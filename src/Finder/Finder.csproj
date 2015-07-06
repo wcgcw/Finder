@@ -1,0 +1,577 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CBC585A9-A63E-4C51-A27D-644858EEFFEE}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Finder</RootNamespace>
+    <AssemblyName>Finder</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <PublishUrl>http://localhost/Finder/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>logo100.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="dog_net_windows">
+      <HintPath>libs\dog_net_windows.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>libs\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="IrisSkin2">
+      <HintPath>libs\IrisSkin2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>libs\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft.NET\Primary Interop Assemblies\Microsoft.mshtml.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=14.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>bin\Debug\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
+    <Reference Include="MILHTMLParser">
+      <HintPath>libs\MILHTMLParser.dll</HintPath>
+    </Reference>
+    <Reference Include="NetDimension.Weibo">
+      <HintPath>libs\NetDimension.Weibo.dll</HintPath>
+    </Reference>
+    <Reference Include="Sodao.Snap">
+      <HintPath>libs\Sodao.Snap.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>libs\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Entities\ModelReleaseInfo.cs" />
+    <Compile Include="Entities\SystemSet.cs" />
+    <Compile Include="Entities\TbReleaseInfo.cs" />
+    <Compile Include="Entities\UrlInfo.cs" />
+    <Compile Include="Entities\UserInfo.cs" />
+    <Compile Include="Entities\Warn.cs" />
+    <Compile Include="Forms\AlertDetail.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlertDetail.Designer.cs">
+      <DependentUpon>AlertDetail.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Changgui.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Changgui.designer.cs">
+      <DependentUpon>Changgui.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ChartDetailData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChartDetailData.Designer.cs">
+      <DependentUpon>ChartDetailData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Datachart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Datachart.Designer.cs">
+      <DependentUpon>Datachart.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Filterdata.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Filterdata.Designer.cs">
+      <DependentUpon>Filterdata.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\HiddenSinaWBOauth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\HiddenSinaWBOauth.Designer.cs">
+      <DependentUpon>HiddenSinaWBOauth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Home.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Home.Designer.cs">
+      <DependentUpon>Home.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Keyword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Keyword.Designer.cs">
+      <DependentUpon>Keyword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Kongzhi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Kongzhi.Designer.cs">
+      <DependentUpon>Kongzhi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Mingan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Mingan.Designer.cs">
+      <DependentUpon>Mingan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Monitor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Monitor.Designer.cs">
+      <DependentUpon>Monitor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Monitoring.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Monitoring.Designer.cs">
+      <DependentUpon>Monitoring.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Partword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Partword.Designer.cs">
+      <DependentUpon>Partword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\QQWeibo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QQWeibo.Designer.cs">
+      <DependentUpon>QQWeibo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SinaWBOauth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SinaWBOauth.designer.cs">
+      <DependentUpon>SinaWBOauth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SystemSetting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SystemSetting.Designer.cs">
+      <DependentUpon>SystemSetting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Tufa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Tufa.Designer.cs">
+      <DependentUpon>Tufa.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Waiting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Waiting.designer.cs">
+      <DependentUpon>Waiting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Webhref.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Webhref.Designer.cs">
+      <DependentUpon>Webhref.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Weekreport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Weekreport.Designer.cs">
+      <DependentUpon>Weekreport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Zhongdian.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Zhongdian.Designer.cs">
+      <DependentUpon>Zhongdian.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.cs">
+      <DependentUpon>Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\CityWeather\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="UserControles\DoubleBufferDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserControles\UC_Menu.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControles\UC_Menu.Designer.cs">
+      <DependentUpon>UC_Menu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="util\Alert.cs" />
+    <Compile Include="util\Comm.cs" />
+    <Compile Include="util\CrawlHtml.cs" />
+    <Compile Include="util\DataPersistenceControl.cs" />
+    <Compile Include="util\DogVendorCode.cs" />
+    <Compile Include="util\GetSnap.cs" />
+    <Compile Include="util\GlobalPars.cs" />
+    <Compile Include="util\HtmlParse.cs" />
+    <Compile Include="util\HtmlUtil.cs" />
+    <Compile Include="util\QQWeibo.cs" />
+    <Compile Include="util\SinaWeibo.cs" />
+    <Compile Include="util\Weather.cs" />
+    <Compile Include="util\WebSanp.cs" />
+    <Compile Include="util\WordUtil.cs" />
+    <Compile Include="util\XmlUtil.cs" />
+    <EmbeddedResource Include="Forms\AlertDetail.resx">
+      <DependentUpon>AlertDetail.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Changgui.resx">
+      <DependentUpon>Changgui.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChartDetailData.resx">
+      <DependentUpon>ChartDetailData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Datachart.resx">
+      <DependentUpon>Datachart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Filterdata.resx">
+      <DependentUpon>Filterdata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\HiddenSinaWBOauth.resx">
+      <DependentUpon>HiddenSinaWBOauth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Home.resx">
+      <DependentUpon>Home.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Keyword.resx">
+      <DependentUpon>Keyword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Kongzhi.resx">
+      <DependentUpon>Kongzhi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Mingan.resx">
+      <DependentUpon>Mingan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Monitor.resx">
+      <DependentUpon>Monitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Monitoring.resx">
+      <DependentUpon>Monitoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Partword.resx">
+      <DependentUpon>Partword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\QQWeibo.resx">
+      <DependentUpon>QQWeibo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SinaWBOauth.resx">
+      <DependentUpon>SinaWBOauth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SystemSetting.resx">
+      <DependentUpon>SystemSetting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Tufa.resx">
+      <DependentUpon>Tufa.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Waiting.resx">
+      <DependentUpon>Waiting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Webhref.resx">
+      <DependentUpon>Webhref.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Weekreport.resx">
+      <DependentUpon>Weekreport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Zhongdian.resx">
+      <DependentUpon>Zhongdian.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="UserControles\UC_Menu.resx">
+      <DependentUpon>UC_Menu.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\DataSources\System.Data.DataSet.datasource" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Service References\CityWeather\WeatherWebService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\white.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\error.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\system_config_boot.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rename.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\web_page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\transfer_down_up.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\report_word.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\find1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CityWeather\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CityWeather\WeatherWebService.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CityWeather\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CityWeather\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CityWeather\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\m.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Update.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\1.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\s1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataBaseServer\DataBaseServer.csproj">
+      <Project>{26716FFD-9C38-4E28-B4E6-8B9B9FF31AD0}</Project>
+      <Name>DataBaseServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Update\Update.csproj">
+      <Project>{FD0FD5D0-24E4-4239-9073-3519E7B7E8B8}</Project>
+      <Name>Update</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logos.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bar_chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\u.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\d.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\loading.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\user.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\updaterec.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\downloads.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\openfolder.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\button_blue_play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\button_blue_stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\button_grey_stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\button_grey_play.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sinaweibo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\qqweibo.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="logo.ico" />
+    <Content Include="logo100.ico" />
+    <None Include="Resources\start_xitongshezhi.png" />
+    <None Include="Resources\start_kongzhizhongxin.png" />
+    <None Include="Resources\start_tufayuqing.png" />
+    <None Include="Resources\start_zhongdianyuqing.png" />
+    <None Include="Resources\start_minganyuqing.png" />
+    <None Include="Resources\start_yuqingbaogao.png" />
+    <None Include="Resources\start_yuqingfenxi.png" />
+    <None Include="Resources\start_yuqingtiqu.png" />
+    <None Include="Resources\start_yuqingsousuo.png" />
+    <None Include="Resources\a1.png" />
+    <None Include="Resources\a.png" />
+    <None Include="Resources\rt.png" />
+    <None Include="Resources\rm.png" />
+    <None Include="Resources\rb.png" />
+    <None Include="Resources\mt.png" />
+    <None Include="Resources\mb.png" />
+    <None Include="Resources\lt.png" />
+    <None Include="Resources\lm.png" />
+    <None Include="Resources\lb.png" />
+    <None Include="Resources\tools.png" />
+    <None Include="Resources\tel.png" />
+    <None Include="Resources\start.png" />
+    <None Include="Resources\newa.png" />
+    <None Include="Resources\mme.png" />
+    <None Include="Resources\mel.png" />
+    <None Include="Resources\fel.png" />
+    <None Include="Resources\ccon.png" />
+    <None Include="Resources\fbg.png" />
+    <None Include="Resources\bg.png" />
+    <None Include="Resources\logo.png" />
+    <None Include="Resources\rm_logo.jpg" />
+    <None Include="Resources\menu_back.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 %28x86 和 x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

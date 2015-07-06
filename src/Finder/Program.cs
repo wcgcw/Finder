@@ -1,0 +1,153 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
+using Finder.util;
+using System.Text;
+
+namespace Finder
+{
+    static class Program
+    {
+        /// <summary>
+        /// 应用程序的主入口点。
+        /// </summary>
+        [STAThread]
+        static void Main()
+        {
+            #region 测试代码
+            HtmlParse parse = new HtmlParse();
+            #region 百度新闻
+            //string html = HtmlUtil.getHtml(@"http://news.baidu.com/ns?word=%CE%ED%F6%B2&tn=news&from=news&cl=2&rn=20&ct=1&oq=wumai&f=3&rsp=0", "");
+            //parse.ParseBaiduNews(html, "");
+            #endregion
+            #region 搜狗微信
+            //string html = HtmlUtil.HttpGet(@"http://weixin.sogou.com/weixin?type=2&query=反腐&ie=utf8", System.Text.Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouWeixin(html, "");
+            #endregion
+            //string html = HtmlUtil.HttpGet(@"http://www.sogou.com/web?interation=196647&query=雾霾", System.Text.Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouBlog(html, "");
+
+            //<cite id="cacheresult_info_0">新浪博客 - blog.sina.com.cn/s/...&nbsp;-&nbsp;2013-1-28</cite>
+            //<cite id="cacheresult_info_8">搜狐母婴 - club.baobao.sohu.co...&nbsp;-&nbsp;2天前</cite>
+            //<cite id="cacheresult_info_9">商都BBS - bbs.shangdu.com - 2天前</cite>
+            //<cite id="cacheresult_info_7">豆瓣 - www.douban.com - 2015-3-10</cite>
+            //string text = "搜狐母婴 - club.bao-bao.sohu.co... - 2013 - 1 - 28 ";
+            //string txt = parse.GetSogouAuthorAndDate(text);
+            //搜狗搜索论坛
+            //string html = HtmlUtil.HttpGet(@"http://www.sogou.com/web?interation=196648&query=王学兵", System.Text.Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouBBS(html, "");
+            //贴吧
+            //string html = HtmlUtil.HttpGet(@"http://tieba.baidu.com/f/search/res?ie=utf-8&qw=雾霾", System.Text.Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseBaiduTieba(html, "");
+
+            //新浪微博
+
+            //String encodeKey = CrawlHtml.UrlEncode("雾霾");
+            //string Url = "http://s.weibo.com/weibo/" + encodeKey + "?topnav=1&wvr=6&b=1&page=1";
+
+            ////Url = "http://s.weibo.com/weibo/%25E9%259B%25BE%25E9%259C%25BE&Refer=STopic_box";
+
+            //string html = HtmlUtil.HttpGet(Url, System.Text.Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSinaWeibo(html, "");
+
+
+            //string txt = CrawlHtml.ChDecodeUrl("\u6709 20 \u6761\u65b0\u5fae\u535a\uff0c\u70b9\u51fb\u67e5\u770b");
+            #region 百度网页
+            //String encodeKey = CrawlHtml.UrlEncode("果敢");
+            //string url = string.Format(@"http://www.baidu.com/s?wd={0}&pn={1}&ie=utf-8", encodeKey, 0 * 10);
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseBaiduWeb(html, "", 0);
+            #endregion
+            #region 测试短信
+            //Alert alert = new Alert(1000 * 60 * 30);
+            //alert.sendSMS("测试短信", "18601005461", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            #endregion
+
+            #region 测试日期转换
+            //string[] formats = {"yyyy-MM-dd HH:mm:ss","yyyy-M-dd HH:mm:ss","yyyy-M-d HH:mm:ss","yyyy-MM-d HH:mm:ss",
+            //        "yyyy-MM-dd HH:mm","yyyy-MM-dd hh:mm","yyyy-MM-dd H:mm","yyyy-MM-dd h:mm","yyyy-MM-dd HH:m","yyyy-MM-dd hh:m","yyyy-MM-dd h:m",
+            //        "yyyy-MM-dd hh:mm:ss","yyyy-MM-dd hh:mm:s","yyyy-MM-dd hh:m:s","yyyy-MM-dd hh:m:ss","yyyy-MM-dd h:mm:ss","yyyy-MM-dd h:mm:s","yyyy-MM-dd h:m:s","yyyy-MM-dd h:m:ss",
+            //        "yyyy-MM-dd HH:mm:s","yyyy-MM-dd HH:m:s","yyyy-MM-dd HH:m:ss","yyyy-MM-dd H:mm:ss","yyyy-MM-dd H:mm:s","yyyy-MM-dd H:m:s","yyyy-MM-dd H:m:ss",
+            //        "yyyy-M-dd HH:mm","yyyy-M-dd hh:mm","yyyy-M-dd H:mm","yyyy-M-dd h:mm","yyyy-M-dd HH:m","yyyy-M-dd hh:m","yyyy-M-dd h:m",
+            //        "yyyy-M-dd hh:mm:ss","yyyy-M-dd hh:mm:s","yyyy-M-dd hh:m:s","yyyy-M-dd hh:m:ss","yyyy-M-dd h:mm:ss","yyyy-M-dd h:mm:s","yyyy-M-dd h:m:s","yyyy-M-dd h:m:ss",
+            //        "yyyy-M-dd HH:mm:s","yyyy-M-dd HH:m:s","yyyy-M-dd HH:m:ss","yyyy-M-dd H:mm:ss","yyyy-M-dd H:mm:s","yyyy-M-dd H:m:s","yyyy-M-dd H:m:ss",
+            //        "yyyy-M-d HH:mm","yyyy-M-d hh:mm","yyyy-M-d H:mm","yyyy-M-d h:mm","yyyy-M-d HH:m","yyyy-M-d hh:m","yyyy-M-d h:m",
+            //        "yyyy-M-d hh:mm:ss","yyyy-M-d hh:mm:s","yyyy-M-d hh:m:s","yyyy-M-d hh:m:ss","yyyy-M-d h:mm:ss","yyyy-M-d h:mm:s","yyyy-M-d h:m:s","yyyy-M-d h:m:ss",
+            //        "yyyy-M-d HH:mm:s","yyyy-M-d HH:m:s","yyyy-M-d HH:m:ss","yyyy-M-d H:mm:ss","yyyy-M-d H:mm:s","yyyy-M-d H:m:s","yyyy-M-d H:m:ss",
+            //        "yyyy-MM-d HH:mm","yyyy-MM-d hh:mm","yyyy-MM-d H:mm","yyyy-MM-d h:mm","yyyy-MM-d HH:m","yyyy-MM-d hh:m","yyyy-MM-d h:m",
+            //        "yyyy-MM-d hh:mm:ss","yyyy-MM-d hh:mm:s","yyyy-MM-d hh:m:s","yyyy-MM-d hh:m:ss","yyyy-MM-d h:mm:ss","yyyy-MM-d h:mm:s","yyyy-MM-d h:m:s","yyyy-MM-d h:m:ss",
+            //        "yyyy-MM-d HH:mm:s","yyyy-MM-d HH:m:s","yyyy-MM-d HH:m:ss","yyyy-MM-d H:mm:ss","yyyy-MM-d H:mm:s","yyyy-MM-d H:m:s","yyyy-MM-d H:m:ss",
+            //        "yyyy-MM-dd","yyyy-M-dd","yyyy-M-d","yyyy-MM-d"};
+
+            //string date = "";
+            //DateTime dateValue;
+            //bool ret = DateTime.TryParseExact(date, formats, 
+            //    System.Globalization.DateTimeFormatInfo.CurrentInfo, System.Globalization.DateTimeStyles.None, out dateValue);
+            #endregion
+
+            #region 测试必应新闻
+            String encodeKey = CrawlHtml.UrlEncode("雾霾 治理");
+            //string url = string.Format(@"http://cn.bing.com/news/search?q={0}&first={1}&FORM=PONR", encodeKey, 1 * 10 + 1);
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseBingNews(html, "", 0);
+
+            //string url = string.Format(@"http://cn.bing.com/search?q={0}&first={1}&FORM=PERE", encodeKey, 0 * 10 + 1); 
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseBingWeb(html, "", 0);
+
+            //string url = string.Format(@"http://news.sogou.com/news?mode=1&query={0}&sut=6247&sst0=1428928362112&page={1}&w=01029901&dr=1", encodeKey, 1); 
+            //string html = HtmlUtil.HttpGet(url, Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouNews(html, "", 0);
+
+            //string url = "http://www.sogou.com/web?query=%E5%B8%8C%E6%8B%89%E9%87%8C%E7%AB%9E%E9%80%89%E6%80%BB%E7%BB%9F&page=2&ie=utf8&w=03021800&dr=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouBlog(html, "", 0);
+
+            //string url = "http://zixun.zhongsou.com/n?w=%CE%ED%F6%B2%20%D6%CE%C0%ED&b=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseZhongsouNews(html, "", 0);
+
+            //string url = "http://news.haosou.com/ns?q=%E6%98%9F%E5%85%89%E5%A4%A7%E9%81%93&pn=1&tn=news&rank=rank&j=0";
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseHaosouNews(html, "", 0);
+
+            //string url = "http://www.sogou.com/web?query=%E9%9B%BE%E9%9C%BE+%E6%B2%BB%E7%90%86&hp=0&sut=4351&lkt=11%2C1429095975318%2C1429095978412&sst0=1429095979669&oq=wumai+zhili&stj0=0&stj1=0&stj=0%3B0%3B0%3B0&stj2=0&hp1=&ri=0&page=1&ie=utf8&p=40040100&dp=1&w=01015002&dr=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseSogouWeb(html, "", 0);
+
+            //string url = "http://www.zhongsou.com/third?w=%CE%ED%F6%B2%20%D6%CE%C0%ED&b=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseZhongsouWeb(html, "", 0);
+
+            //string url = "http://www.haosou.com/s?q=%E6%98%9F%E5%85%89%E5%A4%A7%E9%81%93&pn=1&j=0&ls=0&src=srp_paging&fr=tab_news&psid=c582f05942d9170285882a26de5a5d12";
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //List<ModelReleaseInfo> mris = parse.ParseHaosouWeb(html, "", 0);
+
+            //string url = "http://bbs.zhongsou.com/b?b=1&w=%CE%ED%F6%B2%20%D6%CE%C0%ED&s=&sc=&dt=&t=&pt=&fo=&u=&au=&nt=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseZhongsouBBS(html, "", 0);
+
+            //string url = "http://t.zhongsou.com/wb?w=%CE%ED%F6%B2%20%D6%CE%C0%ED&b=1";
+            //string html = HtmlUtil.HttpGet(url, Encoding.Default);
+            //List<ModelReleaseInfo> mris = parse.ParseZhongsouWeibo(html, "", 0);
+
+            #endregion
+            //return;
+            #endregion
+
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.DoEvents();
+            Application.Run(new MainForm());
+        }
+
+        /// <summary>
+        /// 函数或方法循环运行变量,如果为False,说明不停止,如果为True,说明在这时要结束循环的执行
+        /// </summary>
+        public static bool ProClose = false;
+        //是否过有效期,true为过期,false未过期
+        public static bool isBeyondDate = false;
+    }
+}
