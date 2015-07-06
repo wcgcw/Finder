@@ -343,7 +343,7 @@ namespace Finder
 
         private void pb_close_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("程序运行中，是否关闭？", "注意", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
+            if (MessageBox.Show("您确认要退出系统？", "注意", MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.OK)
             {
                 try
                 {
