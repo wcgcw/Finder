@@ -118,15 +118,15 @@ namespace Finder.util
                             }
                         }
                         //2015.3.18 wangcg 修改后，ReleaseInfo数据库的keywords字段存储的是关键字不是事件名称，需要修改sql
-                        //sql = "select count(1) cs,keywords from v_ReleaseInfo where collectdate between '"
+                        //sql = "select count(1) cs,keywords from releaseinfo where collectdate between '"
                         //    + timeBefore + "' and '"
                         //    + timeNow + "' and "
                         //    + " keywords = '" + tmp_keyword + "'";
                         //样例sql：
-                        //select count(*) cs, b.name from v_ReleaseInfo a
+                        //select count(*) cs, b.name from releaseinfo a
                         //left join keywords b on a.keywords=b.[KeyWord]
                         //where b.[Name]='自然灾害'
-                        sql = @"select count(1) cs,b.[Name] keywords from v_ReleaseInfo a
+                        sql = @"select count(1) cs,b.[Name] keywords from releaseinfo a
                                 left join keywords b on a.keywords=b.[KeyWord]
                                 where a.collectdate between '{0}' and '{1}'
                                 and  b.[Name]='{2}'";
@@ -221,7 +221,7 @@ namespace Finder.util
                         tmp_sendContent = dt_alert_collection.Rows[icount]["WarnContent"].ToString();
                         tmp_phoneNumber = dt_alert_collection.Rows[icount]["mobile"].ToString();
 
-                        //sql = "select count(1) cs,keywords from v_ReleaseInfo where collectdate between '"
+                        //sql = "select count(1) cs,keywords from releaseinfo where collectdate between '"
                         //    + timeBefore + "' and '"
                         //    + timeNow + "' and "
                         //    + " keywords = '" + tmp_keyword + "'";
@@ -238,10 +238,10 @@ namespace Finder.util
                         }
 
                         //样例sql：
-                        //select count(*) cs, b.name from v_ReleaseInfo a
+                        //select count(*) cs, b.name from releaseinfo a
                         //left join keywords b on a.keywords=b.[KeyWord]
                         //where b.[Name]='自然灾害'
-                        sql = @"select count(1) cs,b.[Name] keywords from v_ReleaseInfo a
+                        sql = @"select count(1) cs,b.[Name] keywords from releaseinfo a
                                 left join keywords b on a.keywords=b.[KeyWord]
                                 where a.collectdate between '{0}' and '{1}'
                                 and  b.[Name]='{2}'";

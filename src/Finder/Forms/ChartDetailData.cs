@@ -38,8 +38,8 @@ namespace Finder.Forms
             {
                 label1.Text = "关键词为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
                 label1.ForeColor = Color.IndianRed;
-                sql = "SELECT uid,keywords,title,infosource,contexts,sender,reposts,comments,pid,webaddress,collectdate,part "
-                    + " from v_ReleaseInfo "
+                sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webaddress,collectdate,part "
+                    + " from releaseinfo "
                     + " where keywords like '%" + kwOrWebaddress + "%'"
                     + " and collectdate > '" + time + "'";
             }
@@ -47,8 +47,8 @@ namespace Finder.Forms
             {
                 label1.Text = "网站为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
                 label1.ForeColor = Color.IndianRed;
-                sql = "SELECT uid,keywords,title,infosource,contexts,sender,reposts,comments,pid,webaddress,collectdate,part "
-                    + " from v_ReleaseInfo " 
+                sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webaddress,collectdate,part "
+                    + " from releaseinfo " 
                     + " where webaddress = '" + kwOrWebaddress + "'"
                     + " and kid = " + kid
                     + " and collectdate > '" + time + "'";
@@ -65,7 +65,7 @@ namespace Finder.Forms
             dataGridView1.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", DataPropertyName = "title" });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "链接", DataPropertyName = "infosource" });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "内容", DataPropertyName = "contexts" });
-            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布者", DataPropertyName = "sender" });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布者", DataPropertyName = "releasename" });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "转发量", DataPropertyName = "reposts" });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "评论数", DataPropertyName = "comments" });
             dataGridView1.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "类别", DataPropertyName = "pid" });

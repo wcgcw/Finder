@@ -316,6 +316,23 @@ namespace Finder
             }
         }
 
+        public DataTable GetLatestData()
+        {
+            //string sql = "Select * From ReleaseInfo where pid={0} and deleted=0 order by collectdate desc limit 0,100";
+            string sql = @"select b.[Name] eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    where b.[Name] is not null and  a.deleted=0 order by a.collectdate desc limit 0,50";
+            try
+            {
+                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+
+                return dbobj.GetTabel(sql);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public int GetMaxUid()
         {
             string sql = "SELECT max(uid) FROM ReleaseInfo";

@@ -28,6 +28,8 @@ namespace Finder.Forms
         #region 属性
 
         private DataTable dtData;
+        Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
+        private string selectKwName;
 
         TbReleaseInfo tri;
         System.Threading.AutoResetEvent obj = new System.Threading.AutoResetEvent(false);
@@ -152,7 +154,7 @@ namespace Finder.Forms
 
             #region 初始化表格控件
             tri = new TbReleaseInfo();
-            FormatDataView(dvView);
+            FormatDataView2(dvView);
 
             dtData = tri.GetReleaseInfoFormat();
 
@@ -174,6 +176,30 @@ namespace Finder.Forms
             chkMedia.Checked = true;
             chkTieba.Checked = true;
             chkWeixin.Checked = true;
+
+            kidlist.SelectedIndex = 4;  //事件类型 (默认选择全部)
+            kwlist.SelectedIndex = 0;   //事件名称 (启动时隐藏)
+            kwlist.Hide();  //事件名称
+            label8.Hide();  //事件名称
+
+            #region 提取事件与关键字
+            DataTable kwdtAll = cmd.GetTabel("select name, keyword from keywords");
+            for (int i = 0; i < kwdtAll.Rows.Count; i++)
+            {
+                string key = kwdtAll.Rows[i]["name"].ToString();
+                if (!dicKeywords.ContainsKey(key))
+                {
+                    List<string> keywords = new List<string>();
+                    keywords.Add(kwdtAll.Rows[i]["keyword"].ToString());
+                    dicKeywords.Add(key, keywords);
+                }
+                else
+                {
+                    dicKeywords[key].Add(kwdtAll.Rows[i]["keyword"].ToString());
+                }
+            }
+            #endregion
+
 
         }
 
@@ -567,7 +593,7 @@ namespace Finder.Forms
             {
                 if (!backgroundWorker1.IsBusy)
                 {
-                    backgroundWorker1.RunWorkerAsync();                    
+                    backgroundWorker1.RunWorkerAsync();
                 }
             }
         }
@@ -636,7 +662,7 @@ namespace Finder.Forms
                         col.DisplayIndex = 10;
                         col.Visible = false;
                         break;
-                    case "sender":
+                    case "releasename":
                         col.HeaderText = "发布者";
                         col.DisplayIndex = 11;
                         col.Width = 160;
@@ -690,6 +716,47 @@ namespace Finder.Forms
             }
         }
 
+        private void FormatDataView2(DataGridView obj)
+        {
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "uid", DataPropertyName = "uid" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "事件", DataPropertyName = "keywords" });
+            obj.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", DataPropertyName = "title" });
+            obj.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "链接", DataPropertyName = "infosource" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "内容", DataPropertyName = "contexts" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布者", DataPropertyName = "releasename" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "转发量", DataPropertyName = "reposts" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "评论数", DataPropertyName = "comments" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "网站类别", DataPropertyName = "pid" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "来源", DataPropertyName = "webname" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "抓取时间", DataPropertyName = "collectdate" });
+            obj.Columns.Add(new DataGridViewImageColumn() { HeaderText = "评价", DataPropertyName = "part" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布时间", DataPropertyName = "releasedate" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "快照", DataPropertyName = "snapshot" });
+
+            obj.Columns[0].Visible = false;
+            obj.Columns[3].Visible = false;
+            obj.Columns[5].Visible = false;
+            obj.Columns[6].Visible = false;
+            obj.Columns[7].Visible = false;
+
+            obj.Columns[8].Visible = true;
+            obj.Columns[12].Visible = true;
+            obj.Columns[13].Visible = false;
+
+            obj.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            obj.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            obj.Columns[8].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            obj.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+
+            obj.Columns[4].Width = 480;
+            obj.Columns[6].Width = 80;
+            obj.Columns[7].Width = 80;
+            obj.Columns[8].Width = 60;
+            obj.Columns[10].Width = 160;
+            obj.Columns[11].Width = 60;
+            obj.Columns[12].Width = 160;
+            obj.Columns[13].Width = 60;
+        }
         #endregion
 
         #region 主流媒体抓取程序
@@ -711,8 +778,12 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
-                string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
+                //string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
                 int.TryParse(dtkey.Rows[kw]["kid"].ToString().Trim(), out kid);
 
@@ -745,7 +816,7 @@ namespace Finder.Forms
                         //写入数据库
                         DataPersistenceControl.GetInstance().Add(mris);
                     }
-                    else 
+                    else
                     {
                         break;
                     }
@@ -841,20 +912,25 @@ namespace Finder.Forms
             SQLitecommand cmd = new SQLitecommand();
             //得到关键字列表
             DataTable dtkey;
-            DataTable dtParts;
+            //DataTable dtParts;
             dtkey = cmd.GetTabel("select * from Keywords");
-            dtParts = cmd.GetTabel("SELECT * FROM partword");
+            //dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
             HtmlParse parse = new HtmlParse();
-            //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Weixin_ReportCatchProcess);
+            parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Weixin_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
-                string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
+                //string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
                 int.TryParse(dtkey.Rows[kw]["kid"].ToString().Trim(), out kid);
                 #region 按关键字检索
@@ -902,6 +978,11 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
                 string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
@@ -947,6 +1028,11 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
                 string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
@@ -1015,8 +1101,12 @@ namespace Finder.Forms
             //按关键字循环
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
-                List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
                 string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
@@ -1064,6 +1154,11 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
                 string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
@@ -1133,6 +1228,11 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
+                if (selectKwName != "全部")
+                {
+                    if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
+                }
+
                 string keyword = dtkey.Rows[kw]["KeyWord"].ToString().Trim();
                 string keyTitle = dtkey.Rows[kw]["Name"].ToString().Trim();
                 int kid = 0;
@@ -1275,7 +1375,7 @@ namespace Finder.Forms
 
             if (e.RowIndex != dgv.NewRowIndex)
             {
-                switch (dgv.Columns[e.ColumnIndex].Name)
+                switch (dgv.Columns[e.ColumnIndex].Name.ToLower())
                 {
                     case "title_link":
                         //超链
@@ -1400,7 +1500,6 @@ namespace Finder.Forms
             {
                 play = false;
                 pictureBox6.BackgroundImage = imageList1.Images[2];
-                //butClike = !butClike;
 
                 this.pictureBox1.Visible = true;
                 if (Program.isBeyondDate == true)
@@ -1449,7 +1548,7 @@ namespace Finder.Forms
                     tCrawl3.Start();
                     BlogWebSpiderTimer.Enabled = true;
                 }
-                
+
                 //论坛抓取（搜狗论坛搜索）
                 if (chkBBS.Checked)
                 {
@@ -1519,13 +1618,17 @@ namespace Finder.Forms
                 tCrawl9.Start();
                 RefreshWebSpiderTimer.Enabled = true;
 
-                chkAllWeb.Checked = false;
-                chkBBS.Checked = false;
-                chkBlog.Checked = false;
-                chkCustom.Checked = false;
-                chkMedia.Checked = false;
-                chkTieba.Checked = false;
-                chkWeixin.Checked = false;
+                kidlist.Enabled = false;
+                kwlist.Enabled = false;
+
+                chkAllWeb.Enabled = false;
+                chkMedia.Enabled = false;
+                chkWeibo.Enabled = false;
+                chkWeixin.Enabled = false;
+                chkTieba.Enabled = false;
+                chkBBS.Enabled = false;
+                chkBlog.Enabled = false;
+                chkCustom.Enabled = false;
 
             }
             else
@@ -1553,14 +1656,17 @@ namespace Finder.Forms
 
                 RefreshWebSpiderTimer.Enabled = false;
 
-                chkAllWeb.Checked = true;
-                chkBBS.Checked = true;
-                chkBlog.Checked = true;
-                chkCustom.Checked = true;
-                chkMedia.Checked = true;
-                chkTieba.Checked = true;
-                chkWeixin.Checked = true;
+                kidlist.Enabled = true;
+                kwlist.Enabled = true;
 
+                chkAllWeb.Enabled = true;
+                chkMedia.Enabled = true;
+                chkWeibo.Enabled = true;
+                chkWeixin.Enabled = true;
+                chkTieba.Enabled = true;
+                chkBBS.Enabled = true;
+                chkBlog.Enabled = true;
+                chkCustom.Enabled = true;
 
                 Program.ProClose = true;
             }
@@ -1593,6 +1699,45 @@ namespace Finder.Forms
             finally
             {
             }
+        }
+
+        private void kwlist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            selectKwName = kwlist.Text;
+
+        }
+
+        private void kidlist_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string kid = kidlist.SelectedIndex.ToString();
+            if (kid == "4")
+            {
+                kwlist.Hide();
+                label8.Hide();
+                kwlist.SelectedIndex = kwlist.Items.Count - 1;
+            }
+            else
+            {
+                string sql = "select uid , name from keywords where kid = '" + kid + "' group by name";
+                DataTable dt = cmd.GetTabel(sql);
+
+                kwlist.DisplayMember = "name";
+                kwlist.ValueMember = "uid";
+
+                DataRow dr = dt.NewRow();
+                dr["name"] = "全部";
+                dr["uid"] = "0";
+
+                dt.Rows.Add(dr);
+
+                //dt.AcceptChanges();
+
+                kwlist.DataSource = dt;
+                kwlist.SelectedIndex = kwlist.Items.Count - 1;
+                kwlist.Show();
+                label8.Show();
+            }
+
         }
 
     }

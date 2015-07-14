@@ -95,7 +95,7 @@ namespace Finder.Forms
                 return;
             }
 
-            string sql = @"select b.[Name] eventname, a.keywords, a.title, a.infosource, a.kid, a.pid from v_releaseinfo  a  left join keywords b on a.keywords=b.[KeyWord]
+            string sql = @"select b.[Name] eventname, a.keywords, a.title, a.infosource, a.kid, a.pid from releaseinfo  a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null  and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
 
             //List<string> kid = new List<string>();
@@ -206,7 +206,7 @@ namespace Finder.Forms
                             break;
                     }
 
-                    string sql2 = @"SELECT count(1) kidcount from v_ReleaseInfo  a  left join keywords b on a.keywords=b.[KeyWord]
+                    string sql2 = @"SELECT count(1) kidcount from releaseinfo  a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null  and   a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     sql2 += "' and a.kid=" + k;
                     if (kwlist.Visible && kwlist.Text != "全部")
@@ -254,7 +254,7 @@ namespace Finder.Forms
                             break;
                     }
 
-                    string sql3 = @"SELECT count(1) pidcount from v_ReleaseInfo   a  left join keywords b on a.keywords=b.[KeyWord]
+                    string sql3 = @"SELECT count(1) pidcount from releaseinfo   a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null  and  a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") +
                             "' and a.kid=" + k + " and a.pid=" + p;
                     if (kwlist.Visible && kwlist.Text != "全部")
@@ -271,7 +271,7 @@ namespace Finder.Forms
                 if (kw != dt.Rows[i]["eventname"].ToString())
                 {
                     kw = dt.Rows[i]["eventname"].ToString();
-                    string sql4 = @"SELECT count(1) kwcount from v_ReleaseInfo    a  left join keywords b on a.keywords=b.[KeyWord]
+                    string sql4 = @"SELECT count(1) kwcount from releaseinfo    a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null  and a. collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss")
                             + "' and a.kid=" + k + " and a.pid=" + p + " and b.[Name]='" + kw + "'";
 
@@ -308,8 +308,8 @@ namespace Finder.Forms
             //string weekstr = " where collectdate > '" + week + "' ";
             //string lweekstr = " where collectdate BETWEEN '" + DateTime.Now.AddDays(-14).ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + week + "' ";
 
-            //DataTable kwdt = cmd.GetTabel("SELECT count(1),keyWords,pid FROM v_ReleaseInfo" + weekstr + "GROUP BY keyWords,pid");
-            //DataTable lkwdt = cmd.GetTabel("SELECT count(1),keyWords,pid FROM v_ReleaseInfo" + lweekstr + "GROUP BY keyWords,pid");
+            //DataTable kwdt = cmd.GetTabel("SELECT count(1),keyWords,pid FROM releaseinfo" + weekstr + "GROUP BY keyWords,pid");
+            //DataTable lkwdt = cmd.GetTabel("SELECT count(1),keyWords,pid FROM releaseinfo" + lweekstr + "GROUP BY keyWords,pid");
 
             //for (int i = 0, l = dt.Rows.Count; i < l; i++)
             //{
@@ -421,8 +421,8 @@ namespace Finder.Forms
             //int qt_l = qt_webdt.Rows.Count;
             //qt_webs = new string[qt_l][];
 
-            //DataTable webdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo" + weekstr + "GROUP BY webaddress");
-            //DataTable lwebdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo" + lweekstr + "GROUP BY webaddress");
+            //DataTable webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo" + weekstr + "GROUP BY webaddress");
+            //DataTable lwebdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo" + lweekstr + "GROUP BY webaddress");
 
             //webs = new string[bk_l + lt_l + qt_l][];
             //for (int i = 0; i < bk_l; i++)

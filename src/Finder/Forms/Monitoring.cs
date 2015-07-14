@@ -2121,14 +2121,14 @@ namespace Finder.Forms
             obj.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", DataPropertyName = "title" });
             obj.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "链接", DataPropertyName = "infosource" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "内容", DataPropertyName = "contexts" });
-            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布者", DataPropertyName = "releaseName" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布者", DataPropertyName = "releasename" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "转发量", DataPropertyName = "reposts" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "评论数", DataPropertyName = "comments" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "类别", DataPropertyName = "pid" });
-            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "来源", DataPropertyName = "webName" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "来源", DataPropertyName = "webname" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "抓取时间", DataPropertyName = "collectdate" });
             obj.Columns.Add(new DataGridViewImageColumn() { HeaderText = "评价", DataPropertyName = "part" });
-            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布时间", DataPropertyName = "releaseDate" });
+            obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "发布时间", DataPropertyName = "releasedate" });
             obj.Columns.Add(new DataGridViewTextBoxColumn() { HeaderText = "快照", DataPropertyName = "snapshot" });
 
             obj.Columns[0].Visible = false;
@@ -2353,7 +2353,7 @@ namespace Finder.Forms
             kwChart.Titles[1].Text = now;
             DataTable dt = cmd.GetTabel("select keyword from keywords where has=1");
             string[][] keywords = new string[dt.Rows.Count][];
-            DataTable kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM v_ReleaseInfo where collectdate > '" + now + "'  GROUP BY keyWords");
+            DataTable kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where collectdate > '" + now + "'  GROUP BY keyWords");
             for (int i = 0, l = dt.Rows.Count; i < l; i++)
             {
                 string keyword = dt.Rows[i]["keyword"].ToString();
@@ -2390,7 +2390,7 @@ namespace Finder.Forms
             pidy = new int[] { 0, 0, 0, 0 };
             party = new int[] { 0, 0 };
 
-            piddt = cmd.GetTabel("select count(1),pid from v_ReleaseInfo where collectdate > '" + now + "' GROUP BY pid");
+            piddt = cmd.GetTabel("select count(1),pid from releaseinfo where collectdate > '" + now + "' GROUP BY pid");
             for (int i = 0, l = piddt.Rows.Count; i < l; i++)
             {
                 switch (Convert.ToInt32(piddt.Rows[i][1]).ToString())
@@ -2411,7 +2411,7 @@ namespace Finder.Forms
             }
             pidChart.Series[0].Points.DataBindXY(pidx, pidy);
 
-            partdt = cmd.GetTabel("select count(1),part from v_ReleaseInfo where collectdate > '" + now + "' GROUP BY part");
+            partdt = cmd.GetTabel("select count(1),part from releaseinfo where collectdate > '" + now + "' GROUP BY part");
             for (int i = 0, l = partdt.Rows.Count; i < l; i++)
             {
                 switch (partdt.Rows[i][1].ToString())

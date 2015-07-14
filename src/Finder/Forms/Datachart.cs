@@ -31,13 +31,13 @@ namespace Finder.Forms
             label0.Text = "最近" + day + "天的数据分析：";
 
             string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and a.kid=0 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM v_ReleaseInfo where kid=0 and collectdate > '" + time + "' GROUP BY keyWords");
+            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=0 and collectdate > '" + time + "' GROUP BY keyWords");
             kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=0 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo where kid=0 and collectdate > '" + time + "' GROUP BY webaddress");
+            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=0 and collectdate > '" + time + "' GROUP BY webaddress");
             webdt = cmd.GetTabel(sql);
 
             int l = kwdt.Rows.Count;
@@ -70,13 +70,13 @@ namespace Finder.Forms
             label1.Text = "最近" + day + "天的数据分析：";
 
             string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=1 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM v_ReleaseInfo where kid=1 and collectdate > '" + time + "' GROUP BY keyWords");
+            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=1 and collectdate > '" + time + "' GROUP BY keyWords");
             kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=1 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo where kid=1 and collectdate > '" + time + "' GROUP BY webaddress");
+            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=1 and collectdate > '" + time + "' GROUP BY webaddress");
             webdt = cmd.GetTabel(sql);
 
             int l = kwdt.Rows.Count;
@@ -108,13 +108,13 @@ namespace Finder.Forms
             int day = trackBar2.Value;
             label2.Text = "最近" + day + "天的数据分析：";
             string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=2 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM v_ReleaseInfo where kid=2 and collectdate > '" + time + "' GROUP BY keyWords");
+            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=2 and collectdate > '" + time + "' GROUP BY keyWords");
             kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=2 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo where kid=2 and collectdate > '" + time + "' GROUP BY webaddress");
+            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=2 and collectdate > '" + time + "' GROUP BY webaddress");
             webdt = cmd.GetTabel(sql);
 
             int l = kwdt.Rows.Count;
@@ -146,13 +146,13 @@ namespace Finder.Forms
             int day = trackBar3.Value;
             label3.Text = "最近" + day + "天的数据分析：";
             string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=3 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM v_ReleaseInfo where kid=3 and collectdate > '" + time + "' GROUP BY keyWords");
+            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=3 and collectdate > '" + time + "' GROUP BY keyWords");
             kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
+            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
                             where b.[Name] is not null and  a.kid=3 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM v_ReleaseInfo where kid=3 and collectdate > '" + time + "' GROUP BY webaddress");
+            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=3 and collectdate > '" + time + "' GROUP BY webaddress");
             webdt = cmd.GetTabel(sql);
 
             int l = kwdt.Rows.Count;

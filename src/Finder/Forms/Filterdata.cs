@@ -17,8 +17,6 @@ namespace Finder.Forms
     {
         DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
 
-        //DataTable kwdt = new DataTable();
-
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
 
         public Filterdata()
@@ -32,8 +30,6 @@ namespace Finder.Forms
             kwlist.SelectedIndex = 0;   //事件名称 (启动时隐藏)
             kwlist.Hide();  //事件名称
             label8.Hide();  //事件名称
-            chkPrecise.Checked = false;
-            chkPrecise.Visible = false;
 
             #region 提取事件与关键字
             DataTable kwdtAll = cmd.GetTabel("select name, keyword from keywords");
@@ -52,23 +48,6 @@ namespace Finder.Forms
                 }
             }
             #endregion
-
-            //kwdt = cmd.GetTabel("select name , keyword from keywords group by name");
-            //DataTable kwdtAll = cmd.GetTabel("select name, keyword from keywords");
-
-            //for (int i = 0, l = kwdt.Rows.Count; i < l; i++)
-            //{
-            //    List<string> keywords = new List<string>();
-            //    string name = kwdt.Rows[i]["name"].ToString();
-            //    for (int j = 0, k = kwdtAll.Rows.Count; j < k; j++)
-            //    {
-            //        if (name == kwdtAll.Rows[j]["name"].ToString())
-            //        {
-            //            keywords.Add(kwdtAll.Rows[j]["keyword"].ToString());
-            //        }
-            //    }
-            //    kwdt.Rows[i]["keyword"] = string.Join("，", keywords);
-            //}
 
             dateTimePicker1.Value = DateTime.Now.AddDays(-30);
 
@@ -117,12 +96,29 @@ namespace Finder.Forms
             pidlist.DataSource = pidDt;
             pidlist.SelectedIndex = pidlist.Items.Count - 1;
             #endregion
+
+            lblSetTop.Visible = false;
+            lblCancelTop.Visible = false;
+            lblFocus.Visible = false;
+            lblMainFocus.Visible = false;
+            lblCancelFocus.Visible = false;
+
+            lblSetTop.ForeColor = Color.Blue;
+            lblCancelTop.ForeColor = Color.Gray;
+            lblFocus.ForeColor = Color.Green;
+            lblMainFocus.ForeColor = Color.Red;
+            lblCancelFocus.ForeColor = Color.Gray;
+
+            txtTitle.Text = "";
+            txtTitle.BorderStyle = BorderStyle.None;
+
         }
 
         private void GetResultData()
         {
-            string sql = @"select b.[Name] eventname, a.* from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    where a.uid > 0 ";
+            string sql = @"select b.[Name] EventName, a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    where deleted=0 and a.uid > 0 ";
 
             if (searchTxt.Text.ToString().Length > 0)
             {
@@ -156,7 +152,6 @@ namespace Finder.Forms
                             }
                         }
                     }
-                    //sql += " and a.keywords = '" + ((DataRowView)kwlist.SelectedItem)["name"].ToString() + "'";
                 }
             }
 
@@ -175,66 +170,134 @@ namespace Finder.Forms
                 }
             }
 
-            //if (dateTimePicker1.Value > DateTime.Now.AddDays(-1))
-            //{
-            //    sql += " and collectdate  > '" + dateTimePicker1.Value.ToString("yyyy-MM-dd") + "'";
-            //}
-            //else
-            //{
-            //    sql += " and collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd") + "'";
-            //}
             sql += " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
             sql += " and b.[Name] is not null  order by a.ReleaseDate desc";
 
             DataTable dt = cmd.GetTabel(sql);
-            #region 是否精确匹配
-            if (chkPrecise.Visible == true && chkPrecise.Checked)
+
+            #region 2015.7.14 修改成默认精确匹配
+            List<DataRow> remove = new List<DataRow>();
+            foreach (DataRow row in dt.Rows)
             {
-                List<DataRow> remove = new List<DataRow>();
-                foreach (DataRow row in dt.Rows)
+                string keywords = row["keywords"].ToString();
+                string title = row["title"].ToString();
+                string context = row["contexts"].ToString();
+                if (!string.IsNullOrEmpty(keywords))
                 {
-                    string keywords = row["keywords"].ToString();
-                    string title = row["title"].ToString();
-                    string context = row["contexts"].ToString();
-                    if (!string.IsNullOrEmpty(keywords))
+                    bool isFundTitle = true;
+                    bool isFundContext = true;
+                    string[] keyw = keywords.Split(' ');
+                    if (keyw != null && keyw.Count() > 0)
                     {
-                        bool isFundTitle = true;
-                        bool isFundContext = true;
-                        string[] keyw = keywords.Split(' ');
-                        if (keyw != null && keyw.Count() > 0)
+                        foreach (string key in keyw)
                         {
-                            foreach (string key in keyw)
+                            if (title.IndexOf(key) < 0)
                             {
-                                if (title.IndexOf(key) < 0 )
-                                {
-                                    isFundTitle = false;
-                                }
-                                if (context.IndexOf(key) < 0)
-                                {
-                                    isFundContext = false;
-                                }
+                                isFundTitle = false;
+                            }
+                            if (context.IndexOf(key) < 0)
+                            {
+                                isFundContext = false;
                             }
                         }
-                        if (!isFundTitle && !isFundContext)
-                        {
-                            //如果标题或者内容没有匹配全部关键字则去掉该条数据
-                            remove.Add(row);
-                        }
+                    }
+                    if (!isFundTitle && !isFundContext)
+                    {
+                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                        remove.Add(row);
                     }
                 }
-                if (remove != null && remove.Count > 0)
+            }
+            if (remove != null && remove.Count > 0)
+            {
+                foreach (DataRow row in remove)
                 {
-                    foreach (DataRow row in remove)
-                    {
-                        dt.Rows.Remove(row);
-                    }
+                    dt.Rows.Remove(row);
                 }
             }
             #endregion
 
+            //将置顶的数据添加进来
+
+            string focusSql = @"select  uid,title,contexts,releasedate,infosource,eventname,keywords,releasename,collectdate,snapshot,webname,pid,
+                                part,reposts,comments,kid,sheng,shi,xian,memo,focuslevel,actiondate,deleted from FilterReleaseInfo where deleted=0 ";
+
+            if (searchTxt.Text.ToString().Length > 0)
+            {
+                focusSql += " and contexts like '%" + searchTxt.Text.ToString() + "%'";
+            }
+            //事件类别
+            if (pidlist.SelectedIndex != pidlist.Items.Count - 1)
+            {
+                focusSql += " and pid = " + ((DataRowView)pidlist.SelectedItem)["pid"].ToString();
+            }
+
+            if (kidlist.SelectedIndex != kidlist.Items.Count - 1)
+            {
+                focusSql += " and kid = " + kidlist.SelectedIndex.ToString();
+                if (kwlist.SelectedIndex != kwlist.Items.Count - 1)
+                {
+                    string eventName = ((DataRowView)kwlist.SelectedItem)["name"].ToString();
+                    if (eventName != "全部" && eventName != "")
+                    {
+                        if (dicKeywords.ContainsKey(eventName))
+                        {
+                            if (dicKeywords[eventName] != null)
+                            {
+                                focusSql += " and keywords in(";
+                                foreach (var keyword in dicKeywords[eventName])
+                                {
+                                    focusSql += "'" + keyword + "',";
+                                }
+                                focusSql = focusSql.Substring(0, focusSql.Length - 1);
+                                focusSql += ")";
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (((DataRowView)shenglist.SelectedItem)["id"].ToString() != "0")
+            {
+                focusSql += " and sheng = '" + ((DataRowView)shenglist.SelectedItem)["name"].ToString() + "'";
+
+                if (((DataRowView)shilist.SelectedItem)["id"].ToString() != "0")
+                {
+                    focusSql += " and shi = '" + ((DataRowView)shilist.SelectedItem)["name"].ToString() + "'";
+
+                    if (((DataRowView)xianlist.SelectedItem)["id"].ToString() != "0")
+                    {
+                        focusSql += " and xian = '" + ((DataRowView)xianlist.SelectedItem)["name"].ToString() + "'";
+                    }
+                }
+            }
+
+            focusSql += " and collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
+
+            DataTable dtFocus = cmd.GetTabel(focusSql);
+
+            remove = new List<DataRow>();
+            foreach (DataRow row in dt.Rows)
+            {
+                DataRow[] rows = dtFocus.Select("uid=" + row["uid"].ToString());
+                if (rows != null && rows.Length > 0)
+                {
+                    remove.Add(row);
+                }
+            }
+            if (remove != null && remove.Count > 0)
+            {
+                foreach (DataRow row in remove)
+                {
+                    dt.Rows.Remove(row);
+                }
+            }
+
+            dtFocus.Merge(dt);
+
             dataGridView1.DataSource = null;
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = dt;
+            dataGridView1.DataSource = dtFocus;
 
             FormatDataView();
         }
@@ -246,109 +309,116 @@ namespace Finder.Forms
             dataGridView1.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", Name = "title_link", DisplayIndex = 4, Width = 160 });
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
-                switch (col.Name)
+                switch (col.Name.ToLower())
                 {
                     #region 调整列的隐藏与列序
                     case "uid":
                         col.DisplayIndex = 0;
                         col.Visible = false;
                         break;
+                    case "focuslevel":
+                        col.HeaderText = "关注度";
+                        col.DisplayIndex = 1;
+                        col.Width = 120;
+                        break;
                     case "eventname":
                         col.HeaderText = "事件名称";
-                        col.DisplayIndex = 1;
+                        col.DisplayIndex = 2;
                         col.Width = 120;
                         break;
                     case "keywords":
                         col.HeaderText = "关键字";
-                        col.DisplayIndex = 2;
+                        col.DisplayIndex = 3;
                         col.Visible = false;
                         break;
                     case "title":
                         col.HeaderText = "标题_txt";
-                        col.DisplayIndex = 3;
-                        col.Width = 160;
+                        col.DisplayIndex = 4;
+                        col.Width = 260;
                         col.Visible = false;
                         break;
                     case "title_link":
                         col.HeaderText = "标题";
-                        col.DisplayIndex = 4;
-                        col.Width = 160;
+                        col.DisplayIndex = 5;
+                        col.Width = 260;
                         break;
                     case "infosource":
                         col.HeaderText = "链接";
-                        col.DisplayIndex = 5;
+                        col.DisplayIndex = 6;
                         col.Visible = false;
                         break;
                     case "contexts":
                         col.HeaderText = "内容";
-                        col.DisplayIndex = 6;
+                        col.DisplayIndex = 7;
                         col.Width = 480;
                         break;
                     case "webaddress":
                         col.HeaderText = "来源";
-                        col.DisplayIndex = 7;
+                        col.DisplayIndex = 8;
                         col.Width = 120;
                         break;
                     case "sheng":
                         col.HeaderText = "区域";
-                        col.DisplayIndex = 8;
+                        col.DisplayIndex = 9;
                         col.Width = 160;
                         break;
                     case "shi":
                         col.HeaderText = "市";
-                        col.DisplayIndex = 9;
+                        col.DisplayIndex = 10;
                         col.Visible = false;
                         break;
                     case "xian":
                         col.HeaderText = "县";
-                        col.DisplayIndex = 10;
+                        col.DisplayIndex = 11;
                         col.Visible = false;
                         break;
-                    case "sender":
+                    case "releasename":
                         col.HeaderText = "发布者";
-                        col.DisplayIndex = 11;
+                        col.DisplayIndex = 12;
                         col.Width = 160;
                         break;
-                    case "ReleaseDate":
+                    case "releasedate":
                         col.HeaderText = "发布时间";
-                        col.DisplayIndex = 12;
+                        col.DisplayIndex = 13;
                         col.Width = 160;
                         break;
                     case "reposts":
                         col.HeaderText = "转发量";
-                        col.DisplayIndex = 13;
+                        col.DisplayIndex = 14;
                         col.Visible = false;
                         break;
                     case "comments":
                         col.HeaderText = "评论数";
-                        col.DisplayIndex = 14;
+                        col.DisplayIndex = 15;
                         col.Visible = false;
                         break;
                     case "pid":
                         col.HeaderText = "网站类别";
-                        col.DisplayIndex = 15;
+                        col.DisplayIndex = 16;
                         col.Width = 80;
                         break;
                     case "kid":
                         col.HeaderText = "事件类别";
-                        col.DisplayIndex = 16;
+                        col.DisplayIndex = 17;
                         col.Width = 80;
                         break;
                     case "collectdate":
                         col.HeaderText = "抓取时间";
-                        col.DisplayIndex = 17;
+                        col.DisplayIndex = 18;
                         col.Width = 160;
                         break;
                     case "part":
                         col.HeaderText = "正负预判-txt";
-                        col.DisplayIndex = 18;
+                        col.DisplayIndex = 19;
                         col.Width = 80;
                         col.Visible = false;
                         break;
                     case "part_img":
                         col.HeaderText = "正负预判";
-                        col.DisplayIndex = 19;
+                        col.DisplayIndex = 20;
                         col.Width = 80;
+                        break;
+                    default:
                         break;
                     #endregion
                 }
@@ -361,109 +431,117 @@ namespace Finder.Forms
             {
                 foreach (DataGridViewColumn col in dataGridView1.Columns)
                 {
-                    switch (col.Name)
+                    switch (col.Name.ToLower())
                     {
                         #region 调整列的隐藏与列序
                         case "uid":
                             col.DisplayIndex = 0;
                             col.Visible = false;
                             break;
+                        case "focuslevel":
+                            col.HeaderText = "关注度";
+                            col.DisplayIndex = 1;
+                            col.Width = 120;
+                            break;
                         case "eventname":
                             col.HeaderText = "事件名称";
-                            col.DisplayIndex = 1;
+                            col.DisplayIndex = 2;
                             col.Width = 120;
                             break;
                         case "keywords":
                             col.HeaderText = "关键字";
-                            col.DisplayIndex = 2;
+                            col.DisplayIndex = 3;
                             col.Visible = false;
                             break;
                         case "title":
                             col.HeaderText = "标题_txt";
-                            col.DisplayIndex = 3;
-                            col.Width = 160;
+                            col.DisplayIndex = 4;
+                            col.Width = 220;
                             col.Visible = false;
                             break;
                         case "title_link":
                             col.HeaderText = "标题";
-                            col.DisplayIndex = 4;
-                            col.Width = 160;
+                            col.DisplayIndex = 5;
+                            col.Width = 260;
                             break;
                         case "infosource":
                             col.HeaderText = "链接";
-                            col.DisplayIndex = 5;
+                            col.DisplayIndex = 6;
                             col.Visible = false;
                             break;
                         case "contexts":
                             col.HeaderText = "内容";
-                            col.DisplayIndex = 6;
+                            col.DisplayIndex = 7;
                             col.Width = 480;
                             break;
                         case "webaddress":
                             col.HeaderText = "来源";
-                            col.DisplayIndex = 7;
+                            col.DisplayIndex = 8;
                             col.Width = 120;
                             break;
                         case "sheng":
                             col.HeaderText = "区域";
-                            col.DisplayIndex = 8;
+                            col.DisplayIndex = 9;
                             col.Width = 160;
                             break;
                         case "shi":
                             col.HeaderText = "市";
-                            col.DisplayIndex = 9;
+                            col.DisplayIndex = 10;
                             col.Visible = false;
                             break;
                         case "xian":
                             col.HeaderText = "县";
-                            col.DisplayIndex = 10;
+                            col.DisplayIndex = 11;
                             col.Visible = false;
                             break;
-                        case "sender":
+                        case "releasename":
                             col.HeaderText = "发布者";
-                            col.DisplayIndex = 11;
+                            col.DisplayIndex = 12;
                             col.Width = 160;
                             break;
-                        case "ReleaseDate":
+                        case "releasedate":
                             col.HeaderText = "发布时间";
-                            col.DisplayIndex = 12;
+                            col.DisplayIndex = 13;
                             col.Width = 160;
                             break;
                         case "reposts":
                             col.HeaderText = "转发量";
-                            col.DisplayIndex = 13;
+                            col.DisplayIndex = 14;
                             col.Visible = false;
                             break;
                         case "comments":
                             col.HeaderText = "评论数";
-                            col.DisplayIndex = 14;
+                            col.DisplayIndex = 15;
                             col.Visible = false;
                             break;
                         case "pid":
                             col.HeaderText = "网站类别";
-                            col.DisplayIndex = 15;
+                            col.DisplayIndex = 16;
                             col.Width = 80;
                             break;
                         case "kid":
                             col.HeaderText = "事件类别";
-                            col.DisplayIndex = 16;
+                            col.DisplayIndex = 17;
                             col.Width = 80;
                             break;
                         case "collectdate":
                             col.HeaderText = "抓取时间";
-                            col.DisplayIndex = 17;
+                            col.DisplayIndex = 18;
                             col.Width = 160;
                             break;
                         case "part":
                             col.HeaderText = "正负预判-txt";
-                            col.DisplayIndex = 18;
+                            col.DisplayIndex = 19;
                             col.Width = 80;
                             col.Visible = false;
                             break;
                         case "part_img":
                             col.HeaderText = "正负预判";
-                            col.DisplayIndex = 19;
+                            col.DisplayIndex = 20;
                             col.Width = 80;
+                            break;
+                        default:
+                            col.Visible = false;
                             break;
                         #endregion
                     }
@@ -478,8 +556,24 @@ namespace Finder.Forms
         {
             if (e.RowIndex != dataGridView1.NewRowIndex)
             {
-                switch (dataGridView1.Columns[e.ColumnIndex].Name)
+                switch (dataGridView1.Columns[e.ColumnIndex].Name.ToLower())
                 {
+                    case "focuslevel":
+                        string txtFocus = dataGridView1.Rows[e.RowIndex].Cells["focuslevel"].Value.ToString();
+                        switch (txtFocus)
+                        {
+                            case "置顶":
+                                e.CellStyle.ForeColor = Color.Blue;
+                                break;
+                            case "关注":
+                                e.CellStyle.ForeColor = Color.Green;
+                                break;
+                            case "重点关注":
+                                e.CellStyle.ForeColor = Color.Red;
+                                break;
+                        }
+                        e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        break;
                     case "title_link":
                         //设定正负向
                         string title = dataGridView1.Rows[e.RowIndex].Cells["title"].Value.ToString();
@@ -558,18 +652,19 @@ namespace Finder.Forms
             if (dataGridView1.SelectedRows.Count != 0)
             {
                 AdjustColDisplayIndex();
+                if (dataGridView1.CurrentCell == null) return;
                 string title = dataGridView1.CurrentCell.OwningRow.Cells["title"].Value.ToString();
                 //设置textbox内容为标题加链接
-                dataView.Text = "标题：" + title + "\n链接：" + dataGridView1.CurrentCell.OwningRow.Cells["infosource"].Value.ToString() + "\n";
 
-                //设置标题粗体
-                dataView.Select(3, title.Length);
-                dataView.SelectionFont = new Font(FontFamily.GenericSerif, 10, FontStyle.Bold);
+                txtTitle.Text = "标题：" + title;
+                txtTitle.Select(3, title.Length);
+                txtTitle.SelectionFont = new Font(FontFamily.GenericSerif, 10, FontStyle.Bold);
 
+                dataView.Text = "链接：" + dataGridView1.CurrentCell.OwningRow.Cells["infosource"].Value.ToString() + "\n";
                 //添加内容
                 dataView.AppendText(dataGridView1.CurrentCell.OwningRow.Cells["contexts"].Value.ToString());
 
-                ////关键字
+                //关键字
                 string keyword = dataGridView1.CurrentCell.OwningRow.Cells["keywords"].Value.ToString();
                 string[] keywords = keyword.Split(' ');
                 foreach (string kw in keywords)
@@ -587,8 +682,22 @@ namespace Finder.Forms
                             start += kl + wl;
                         }
                     }
+
+                    start = 0;
+                    while (start < txtTitle.Text.Length && txtTitle.Text.IndexOf(kw, start) > -1)
+                    {
+                        int kl = txtTitle.Text.IndexOf(kw, start);
+                        if (kl >= 0)
+                        {
+                            txtTitle.Select(kl, wl);
+                            txtTitle.SelectionFont = new Font(FontFamily.GenericSerif, 10, FontStyle.Bold);
+                            txtTitle.SelectionColor = Color.Red;
+                            start += kl + wl;
+                        }
+                    }
                 }
                 dataView.Select(0, 0);
+                txtTitle.Select(0, 0);
             }
         }
 
@@ -612,6 +721,12 @@ namespace Finder.Forms
         {
             dataGridView1.DataSource = null;
             GetResultData();
+
+            lblSetTop.Visible = true;
+            lblCancelTop.Visible = true;
+            lblFocus.Visible = true;
+            lblMainFocus.Visible = true;
+            lblCancelFocus.Visible = true;
         }
 
         private void button3_Click(object sender, EventArgs e)
@@ -845,13 +960,54 @@ namespace Finder.Forms
 
         private void kwlist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (kwlist.Text == "全部")
+        }
+
+        private void lblSetTop_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
             {
-                chkPrecise.Visible = false;
+                DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
+                string uid = dvs[0].Cells["uid"].Value.ToString();
+                string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
+                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                        where a.uid ={2}";
+                sql = string.Format(sql, "置顶", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
+                cmd.ExecuteNonQueryInt(sql);
+
+                GetResultData();
             }
-            else
+        }
+
+        private void lblFocus_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
             {
-                chkPrecise.Visible = true;
+                DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
+                string uid = dvs[0].Cells["uid"].Value.ToString();
+                string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
+                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                        where a.uid ={2}";
+                sql = string.Format(sql, "关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
+                cmd.ExecuteNonQueryInt(sql);
+
+                GetResultData();
+            }
+
+        }
+
+        private void lblMainFocus_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
+            {
+                DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
+                string uid = dvs[0].Cells["uid"].Value.ToString();
+                string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
+                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                        where a.uid ={2}";
+                sql = string.Format(sql, "重点关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
+                cmd.ExecuteNonQueryInt(sql);
+
+                GetResultData();
             }
         }
 

@@ -72,11 +72,11 @@ namespace Finder.Forms
         private void GetResultData()
         {
             //sql样例：
-            //select b.[Name] eventname, a.* from v_releaseinfo a
+            //select b.[Name] eventname, a.* from releaseinfo a
             //left join keywords b on a.keywords=b.[KeyWord]
             //where a.uid > 0 and a.kid = 3
             //and a.keywords in ('地震 塌方')
-            string sql = @"select b.[Name] eventname, a.* from v_releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+            string sql = @"select b.[Name] eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
                                     where a.uid > 0 and a.kid = " + kid;
             string eventName = keylist.Text;
             if (eventName != "全部" && eventName != "")
@@ -167,7 +167,7 @@ namespace Finder.Forms
             dataGridView1.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", Name = "title_link", DisplayIndex = 4, Width = 160 });
             foreach (DataGridViewColumn col in dataGridView1.Columns)
             {
-                switch (col.Name)
+                switch (col.Name.ToLower())
                 {
                     #region 调整列的隐藏与列序
                     case "uid":
@@ -225,12 +225,12 @@ namespace Finder.Forms
                         col.DisplayIndex = 10;
                         col.Visible = false;
                         break;
-                    case "sender":
+                    case "releasename":
                         col.HeaderText = "发布者";
                         col.DisplayIndex = 11;
                         col.Width = 160;
                         break;
-                    case "ReleaseDate":
+                    case "releasedate":
                         col.HeaderText = "发布时间";
                         col.DisplayIndex = 12;
                         col.Width = 160;
@@ -281,7 +281,7 @@ namespace Finder.Forms
         {
             if (e.RowIndex != dataGridView1.NewRowIndex)
             {
-                switch (dataGridView1.Columns[e.ColumnIndex].Name)
+                switch (dataGridView1.Columns[e.ColumnIndex].Name.ToLower())
                 {
                     case "title_link":
                         //设定正负向
