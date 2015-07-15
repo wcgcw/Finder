@@ -198,7 +198,7 @@ namespace Finder.Forms
         private void GetWebHrefData()
         {
             DataTable dt = new DataTable();
-            dt = cmd.GetTabel("select uid,name as 网站名称 ,url as 网站链接 ,likeurl as 相似链接 ,case pid when 1 then '博客' when 2 then '论坛' when 4 then '主流媒体'  else '贴吧' end as 网站类别 ,sheng as 省 ,shi as 市 ,xian as 县 from webaddress order by uid desc");
+            dt = cmd.GetTabel("select uid,name as 网站名称 ,url as 网站链接 ,likeurl as 相似链接 ,case pid when 1 then '博客' when 2 then '论坛' when 4 then '主流媒体'  else '贴吧' end as 网站类别 ,sheng as 省 ,shi as 市 ,xian as 县 from WebAddress order by uid desc");
             dataGridView1.DataSource = dt;
             dataGridView1.Columns[0].Visible = false;
             dataGridView1.Columns[1].Width = 160;

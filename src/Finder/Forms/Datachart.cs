@@ -20,310 +20,461 @@ namespace Finder.Forms
         }
 
         DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
-        
-        DataTable kwdt = new DataTable();
-
-        DataTable webdt = new DataTable();
-
-        private void tab0_Load()
-        {
-            int day = trackBar0.Value;
-            label0.Text = "最近" + day + "天的数据分析：";
-
-            string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and a.kid=0 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=0 and collectdate > '" + time + "' GROUP BY keyWords");
-            kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=0 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=0 and collectdate > '" + time + "' GROUP BY webaddress");
-            webdt = cmd.GetTabel(sql);
-
-            int l = kwdt.Rows.Count;
-            string[] x = new string[l];
-            int[] y = new int[l];
-            for (int i = 0; i < l; i++)
-            {
-                x[i] = kwdt.Rows[i][1].ToString();
-                y[i] = Convert.ToInt32(kwdt.Rows[i][0]);
-            }
-
-            chart10.Series[0].Points.DataBindXY(x, y);
-
-            l = webdt.Rows.Count;
-            string[] webx = new string[l];
-            int[] weby = new int[l];
-
-            for (int i = 0; i < l; i++)
-            {
-                webx[i] = webdt.Rows[i][1].ToString();
-                weby[i] = Convert.ToInt32(webdt.Rows[i][0]);
-            }
-
-            chart20.Series["Series"].Points.DataBindXY(webx, weby);
-        }
-
-        private void tab1_Load()
-        {
-            int day = trackBar1.Value;
-            label1.Text = "最近" + day + "天的数据分析：";
-
-            string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=1 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=1 and collectdate > '" + time + "' GROUP BY keyWords");
-            kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=1 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=1 and collectdate > '" + time + "' GROUP BY webaddress");
-            webdt = cmd.GetTabel(sql);
-
-            int l = kwdt.Rows.Count;
-            string[] x = new string[l];
-            int[] y = new int[l];
-            for (int i = 0; i < l; i++)
-            {
-                x[i]=kwdt.Rows[i][1].ToString();
-                y[i]=Convert.ToInt32(kwdt.Rows[i][0]);
-            }
-            
-            chart11.Series[0].Points.DataBindXY(x, y);
-
-            l = webdt.Rows.Count;
-            string[] webx = new string[l];
-            int[] weby = new int[l];
-
-            for (int i = 0; i < l; i++)
-            {
-                webx[i] = webdt.Rows[i][1].ToString();
-                weby[i] = Convert.ToInt32(webdt.Rows[i][0]);
-            }
-
-            chart21.Series["Series"].Points.DataBindXY(webx, weby);
-        }
-
-        private void tab2_Load()
-        {
-            int day = trackBar2.Value;
-            label2.Text = "最近" + day + "天的数据分析：";
-            string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=2 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=2 and collectdate > '" + time + "' GROUP BY keyWords");
-            kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=2 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=2 and collectdate > '" + time + "' GROUP BY webaddress");
-            webdt = cmd.GetTabel(sql);
-
-            int l = kwdt.Rows.Count;
-            string[] x = new string[l];
-            int[] y = new int[l];
-            for (int i = 0; i < l; i++)
-            {
-                x[i] = kwdt.Rows[i][1].ToString();
-                y[i] = Convert.ToInt32(kwdt.Rows[i][0]);
-            }
-
-            chart12.Series["Series"].Points.DataBindXY(x, y);
-
-            l = webdt.Rows.Count;
-            string[] webx = new string[l];
-            int[] weby = new int[l];
-
-            for (int i = 0; i < l; i++)
-            {
-                webx[i] = webdt.Rows[i][1].ToString();
-                weby[i] = Convert.ToInt32(webdt.Rows[i][0]);
-            }
-
-            chart22.Series["Series"].Points.DataBindXY(webx, weby);
-        }
-
-        private void tab3_Load()
-        {
-            int day = trackBar3.Value;
-            label3.Text = "最近" + day + "天的数据分析：";
-            string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-            string sql = @"select count(1),a.keyWords from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=3 and a.collectdate > '" + time + "' GROUP BY a.keyWords";
-            //kwdt = cmd.GetTabel("SELECT count(1),keyWords FROM releaseinfo where kid=3 and collectdate > '" + time + "' GROUP BY keyWords");
-            kwdt = cmd.GetTabel(sql);
-            sql = @"select count(1),a.webaddress from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null and  a.kid=3 and a.collectdate > '" + time + "' GROUP BY a.webaddress";
-            //webdt = cmd.GetTabel("SELECT count(1),webaddress FROM releaseinfo where kid=3 and collectdate > '" + time + "' GROUP BY webaddress");
-            webdt = cmd.GetTabel(sql);
-
-            int l = kwdt.Rows.Count;
-            string[] x = new string[l];
-            int[] y = new int[l];
-            for (int i = 0; i < l; i++)
-            {
-                x[i] = kwdt.Rows[i][1].ToString();
-                y[i] = Convert.ToInt32(kwdt.Rows[i][0]);
-            }
-
-            chart13.Series["Series"].Points.DataBindXY(x, y);
-
-            l = webdt.Rows.Count;
-            string[] webx = new string[l];
-            int[] weby = new int[l];
-
-            for (int i = 0; i < l; i++)
-            {
-                webx[i] = webdt.Rows[i][1].ToString();
-                weby[i] = Convert.ToInt32(webdt.Rows[i][0]);
-            }
-
-            chart23.Series["Series"].Points.DataBindXY(webx, weby);
-        }
-
-        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (tabControl1.SelectedIndex)
-            {
-                case 0:
-                    tab0_Load();
-                    break;
-                case 1:
-                    tab1_Load();
-                    break;
-                case 2:
-                    tab2_Load();
-                    break;
-                case 3:
-                    tab3_Load();
-                    break;
-            }
-
-        }
 
         private void Datachart_Load(object sender, EventArgs e)
         {
-            
-            string softVer = GlobalPars.GloPars.ContainsKey("SoftVer") ? GlobalPars.GloPars["SoftVer"].ToString() : "1";
-            if (softVer.Equals("1"))
+            kidlist.SelectedIndex = 4;  //事件类型 (默认选择全部)
+            kwlist.SelectedIndex = 0;   //事件名称 (启动时隐藏)
+
+            dateTimePicker1.Value = DateTime.Now.AddDays(-30);
+
+            #region 提取事件与关键字
+            DataTable kwdtAll = cmd.GetTabel("select name, keyword from keywords");
+            for (int i = 0; i < kwdtAll.Rows.Count; i++)
             {
-                tabControl1.TabPages.Remove(tabPage1);
-                tabControl1.TabPages.Remove(tabPage2);
-                tabControl1.TabPages.Remove(tabPage3);
+                string key = kwdtAll.Rows[i]["name"].ToString();
+                if (!dicKeywords.ContainsKey(key))
+                {
+                    List<string> keywords = new List<string>();
+                    keywords.Add(kwdtAll.Rows[i]["keyword"].ToString());
+                    dicKeywords.Add(key, keywords);
+                }
+                else
+                {
+                    dicKeywords[key].Add(kwdtAll.Rows[i]["keyword"].ToString());
+                }
             }
-            tab0_Load();
-        }
+            #endregion
 
-        private void trackBar0_ValueChanged(object sender, EventArgs e)
-        {
-            tab0_Load();
-        }
-
-        private void trackBar1_ValueChanged(object sender, EventArgs e)
-        {
-            tab1_Load();
-        }
-
-        private void trackBar2_ValueChanged(object sender, EventArgs e)
-        {
-            tab2_Load();
-        }
-
-        private void trackBar3_ValueChanged(object sender, EventArgs e)
-        {
-            tab3_Load();
         }
 
         private void allKwChart_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             HitTestResult htr = chart10.HitTest(e.X, e.Y);
-            int time = 0;
-            switch (tabControl1.SelectedIndex)
-            {
-                case 0:
-                    time = trackBar0.Value;
-                    htr = chart10.HitTest(e.X, e.Y);
-                    break;
-                case 1:
-                    time = trackBar1.Value;
-                    htr = chart11.HitTest(e.X, e.Y);
-                    break;
-                case 2:
-                    time = trackBar2.Value;
-                    htr = chart12.HitTest(e.X, e.Y);
-                    break;
-                case 3:
-                    time = trackBar3.Value;
-                    htr = chart13.HitTest(e.X, e.Y);
-                    break;
-            }
+            //int time = 0;
             if (htr.PointIndex < 0)
             {
                 return;
             }
             string keyword = "";
-            switch (tabControl1.SelectedIndex)
-            {
-                case 0:
-                    keyword = chart10.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 1:
-                    keyword = chart11.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 2:
-                    keyword = chart12.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 3:
-                    keyword = chart13.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-            }
-            ChartDetailData cdd = new ChartDetailData(tabControl1.SelectedIndex, keyword, "全网", time, "U");
+            keyword = chart10.Series["Series"].Points[htr.PointIndex].AxisLabel;
+
+            //ChartDetailData cdd = new ChartDetailData(0, keyword, "全网", time, "U");
+            ChartDetailData cdd = new ChartDetailData(keyword, "全网", "U", DataSelected);
             cdd.ShowDialog();
         }
 
-        private void allWebChart_MouseDoubleClick(object sender, MouseEventArgs e)
+        //private void allWebChart_MouseDoubleClick(object sender, MouseEventArgs e)
+        //{
+        //    HitTestResult htr = chart10.HitTest(e.X, e.Y);
+        //    int time = 0;
+        //    if (htr.PointIndex < 0)
+        //    {
+        //        return;
+        //    }
+        //    string webaddress = "";
+        //    webaddress = chart20.Series["Series"].Points[htr.PointIndex].AxisLabel;
+
+        //    ChartDetailData cdd = new ChartDetailData(0, webaddress, "全网", time, "D");
+        //    cdd.ShowDialog();
+        //}
+
+        private void kidlist_SelectedIndexChanged(object sender, EventArgs e)
         {
-            HitTestResult htr = chart10.HitTest(e.X, e.Y);
-            int time = 0;
-            switch (tabControl1.SelectedIndex)
+            string kid = kidlist.SelectedIndex.ToString();
+            if (kid == "4")
             {
-                case 0:
-                    time = trackBar0.Value;
-                    htr = chart20.HitTest(e.X, e.Y);
-                    break;
-                case 1:
-                    time = trackBar1.Value;
-                    htr = chart21.HitTest(e.X, e.Y);
-                    break;
-                case 2:
-                    time = trackBar2.Value;
-                    htr = chart22.HitTest(e.X, e.Y);
-                    break;
-                case 3:
-                    time = trackBar3.Value;
-                    htr = chart23.HitTest(e.X, e.Y);
-                    break;
+                //kwlist.Hide();
+                //label8.Hide();
+                kwlist.SelectedIndex = kwlist.Items.Count - 1;
             }
-            if (htr.PointIndex < 0)
+            else
             {
-                return;
+                string sql = "select uid , name from keywords where kid = '" + kid + "' group by name";
+                DataTable dt = cmd.GetTabel(sql);
+
+                kwlist.DisplayMember = "name";
+                kwlist.ValueMember = "uid";
+
+                DataRow dr = dt.NewRow();
+                dr["name"] = "全部";
+                dr["uid"] = "0";
+
+                dt.Rows.Add(dr);
+
+                kwlist.DataSource = dt;
+                kwlist.SelectedIndex = kwlist.Items.Count - 1;
+                kwlist.Show();
+                label8.Show();
             }
-            string webaddress = "";
-            switch (tabControl1.SelectedIndex)
-            {
-                case 0:
-                    webaddress = chart20.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 1:
-                    webaddress = chart21.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 2:
-                    webaddress = chart22.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-                case 3:
-                    webaddress = chart23.Series["Series"].Points[htr.PointIndex].AxisLabel;
-                    break;
-            }
-            ChartDetailData cdd = new ChartDetailData(tabControl1.SelectedIndex, webaddress, "全网", time, "D");
-            cdd.ShowDialog();
         }
+
+        private DataTable DataSelected = null;
+        Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string baseSql = @"select b.[Name] EventName, a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    where deleted=0 and a.uid > 0 ";
+
+            //事件类别
+            if (kidlist.SelectedIndex != kidlist.Items.Count - 1)
+            {
+                baseSql += " and a.kid = " + kidlist.SelectedIndex.ToString();
+                if (kwlist.SelectedIndex != kwlist.Items.Count - 1)
+                {
+                    string eventName = ((DataRowView)kwlist.SelectedItem)["name"].ToString();
+                    if (eventName != "全部" && eventName != "")
+                    {
+                        if (dicKeywords.ContainsKey(eventName))
+                        {
+                            if (dicKeywords[eventName] != null)
+                            {
+                                baseSql += " and a.keywords in(";
+                                foreach (var keyword in dicKeywords[eventName])
+                                {
+                                    baseSql += "'" + keyword + "',";
+                                }
+                                baseSql = baseSql.Substring(0, baseSql.Length - 1);
+                                baseSql += ")";
+                            }
+                        }
+                    }
+                }
+            }
+
+            string sql = baseSql + " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
+
+            DataTable dt = cmd.GetTabel(sql);
+
+            #region 默认精确匹配
+            List<DataRow> remove = new List<DataRow>();
+            foreach (DataRow row in dt.Rows)
+            {
+                string keywords = row["keywords"].ToString();
+                string title = row["title"].ToString();
+                string context = row["contexts"].ToString();
+                if (!string.IsNullOrEmpty(keywords))
+                {
+                    bool isFundTitle = true;
+                    bool isFundContext = true;
+                    string[] keyw = keywords.Split(' ');
+                    if (keyw != null && keyw.Count() > 0)
+                    {
+                        foreach (string key in keyw)
+                        {
+                            if (title.IndexOf(key) < 0)
+                            {
+                                isFundTitle = false;
+                            }
+                            if (context.IndexOf(key) < 0)
+                            {
+                                isFundContext = false;
+                            }
+                        }
+                    }
+                    if (!isFundTitle && !isFundContext)
+                    {
+                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                        remove.Add(row);
+                    }
+                }
+            }
+            if (remove != null && remove.Count > 0)
+            {
+                foreach (DataRow row in remove)
+                {
+                    dt.Rows.Remove(row);
+                }
+            }
+            #endregion
+
+            DataSelected = dt;
+
+            string charttitle = ""; ;
+            Dictionary<string, int> dicTotal = new Dictionary<string, int>();
+            if (kidlist.SelectedIndex != kidlist.Items.Count - 1 && kwlist.SelectedIndex != kwlist.Items.Count - 1)
+            {
+                //选择了具体的事件，分析事件下的关键字。
+                foreach (DataRow r in dt.Rows)
+                {
+                    string kw = r["keyWords"].ToString();
+                    if (!dicTotal.ContainsKey(kw))
+                    {
+                        dicTotal.Add(kw, 1);
+                    }
+                    else
+                    {
+                        dicTotal[kw] = dicTotal[kw] + 1;
+                    }
+                }
+                charttitle = string.Format("统计事件[{0}]的数据", kwlist.Text);
+            }
+            else
+            {
+                //没有选择具体事件，按事件进行统计
+                foreach (DataRow r in dt.Rows)
+                {
+                    string kw = r["EventName"].ToString();
+                    if (string.IsNullOrEmpty(kw)) kw = "未知（空）";
+                    if (!dicTotal.ContainsKey(kw))
+                    {
+                        dicTotal.Add(kw, 1);
+                    }
+                    else
+                    {
+                        dicTotal[kw] = dicTotal[kw] + 1;
+                    }
+                }
+                charttitle = string.Format("按事件统计", kwlist.Text);
+            }
+
+            DataTable dtTotal = new DataTable();
+            DataColumn col1 = new DataColumn();
+            col1.ColumnName = "columnname";
+            col1.DataType = typeof(string);
+            dtTotal.Columns.Add(col1);
+
+            DataColumn col2 = new DataColumn();
+            col2.ColumnName = "columndata";
+            col2.DataType = typeof(int);
+            dtTotal.Columns.Add(col2);
+            foreach (var k in dicTotal)
+            {
+                DataRow r = dtTotal.NewRow();
+                r["columnname"] = k.Key;
+                r["columndata"] = k.Value;
+
+                dtTotal.Rows.Add(r);
+            }
+            dtTotal.AcceptChanges();
+            ViewChart(dtTotal, charttitle);
+
+            //近30天的数据统计
+            int day = 30;
+            string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
+            string sql2 = baseSql + " and a.collectdate  > '" + time + "'";
+            DataTable dt2 = cmd.GetTabel(sql2);
+            #region 默认精确匹配
+            remove = new List<DataRow>();
+            foreach (DataRow row in dt2.Rows)
+            {
+                string keywords = row["keywords"].ToString();
+                string title = row["title"].ToString();
+                string context = row["contexts"].ToString();
+                if (!string.IsNullOrEmpty(keywords))
+                {
+                    bool isFundTitle = true;
+                    bool isFundContext = true;
+                    string[] keyw = keywords.Split(' ');
+                    if (keyw != null && keyw.Count() > 0)
+                    {
+                        foreach (string key in keyw)
+                        {
+                            if (title.IndexOf(key) < 0)
+                            {
+                                isFundTitle = false;
+                            }
+                            if (context.IndexOf(key) < 0)
+                            {
+                                isFundContext = false;
+                            }
+                        }
+                    }
+                    if (!isFundTitle && !isFundContext)
+                    {
+                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                        remove.Add(row);
+                    }
+                }
+            }
+            if (remove != null && remove.Count > 0)
+            {
+                foreach (DataRow row in remove)
+                {
+                    dt2.Rows.Remove(row);
+                }
+            }
+            #endregion
+            Dictionary<string, Dictionary<string, int>> dicTotal2 = new Dictionary<string, Dictionary<string, int>>();
+            if (kidlist.SelectedIndex != kidlist.Items.Count - 1 && kwlist.SelectedIndex != kwlist.Items.Count - 1)
+            {
+                //选择了具体的事件，分析事件下的关键字。
+                foreach (DataRow r in dt2.Rows)
+                {
+                    string kw = r["keyWords"].ToString();
+                    string date = r["collectdate"].ToString();
+                    if (date.Length > 10) date = date.Substring(0, 10);
+                    if (!dicTotal2.ContainsKey(kw))
+                    {
+                        dicTotal2.Add(kw, new Dictionary<string, int>());
+                        dicTotal2[kw].Add(date, 1);
+                    }
+                    else
+                    {
+                        if (!dicTotal2[kw].ContainsKey(date))
+                        {
+                            dicTotal2[kw].Add(date, 1);
+                        }
+                        else
+                        {
+                            dicTotal2[kw][date] = dicTotal2[kw][date] + 1;
+                        }
+
+                    }
+                }
+                charttitle = string.Format("统计事件[{0}]的数据", kwlist.Text);
+            }
+            else
+            {
+                //没有选择具体事件，按事件进行统计
+                foreach (DataRow r in dt2.Rows)
+                {
+                    string kw = r["EventName"].ToString();
+                    if (string.IsNullOrEmpty(kw)) kw = "未知（空）";
+                    string date = r["collectdate"].ToString();
+                    if (date.Length > 10) date = date.Substring(0, 10);
+                    if (!dicTotal2.ContainsKey(kw))
+                    {
+                        dicTotal2.Add(kw, new Dictionary<string, int>());
+                        dicTotal2[kw].Add(date, 1);
+                    }
+                    else
+                    {
+                        if (!dicTotal2[kw].ContainsKey(date))
+                        {
+                            dicTotal2[kw].Add(date, 1);
+                        }
+                        else
+                        {
+                            dicTotal2[kw][date] = dicTotal2[kw][date] + 1;
+                        }
+
+                    }
+                }
+                charttitle = string.Format("按事件统计", kwlist.Text);
+            }
+
+            this.chart20.Legends.Clear();
+            this.chart20.Legends.Add(new Legend("Stores")); //右边标签列
+            this.chart20.Legends["Stores"].Alignment = StringAlignment.Center;
+            this.chart20.Legends["Stores"].HeaderSeparator = System.Windows.Forms.DataVisualization.Charting.LegendSeparatorStyle.ThickLine;
+
+            chart20.Series.Clear();
+            foreach (var k in dicTotal2)
+            {
+                Series s = new Series();
+                s.ChartType = SeriesChartType.Line;
+
+                string[] x = new string[day];
+                int[] y = new int[day];
+                for (int d = 0; d < day; d++)
+                {
+                    string date = DateTime.Now.AddDays(0 - day + d + 1).ToString("yyyy-MM-dd");
+                    x[d] = date.Substring(5).Replace("-", "/");
+                    y[d] = 0;
+                    if (k.Value.ContainsKey(date))
+                    {
+                        y[d] = k.Value[date];
+                    }
+                }
+                s.Points.DataBindXY(x, y);
+
+                s.LegendText = k.Key;
+                chart20.Series.Add(s);
+            }
+
+
+            Dictionary<string, int> dicTotal3 = new Dictionary<string, int>();
+            //选择了具体的事件，分析事件下的关键字。
+            foreach (DataRow r in dt.Rows)
+            {
+                string kw = r["keyWords"].ToString();
+                if (!dicTotal3.ContainsKey(kw))
+                {
+                    dicTotal3.Add(kw, 1);
+                }
+                else
+                {
+                    dicTotal3[kw] = dicTotal3[kw] + 1;
+                }
+            }
+
+            int l = dicTotal3.Count;
+            string[] xx = new string[l];
+            int[] yy = new int[l];
+            int i = 0;
+            foreach (var k in dicTotal3)
+            {
+                xx[i] = k.Key;
+                yy[i] = k.Value;
+                i++;
+            }
+            chart10.Series[0].Points.DataBindXY(xx, yy);
+
+        }
+
+        //饼图   dt数据结构为 columndata(数据)  columnname(文本) 这两列
+        private void ViewChart(DataTable _dt, string _title)
+        {
+            this.chart1.Series.Clear();
+            this.chart1.Legends.Clear();
+
+            this.chart1.Series.Add(new Series("Data"));
+            this.chart1.Legends.Add(new Legend("Stores")); //右边标签列
+
+            this.chart1.Series["Data"].ChartType = SeriesChartType.Pie;
+            this.chart1.Series["Data"]["PieLabelStyle"] = "Outside";//Inside 数值显示在圆饼内 Outside 数值显示在圆饼外 Disabled 不显示数值
+
+            this.chart1.Series["Data"]["PieLineColor"] = "Black";
+
+
+            //this.ct_coll.Series["Data"].IsValueShownAsLabel = true;
+            //this.ct_coll.Series["Data"].IsVisibleInLegend = true;
+            //this.ct_coll.Series["Data"].ShadowOffset = 1;//阴影偏移量
+
+            this.chart1.Series["Data"].ToolTip = "#VAL{D} 次";//鼠标移动到上面显示的文字
+            this.chart1.Series["Data"].BackSecondaryColor = Color.DarkCyan;
+            this.chart1.Series["Data"].BorderColor = Color.DarkOliveGreen;
+            this.chart1.Series["Data"].LabelBackColor = Color.Transparent;
+
+            foreach (DataRow dr in _dt.Rows)
+            {
+                int ptIdx = this.chart1.Series["Data"].Points.AddY(Convert.ToDouble(dr["columndata"].ToString()));
+                DataPoint pt = this.chart1.Series["Data"].Points[ptIdx];
+                pt.LegendText = dr["columnname"].ToString() + " " + "#PERCENT{P2}" + " [ " + "#VAL{D} 条" + " ]";//右边标签列显示的文字
+                pt.Label = dr["columnname"].ToString() + " " + "#PERCENT{P2}" + " [ " + "#VAL{D} 条" + " ]"; //圆饼外显示的信息
+
+                //  pt.LabelToolTip = "#PERCENT{P2}";
+                //pt.LabelBorderColor = Color.Red;//文字背景色 
+            }
+
+            // this.ct_coll.Series["Data"].Label = "#PERCENT{P2}"; //
+            this.chart1.Series["Data"].Font = new Font("Segoe UI", 8.0f, FontStyle.Bold);
+            this.chart1.Series["Data"].Legend = "Stores"; //右边标签列显示信息
+            this.chart1.Legends["Stores"].Alignment = StringAlignment.Center;
+            this.chart1.Legends["Stores"].HeaderSeparator = System.Windows.Forms.DataVisualization.Charting.LegendSeparatorStyle.ThickLine;
+
+
+            this.chart1.Titles[0].Text = _title;
+            this.chart1.ChartAreas["ChartArea1"].AxisX.IsMarginVisible = false;
+            this.chart1.ChartAreas["ChartArea1"].Area3DStyle.Enable3D = true;
+
+            int int_count = _dt.AsEnumerable().Select(t => t.Field<int>("columndata")).Sum();
+            this.chart1.Titles[1].Text = string.Format("总条数: {0} 条", int_count);
+
+            /*
+                #VALX      显示当前图例的X轴的对应文本(或数据)
+    #VAL, #VALY,  显示当前图例的Y轴的对应文本(或数据)
+    #VALY2, #VALY3, 显示当前图例的辅助Y轴的对应文本(或数据)
+    #SER:      显示当前图例的名称
+    #LABEL       显示当前图例的标签文本
+    #INDEX      显示当前图例的索引
+    #PERCENT       显示当前图例的所占的百分比
+    #TOTAL      总数量
+    #LEGENDTEXT      图例文本
+                */
+        }
+
     }
 }

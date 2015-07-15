@@ -61,12 +61,13 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.lblSetTop = new System.Windows.Forms.Label();
-            this.lblCancelTop = new System.Windows.Forms.Label();
-            this.lblFocus = new System.Windows.Forms.Label();
             this.lblMainFocus = new System.Windows.Forms.Label();
-            this.lblCancelFocus = new System.Windows.Forms.Label();
+            this.lblFocus = new System.Windows.Forms.Label();
             this.txtTitle = new System.Windows.Forms.RichTextBox();
+            this.lblCancelFocus = new System.Windows.Forms.Label();
+            this.lblCancelTop = new System.Windows.Forms.Label();
+            this.lblSetTop = new System.Windows.Forms.Label();
+            this.lblCount = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.cmsSearch.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -428,6 +429,7 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lblCount);
             this.panel1.Controls.Add(this.kwlist);
             this.panel1.Controls.Add(this.dateTimePicker1);
             this.panel1.Controls.Add(this.searchTxt);
@@ -469,30 +471,18 @@
             this.panel2.Size = new System.Drawing.Size(995, 38);
             this.panel2.TabIndex = 27;
             // 
-            // lblSetTop
+            // lblMainFocus
             // 
-            this.lblSetTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblSetTop.AutoSize = true;
-            this.lblSetTop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSetTop.ForeColor = System.Drawing.Color.Blue;
-            this.lblSetTop.Location = new System.Drawing.Point(695, 11);
-            this.lblSetTop.Name = "lblSetTop";
-            this.lblSetTop.Size = new System.Drawing.Size(35, 12);
-            this.lblSetTop.TabIndex = 0;
-            this.lblSetTop.Text = "+置顶";
-            this.lblSetTop.Click += new System.EventHandler(this.lblSetTop_Click);
-            // 
-            // lblCancelTop
-            // 
-            this.lblCancelTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCancelTop.AutoSize = true;
-            this.lblCancelTop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblCancelTop.ForeColor = System.Drawing.Color.Gray;
-            this.lblCancelTop.Location = new System.Drawing.Point(739, 11);
-            this.lblCancelTop.Name = "lblCancelTop";
-            this.lblCancelTop.Size = new System.Drawing.Size(53, 12);
-            this.lblCancelTop.TabIndex = 0;
-            this.lblCancelTop.Text = "取消置顶";
+            this.lblMainFocus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblMainFocus.AutoSize = true;
+            this.lblMainFocus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblMainFocus.ForeColor = System.Drawing.Color.Red;
+            this.lblMainFocus.Location = new System.Drawing.Point(853, 11);
+            this.lblMainFocus.Name = "lblMainFocus";
+            this.lblMainFocus.Size = new System.Drawing.Size(59, 12);
+            this.lblMainFocus.TabIndex = 0;
+            this.lblMainFocus.Text = "+重点关注";
+            this.lblMainFocus.Click += new System.EventHandler(this.lblMainFocus_Click);
             // 
             // lblFocus
             // 
@@ -507,31 +497,6 @@
             this.lblFocus.Text = "+关注";
             this.lblFocus.Click += new System.EventHandler(this.lblFocus_Click);
             // 
-            // lblMainFocus
-            // 
-            this.lblMainFocus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMainFocus.AutoSize = true;
-            this.lblMainFocus.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblMainFocus.ForeColor = System.Drawing.Color.Red;
-            this.lblMainFocus.Location = new System.Drawing.Point(853, 11);
-            this.lblMainFocus.Name = "lblMainFocus";
-            this.lblMainFocus.Size = new System.Drawing.Size(59, 12);
-            this.lblMainFocus.TabIndex = 0;
-            this.lblMainFocus.Text = "+重点关注";
-            this.lblMainFocus.Click += new System.EventHandler(this.lblMainFocus_Click);
-            // 
-            // lblCancelFocus
-            // 
-            this.lblCancelFocus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblCancelFocus.AutoSize = true;
-            this.lblCancelFocus.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblCancelFocus.ForeColor = System.Drawing.Color.Gray;
-            this.lblCancelFocus.Location = new System.Drawing.Point(918, 11);
-            this.lblCancelFocus.Name = "lblCancelFocus";
-            this.lblCancelFocus.Size = new System.Drawing.Size(53, 12);
-            this.lblCancelFocus.TabIndex = 0;
-            this.lblCancelFocus.Text = "取消关注";
-            // 
             // txtTitle
             // 
             this.txtTitle.BackColor = System.Drawing.Color.White;
@@ -544,6 +509,55 @@
             this.txtTitle.TabIndex = 25;
             this.txtTitle.Tag = "9999";
             this.txtTitle.Text = "";
+            // 
+            // lblCancelFocus
+            // 
+            this.lblCancelFocus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCancelFocus.AutoSize = true;
+            this.lblCancelFocus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblCancelFocus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblCancelFocus.Location = new System.Drawing.Point(918, 11);
+            this.lblCancelFocus.Name = "lblCancelFocus";
+            this.lblCancelFocus.Size = new System.Drawing.Size(53, 12);
+            this.lblCancelFocus.TabIndex = 0;
+            this.lblCancelFocus.Text = "取消关注";
+            this.lblCancelFocus.Click += new System.EventHandler(this.lblCancelFocus_Click);
+            // 
+            // lblCancelTop
+            // 
+            this.lblCancelTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCancelTop.AutoSize = true;
+            this.lblCancelTop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblCancelTop.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblCancelTop.Location = new System.Drawing.Point(739, 11);
+            this.lblCancelTop.Name = "lblCancelTop";
+            this.lblCancelTop.Size = new System.Drawing.Size(53, 12);
+            this.lblCancelTop.TabIndex = 0;
+            this.lblCancelTop.Text = "取消置顶";
+            this.lblCancelTop.Click += new System.EventHandler(this.lblCancelTop_Click);
+            // 
+            // lblSetTop
+            // 
+            this.lblSetTop.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSetTop.AutoSize = true;
+            this.lblSetTop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblSetTop.ForeColor = System.Drawing.Color.Blue;
+            this.lblSetTop.Location = new System.Drawing.Point(695, 11);
+            this.lblSetTop.Name = "lblSetTop";
+            this.lblSetTop.Size = new System.Drawing.Size(35, 12);
+            this.lblSetTop.TabIndex = 0;
+            this.lblSetTop.Text = "+置顶";
+            this.lblSetTop.Click += new System.EventHandler(this.lblSetTop_Click);
+            // 
+            // lblCount
+            // 
+            this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCount.AutoSize = true;
+            this.lblCount.Location = new System.Drawing.Point(861, 72);
+            this.lblCount.Name = "lblCount";
+            this.lblCount.Size = new System.Drawing.Size(131, 12);
+            this.lblCount.TabIndex = 38;
+            this.lblCount.Text = "共计检索到XXXXX条结果";
             // 
             // Filterdata
             // 
@@ -603,5 +617,6 @@
         private System.Windows.Forms.Label lblCancelTop;
         private System.Windows.Forms.Label lblSetTop;
         private System.Windows.Forms.RichTextBox txtTitle;
+        private System.Windows.Forms.Label lblCount;
     }
 }

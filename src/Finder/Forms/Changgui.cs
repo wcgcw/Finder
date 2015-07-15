@@ -205,7 +205,7 @@ namespace Finder.Forms
                         col.DisplayIndex = 6;
                         col.Width = 480;
                         break;
-                    case "webaddress":
+                    case "webname":
                         col.HeaderText = "来源";
                         col.DisplayIndex = 7;
                         col.Width = 120;
