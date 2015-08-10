@@ -42,7 +42,7 @@ namespace Finder.Forms
                 }
             }
         }
-        private void readData()
+        public void readData()
         {
             string keywords_k0 = "select Name from keywords where kid=0 group by name limit 10";
             string keywords_k1 = "select Name from keywords where kid=1 group by name limit 10";
@@ -167,7 +167,7 @@ namespace Finder.Forms
 
         private void Home_MouseDown(object sender, MouseEventArgs e)
         {
-            readData();
+            //readData();
         }
 
         //private void Home_Resize(object sender, EventArgs e)

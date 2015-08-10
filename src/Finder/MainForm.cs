@@ -574,6 +574,13 @@ namespace Finder
             uC_Menu9.BackgroundImage = Properties.Resources.a1;
             uC_Menu9.FontColor = Color.White;
             um = uC_Menu9;
+
+            if (Comm.isChangedEvents)
+            {
+                home.readData();
+                Comm.isChangedEvents = false;
+            }
+
             home.Show();
         }
         public void uC_Menu8_UC_Click(object sender, EventArgs e)

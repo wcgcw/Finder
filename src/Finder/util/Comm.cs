@@ -16,6 +16,8 @@ namespace Finder.util
 {
     public class Comm
     {
+        public static bool isChangedEvents = false;
+
         public static void VisiteUrl(string url)
         {
             System.Diagnostics.Process.Start(url);

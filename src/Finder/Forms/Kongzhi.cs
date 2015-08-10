@@ -483,6 +483,8 @@ namespace Finder.Forms
                 //cmd.ExecuteNonQuery(sql);
 
                 GetKeyWordData();
+                
+                Comm.isChangedEvents = true;
             }
         }
 
@@ -503,6 +505,8 @@ namespace Finder.Forms
             AddKeyWord(KeyWordName.Text,keywords.Text, messageAlarm.Checked ? 1 : 0, musicAlarm.Checked ? 1 : 0);
             ClearKeyWordForm();
             GetKeyWordData();
+
+            Comm.isChangedEvents = true;
         }
 
         private void Kongzhi_Load(object sender, EventArgs e)

@@ -98,16 +98,16 @@ namespace Finder.Forms
             #endregion
 
             lblSetTop.Visible = false;
-            lblCancelTop.Visible = false;
+            lblCancel.Visible = false;
             lblFocus.Visible = false;
             lblMainFocus.Visible = false;
-            lblCancelFocus.Visible = false;
+            lblDelete.Visible = false;
 
             lblSetTop.ForeColor = Color.Blue;
-            lblCancelTop.ForeColor = Color.FromArgb(64,64,64);
+            lblCancel.ForeColor = Color.FromArgb(64,64,64);
             lblFocus.ForeColor = Color.Green;
             lblMainFocus.ForeColor = Color.Red;
-            lblCancelFocus.ForeColor = Color.FromArgb(64, 64, 64);
+            lblDelete.ForeColor = Color.FromArgb(64, 64, 64);
 
             txtTitle.Text = "";
             lblCount.Text = "";
@@ -681,34 +681,34 @@ where deleted=0";
                         {
                             case "置顶":
                                 lblSetTop.Enabled = false;
-                                lblCancelTop.Enabled = true;
+                                lblCancel.Enabled = true;
                                 lblFocus.Enabled = false;
                                 lblMainFocus.Enabled = false;
-                                lblCancelFocus.Enabled = false;
+                                lblDelete.Enabled = false;
                                 break;
                             case "关注":
                                 lblSetTop.Enabled = false;
-                                lblCancelTop.Enabled = false;
+                                lblCancel.Enabled = false;
                                 lblFocus.Enabled = false;
                                 lblMainFocus.Enabled = true;
-                                lblCancelFocus.Enabled = true;
+                                lblDelete.Enabled = true;
                                 break;
                             case "重点关注":
                                 lblSetTop.Enabled = true;
-                                lblCancelTop.Enabled = false;
+                                lblCancel.Enabled = false;
                                 lblFocus.Enabled = true;
                                 lblMainFocus.Enabled = false;
-                                lblCancelFocus.Enabled = true;
+                                lblDelete.Enabled = true;
                                 break;
                         }
                     }
                     else
                     {
                         lblSetTop.Enabled = true;
-                        lblCancelTop.Enabled = false;
+                        lblCancel.Enabled = false;
                         lblFocus.Enabled = true;
                         lblMainFocus.Enabled = true;
-                        lblCancelFocus.Enabled = false;
+                        lblDelete.Enabled = false;
                     }
                 }
 
@@ -759,6 +759,27 @@ where deleted=0";
                 }
                 dataView.Select(0, 0);
                 txtTitle.Select(0, 0);
+
+                #region 显示评论
+                CommentView.Text = "";
+                string sql = "select uid , CommentID, Comment, SubmitDate from UserComment where uid ={0} and Deleted = 0 order by SubmitDate desc";
+                sql=string.Format(sql, dataGridView1.CurrentRow.Cells["uid"].Value.ToString());
+                DataTable dt = cmd.GetTabel(sql);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        string date = row["SubmitDate"].ToString();
+                        string comment = row["Comment"].ToString();
+
+                        CommentView.Text += "时间：" +  date + "\r\n";
+                        CommentView.Text +="内容：" + comment + "\r\n";
+                        CommentView.Text += "-----------------------------------\r\n";
+                    }
+                }
+
+                #endregion
+
             }
         }
 
@@ -784,10 +805,10 @@ where deleted=0";
             GetResultData();
 
             lblSetTop.Visible = true;
-            lblCancelTop.Visible = true;
+            lblCancel.Visible = true;
             lblFocus.Visible = true;
             lblMainFocus.Visible = true;
-            lblCancelFocus.Visible = true;
+            lblDelete.Visible = true;
 
             FormateFoucsStatus();
         }
@@ -1119,26 +1140,7 @@ where deleted=0";
             }
         }
 
-        private void lblCancelTop_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
-            {
-                DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
-                string uid = dvs[0].Cells["uid"].Value.ToString();
-                string dataSource = dvs[0].Cells["dataSource"].Value.ToString();
-                if (dataSource == "1")
-                {
-                    //数据来源于筛选表
-                    string sql = @"update FilterReleaseInfo set FocusLevel='', ActionDate='{0}' where uid ={1}";
-                    sql = string.Format(sql, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
-                }
-            }
-        }
-
-        private void lblCancelFocus_Click(object sender, EventArgs e)
+        private void lblCancel_Click(object sender, EventArgs e)
         {
             if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
             {
@@ -1168,36 +1170,61 @@ where deleted=0";
                     {
                         case "置顶":
                             lblSetTop.Enabled = false;
-                            lblCancelTop.Enabled = true;
+                            lblCancel.Enabled = true;
                             lblFocus.Enabled = false;
                             lblMainFocus.Enabled = false;
-                            lblCancelFocus.Enabled = false;
+                            lblDelete.Enabled = false;
                             break;
                         case "关注":
                             lblSetTop.Enabled = false;
-                            lblCancelTop.Enabled = false;
+                            lblCancel.Enabled = false;
                             lblFocus.Enabled = false;
                             lblMainFocus.Enabled = true;
-                            lblCancelFocus.Enabled = true;
+                            lblDelete.Enabled = true;
                             break;
                         case "重点关注":
                             lblSetTop.Enabled = true;
-                            lblCancelTop.Enabled = false;
+                            lblCancel.Enabled = false;
                             lblFocus.Enabled = true;
                             lblMainFocus.Enabled = false;
-                            lblCancelFocus.Enabled = true;
+                            lblDelete.Enabled = true;
                             break;
                     }
                 }
                 else
                 {
                     lblSetTop.Enabled = true;
-                    lblCancelTop.Enabled = false;
+                    lblCancel.Enabled = false;
                     lblFocus.Enabled = true;
                     lblMainFocus.Enabled = true;
-                    lblCancelFocus.Enabled = false;
+                    lblDelete.Enabled = false;
                 }
             }
+        }
+
+        private void lblDelete_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSubmit_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(txtComment.Text.Trim()))
+            {
+                MessageBox.Show("内容不能为空。");
+                txtComment.Focus();
+                return;
+            }
+
+            DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
+            string uid = dvs[0].Cells["uid"].Value.ToString();
+            //数据来源于筛选表
+            string sql = @"insert into UserComment(uid,Comment,SubmitDate,UserName,Deleted) values({0},'{1}','{2}','{3}',0)";
+            sql = string.Format(sql, uid, txtComment.Text.Trim(), DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), "");
+            cmd.ExecuteNonQueryInt(sql);
+
+            CommentView.Text = "";
+
         }
 
     }
