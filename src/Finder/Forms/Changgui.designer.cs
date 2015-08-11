@@ -44,7 +44,6 @@
             this.label6 = new System.Windows.Forms.Label();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
-            this.chkPrecise = new System.Windows.Forms.CheckBox();
             this.dataView = new System.Windows.Forms.RichTextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.cmsSearch.SuspendLayout();
@@ -162,16 +161,6 @@
             this.label5.TabIndex = 60;
             this.label5.Text = "抓取时间：";
             // 
-            // chkPrecise
-            // 
-            this.chkPrecise.AutoSize = true;
-            this.chkPrecise.Location = new System.Drawing.Point(265, 16);
-            this.chkPrecise.Name = "chkPrecise";
-            this.chkPrecise.Size = new System.Drawing.Size(72, 16);
-            this.chkPrecise.TabIndex = 65;
-            this.chkPrecise.Text = "精确匹配";
-            this.chkPrecise.UseVisualStyleBackColor = true;
-            // 
             // dataView
             // 
             this.dataView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -259,7 +248,6 @@
             this.ClientSize = new System.Drawing.Size(1001, 704);
             this.Controls.Add(this.dataView);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.chkPrecise);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -293,7 +281,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.CheckBox chkPrecise;
         private System.Windows.Forms.RichTextBox dataView;
         private System.Windows.Forms.DataGridView dataGridView1;
     }

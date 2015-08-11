@@ -2199,7 +2199,7 @@ namespace Finder.Forms
 
                 Bitmap image = util.WebSnap.StartSnap(this.dvAll.SelectedRows[0].Cells[4].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {
@@ -2220,7 +2220,7 @@ namespace Finder.Forms
 
                 Bitmap image = util.WebSnap.StartSnap(this.dvBlog.SelectedRows[0].Cells[4].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {
@@ -2242,7 +2242,7 @@ namespace Finder.Forms
 
                 Bitmap image = util.WebSnap.StartSnap(this.dvBlog.SelectedRows[0].Cells[4].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {
@@ -2263,7 +2263,7 @@ namespace Finder.Forms
 
                 Bitmap image = util.WebSnap.StartSnap(this.dvWBlog.SelectedRows[0].Cells[4].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {
@@ -2284,7 +2284,7 @@ namespace Finder.Forms
 
                 Bitmap image = util.WebSnap.StartSnap(this.dvWeb.SelectedRows[0].Cells[4].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {

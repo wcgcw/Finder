@@ -102,9 +102,12 @@ namespace Finder.Forms
             lblFocus.Visible = false;
             lblMainFocus.Visible = false;
             lblDelete.Visible = false;
+            lblPre.Visible = false;
+            lblNext.Visible = false;
+            panel4.Visible = false;
 
             lblSetTop.ForeColor = Color.Blue;
-            lblCancel.ForeColor = Color.FromArgb(64,64,64);
+            lblCancel.ForeColor = Color.FromArgb(64, 64, 64);
             lblFocus.ForeColor = Color.Green;
             lblMainFocus.ForeColor = Color.Red;
             lblDelete.ForeColor = Color.FromArgb(64, 64, 64);
@@ -117,12 +120,14 @@ namespace Finder.Forms
 
         private void GetResultData()
         {
-            string sql = @"select 2 as dataSource, 5 as dataSort, b.[Name] as EventName, 
-a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
-a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted , '' as memo, '' as FocusLevel, '' as ActionDate
-from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-where deleted=0 and a.uid > 0";
+            string sql = @"select ifnull(c.[FocusLevel],'99') FocusLevel, ifnull(c.[ActionDate], '') ActionDate, b.[Name] as EventName, 
+                                    a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
+                                    from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    left join FilterReleaseInfo c on a.uid=c.uid
+                                    where a.deleted=0 and a.uid > 0";
 
+            #region 拼接sql的条件
             if (searchTxt.Text.ToString().Length > 0)
             {
                 sql += " and a.contexts like '%" + searchTxt.Text.ToString() + "%'";
@@ -174,7 +179,8 @@ where deleted=0 and a.uid > 0";
             }
 
             sql += " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
-            sql += " and b.[Name] is not null  order by a.ReleaseDate desc";
+            sql += " and b.[Name] is not null  order by FocusLevel, ActionDate desc, a.collectdate desc";
+            #endregion
 
             DataTable dt = cmd.GetTabel(sql);
 
@@ -220,105 +226,15 @@ where deleted=0 and a.uid > 0";
             }
             #endregion
 
-            //将置顶的数据添加进来
-
-            string focusSql = @"select  1 as dataSource, case focuslevel when '置顶' then 1 when '重点关注' then 2 when '关注' then 3 else 4 end as dataSort,EventName, 
-uid,title,contexts,releasedate,infosource,keywords,releasename,collectdate,snapshot,webname,
-pid,part,reposts,comments,kid,sheng,shi,xian,deleted ,memo,FocusLevel,ActionDate
-from FilterReleaseInfo 
-where deleted=0";
-
-            if (searchTxt.Text.ToString().Length > 0)
-            {
-                focusSql += " and contexts like '%" + searchTxt.Text.ToString() + "%'";
-            }
-            //事件类别
-            if (pidlist.SelectedIndex != pidlist.Items.Count - 1)
-            {
-                focusSql += " and pid = " + ((DataRowView)pidlist.SelectedItem)["pid"].ToString();
-            }
-
-            if (kidlist.SelectedIndex != kidlist.Items.Count - 1)
-            {
-                focusSql += " and kid = " + kidlist.SelectedIndex.ToString();
-                if (kwlist.SelectedIndex != kwlist.Items.Count - 1)
-                {
-                    string eventName = ((DataRowView)kwlist.SelectedItem)["name"].ToString();
-                    if (eventName != "全部" && eventName != "")
-                    {
-                        if (dicKeywords.ContainsKey(eventName))
-                        {
-                            if (dicKeywords[eventName] != null)
-                            {
-                                focusSql += " and keywords in(";
-                                foreach (var keyword in dicKeywords[eventName])
-                                {
-                                    focusSql += "'" + keyword + "',";
-                                }
-                                focusSql = focusSql.Substring(0, focusSql.Length - 1);
-                                focusSql += ")";
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (((DataRowView)shenglist.SelectedItem)["id"].ToString() != "0")
-            {
-                focusSql += " and sheng = '" + ((DataRowView)shenglist.SelectedItem)["name"].ToString() + "'";
-
-                if (((DataRowView)shilist.SelectedItem)["id"].ToString() != "0")
-                {
-                    focusSql += " and shi = '" + ((DataRowView)shilist.SelectedItem)["name"].ToString() + "'";
-
-                    if (((DataRowView)xianlist.SelectedItem)["id"].ToString() != "0")
-                    {
-                        focusSql += " and xian = '" + ((DataRowView)xianlist.SelectedItem)["name"].ToString() + "'";
-                    }
-                }
-            }
-
-            focusSql += " and collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
-
-            DataTable dtFocus = cmd.GetTabel(focusSql);
-
-            remove = new List<DataRow>();
-            foreach (DataRow row in dt.Rows)
-            {
-                DataRow[] rows = dtFocus.Select("uid=" + row["uid"].ToString());
-                if (rows != null && rows.Length > 0)
-                {
-                    remove.Add(row);
-                }
-            }
-            if (remove != null && remove.Count > 0)
-            {
-                foreach (DataRow row in remove)
-                {
-                    dt.Rows.Remove(row);
-                }
-            }
-
-            DataTable dtMerge = null;
-            if (dtFocus == null || dtFocus.Rows.Count == 0)
-            {
-                dtMerge = dt;
-            }
-            else
-            {
-                dtFocus.Merge(dt);
-                dtMerge = dtFocus;
-            }
-
-            dtMerge.DefaultView.Sort = "dataSource, dataSort, actiondate desc, collectdate desc";
-
             dataGridView1.DataSource = null;
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = dtMerge;
+            dataGridView1.DataSource = dt;
 
-            lblCount.Text = string.Format("共计检索到 {0} 条结果", dtMerge.Rows.Count);
-
+            this.dataGridView1.SelectionChanged -= new System.EventHandler(this.dataGridView1_SelectionChanged);
             FormatDataView();
+            this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+
+            lblCount.Text = string.Format("共计检索到 {0} 条结果", dt.Rows.Count);
         }
 
         private DataTable MergeTable(DataTable dt1, DataTable dt2)
@@ -452,118 +368,121 @@ where deleted=0";
             dataGridView1.Columns.CopyTo(array, 0);
             dataGridView1.Columns.Clear();
 
+            int order = 12;
             foreach (DataGridViewColumn col in array)
             {
                 switch (col.Name.ToLower())
                 {
                     #region 调整列的隐藏与列序
-                    case "uid":
-                        col.DisplayIndex = 0;
-                        col.Visible = false;
-                        break;
                     case "focuslevel":
                         col.HeaderText = "关注度";
-                        col.DisplayIndex = 1;
+                        col.DisplayIndex = 0;
                         col.Width = 120;
                         break;
                     case "eventname":
                         col.HeaderText = "事件名称";
-                        col.DisplayIndex = 2;
+                        col.DisplayIndex = 1;
                         col.Width = 120;
                         break;
                     case "keywords":
                         col.HeaderText = "关键字";
-                        col.DisplayIndex = 3;
-                        col.Visible = false;
-                        break;
-                    case "title":
-                        col.HeaderText = "标题_txt";
-                        col.DisplayIndex = 4;
-                        col.Width = 260;
+                        col.DisplayIndex = 2;
                         col.Visible = false;
                         break;
                     case "title_link":
                         col.HeaderText = "标题";
-                        col.DisplayIndex = 5;
+                        col.DisplayIndex = 3;
                         col.Width = 260;
-                        break;
-                    case "infosource":
-                        col.HeaderText = "链接";
-                        col.DisplayIndex = 6;
-                        col.Visible = false;
                         break;
                     case "contexts":
                         col.HeaderText = "内容";
-                        col.DisplayIndex = 7;
+                        col.DisplayIndex = 4;
                         col.Width = 480;
                         break;
                     case "webname":
                         col.HeaderText = "来源";
-                        col.DisplayIndex = 8;
+                        col.DisplayIndex = 5;
                         col.Width = 120;
-                        break;
-                    case "sheng":
-                        col.HeaderText = "区域";
-                        col.DisplayIndex = 9;
-                        col.Width = 160;
-                        break;
-                    case "shi":
-                        col.HeaderText = "市";
-                        col.DisplayIndex = 10;
-                        col.Visible = false;
-                        break;
-                    case "xian":
-                        col.HeaderText = "县";
-                        col.DisplayIndex = 11;
-                        col.Visible = false;
                         break;
                     case "releasename":
                         col.HeaderText = "发布者";
-                        col.DisplayIndex = 12;
+                        col.DisplayIndex = 6;
                         col.Width = 160;
                         break;
                     case "releasedate":
                         col.HeaderText = "发布时间";
-                        col.DisplayIndex = 13;
+                        col.DisplayIndex = 7;
                         col.Width = 160;
-                        break;
-                    case "reposts":
-                        col.HeaderText = "转发量";
-                        col.DisplayIndex = 14;
-                        col.Visible = false;
-                        break;
-                    case "comments":
-                        col.HeaderText = "评论数";
-                        col.DisplayIndex = 15;
-                        col.Visible = false;
                         break;
                     case "pid":
                         col.HeaderText = "网站类别";
-                        col.DisplayIndex = 16;
+                        col.DisplayIndex = 8;
                         col.Width = 80;
                         break;
                     case "kid":
                         col.HeaderText = "事件类别";
-                        col.DisplayIndex = 17;
+                        col.DisplayIndex = 9;
                         col.Width = 80;
                         break;
                     case "collectdate":
                         col.HeaderText = "抓取时间";
-                        col.DisplayIndex = 18;
+                        col.DisplayIndex = 10;
                         col.Width = 160;
-                        break;
-                    case "part":
-                        col.HeaderText = "正负预判-txt";
-                        col.DisplayIndex = 19;
-                        col.Width = 80;
-                        col.Visible = false;
                         break;
                     case "part_img":
                         col.HeaderText = "正负预判";
-                        col.DisplayIndex = 20;
+                        col.DisplayIndex = 11;
                         col.Width = 80;
                         break;
+                    case "uid":
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "title":
+                        col.HeaderText = "标题_txt";
+                        col.DisplayIndex = order++;
+                        col.Width = 260;
+                        col.Visible = false;
+                        break;
+                    case "infosource":
+                        col.HeaderText = "链接";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "sheng":
+                        col.HeaderText = "区域";
+                        col.DisplayIndex = order++;
+                        col.Width = 160;
+                        col.Visible = false;
+                        break;
+                    case "shi":
+                        col.HeaderText = "市";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "xian":
+                        col.HeaderText = "县";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "reposts":
+                        col.HeaderText = "转发量";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "comments":
+                        col.HeaderText = "评论数";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "part":
+                        col.HeaderText = "正负预判-txt";
+                        col.DisplayIndex = order++;
+                        col.Width = 80;
+                        col.Visible = false;
+                        break;
                     default:
+                        col.DisplayIndex = order++;
                         col.Visible = false;
                         break;
                     #endregion
@@ -583,14 +502,21 @@ where deleted=0";
                         string txtFocus = dataGridView1.Rows[e.RowIndex].Cells["focuslevel"].Value.ToString();
                         switch (txtFocus)
                         {
-                            case "置顶":
+                            case "1":
+                                e.Value = "置顶";
                                 e.CellStyle.ForeColor = Color.Blue;
                                 break;
-                            case "关注":
+                            case "2":
+                                e.Value = "重点关注";
+                                e.CellStyle.ForeColor = Color.Red;
+                                break;
+                            case "3":
+                                e.Value = "关注";
                                 e.CellStyle.ForeColor = Color.Green;
                                 break;
-                            case "重点关注":
-                                e.CellStyle.ForeColor = Color.Red;
+                            case "99":
+                                e.Value = "";
+                                e.CellStyle.ForeColor = Color.Green;
                                 break;
                         }
                         e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -672,49 +598,9 @@ where deleted=0";
         {
             if (dataGridView1.SelectedRows.Count != 0)
             {
-                if(dataGridView1.CurrentRow!=null)
-                {
-                    string level = dataGridView1.CurrentRow.Cells["focuslevel"].Value.ToString();
-                    if (!string.IsNullOrEmpty(level))
-                    {
-                        switch (level)
-                        {
-                            case "置顶":
-                                lblSetTop.Enabled = false;
-                                lblCancel.Enabled = true;
-                                lblFocus.Enabled = false;
-                                lblMainFocus.Enabled = false;
-                                lblDelete.Enabled = false;
-                                break;
-                            case "关注":
-                                lblSetTop.Enabled = false;
-                                lblCancel.Enabled = false;
-                                lblFocus.Enabled = false;
-                                lblMainFocus.Enabled = true;
-                                lblDelete.Enabled = true;
-                                break;
-                            case "重点关注":
-                                lblSetTop.Enabled = true;
-                                lblCancel.Enabled = false;
-                                lblFocus.Enabled = true;
-                                lblMainFocus.Enabled = false;
-                                lblDelete.Enabled = true;
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        lblSetTop.Enabled = true;
-                        lblCancel.Enabled = false;
-                        lblFocus.Enabled = true;
-                        lblMainFocus.Enabled = true;
-                        lblDelete.Enabled = false;
-                    }
-                }
-
                 if (dataGridView1.CurrentCell == null) return;
                 string title = dataGridView1.CurrentCell.OwningRow.Cells["title"].Value.ToString();
-                
+
                 //设置标题
                 txtTitle.Text = "标题：" + title;
                 txtTitle.Select(3, title.Length);
@@ -763,7 +649,7 @@ where deleted=0";
                 #region 显示评论
                 CommentView.Text = "";
                 string sql = "select uid , CommentID, Comment, SubmitDate from UserComment where uid ={0} and Deleted = 0 order by SubmitDate desc";
-                sql=string.Format(sql, dataGridView1.CurrentRow.Cells["uid"].Value.ToString());
+                sql = string.Format(sql, dataGridView1.CurrentRow.Cells["uid"].Value.ToString());
                 DataTable dt = cmd.GetTabel(sql);
                 if (dt != null && dt.Rows.Count > 0)
                 {
@@ -772,13 +658,15 @@ where deleted=0";
                         string date = row["SubmitDate"].ToString();
                         string comment = row["Comment"].ToString();
 
-                        CommentView.Text += "时间：" +  date + "\r\n";
-                        CommentView.Text +="内容：" + comment + "\r\n";
+                        CommentView.Text += "时间：" + date + "\r\n";
+                        CommentView.Text += "内容：" + comment + "\r\n";
                         CommentView.Text += "-----------------------------------\r\n";
                     }
                 }
-
                 #endregion
+
+                //设置按钮
+                FormateFoucsStatus();
 
             }
         }
@@ -809,6 +697,9 @@ where deleted=0";
             lblFocus.Visible = true;
             lblMainFocus.Visible = true;
             lblDelete.Visible = true;
+            lblPre.Visible = true;
+            lblNext.Visible = true;
+            panel4.Visible = true;
 
             FormateFoucsStatus();
         }
@@ -914,7 +805,7 @@ where deleted=0";
 
                 Bitmap image = util.WebSnap.StartSnap(this.dataGridView1.SelectedRows[0].Cells["infosource"].Value.ToString());
                 image.Save(temp);
-                MessageBox.Show("证据保存成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("证据保存成功！", "提示");
             }
             catch (Exception ex)
             {
@@ -1008,42 +899,107 @@ where deleted=0";
             }
         }
 
+        private bool DeleteData()
+        {
+            if (MessageBox.Show("确定要删除选定的数据吗？删除后将无法恢复", "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+            {
+                DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
+                StringBuilder sb = new StringBuilder("update ReleaseInfo set deleted=1 where uid in (");
+                StringBuilder sb1 = new StringBuilder();
+                List<string> removes = new List<string>();
+                foreach (DataGridViewRow dr in dvs)
+                {                    
+                    string uid = dr.Cells["uid"].Value.ToString();
+                    sb1.Append("," + uid);
+
+                    removes.Add(uid);                        
+                }
+
+                string nextUid = "";
+                if (removes.Count > 0)
+                {
+                    bool fund = false;
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), removes[0]) == 0)
+                        {
+                            fund = true;                            
+                        }
+                        if (fund)
+                        {
+                            if (string.Compare(row.Cells["uid"].Value.ToString(), removes[0]) != 0 && !removes.Contains(row.Cells["uid"].Value.ToString()))
+                            {
+                                nextUid = row.Cells["uid"].Value.ToString();
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                sb.Append(sb1.Length > 1 ? sb1.ToString().Substring(1) : sb1.ToString());
+                sb.Append(")");
+                if (sb.Length > 48)
+                {
+                    cmd.ExecuteNonQueryInt(sb.ToString());
+                }
+                GetResultData();
+
+                if (!string.IsNullOrEmpty(nextUid))
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), nextUid) == 0)
+                        {
+                            dataGridView1.CurrentCell = row.Cells[0];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[0];
+                }
+            }
+            return true;
+        }
+
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Delete)
             {
-                if (MessageBox.Show("确定要删除选定的数据吗？删除后将无法恢复", "警告", MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
-                {
-                    DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
-                    StringBuilder sb = new StringBuilder("update ReleaseInfo set deleted=1 where uid in (");
-                    //StringBuilder wb_sb = new StringBuilder("update ReleaseInfowb set deleted=1 where uid in (");
-                    StringBuilder sb1 = new StringBuilder();
-                    //StringBuilder wb_sb1 = new StringBuilder();
-                    foreach (DataGridViewRow dr in dvs)
-                    {
-                        string uid = dr.Cells["uid"].Value.ToString();
-                        string pid = dr.Cells["pid"].Value.ToString();
-                        sb1.Append("," + uid);
-                    }
-                    sb.Append(sb1.Length > 1 ? sb1.ToString().Substring(1) : sb1.ToString());
-                    //wb_sb.Append(wb_sb1.Length > 1 ? wb_sb1.ToString().Substring(1) : wb_sb1.ToString());
-                    sb.Append(")");
-                    //wb_sb.Append(")");
-                    if (sb.Length > 48)
-                    {
-                        cmd.ExecuteNonQueryInt(sb.ToString());
-                    }
-                    //if (wb_sb.Length > 50)
-                    //{
-                    //    cmd.ExecuteNonQueryInt(wb_sb.ToString());
-                    //}
-                    GetResultData();
-                }
+                DeleteData();
             }
         }
 
         private void kwlist_SelectedIndexChanged(object sender, EventArgs e)
         {
+        }
+
+        private bool SetRecordFocusLevel(string uid, int focusLevel)
+        {
+            string sql = @"select count(*) from FilterReleaseInfo where uid ={0}";
+            sql = string.Format(sql, uid);
+            DataTable dt = cmd.GetTabel(sql);
+            if (dt != null && dt.Rows.Count > 0)
+            {
+                int count = 0;
+                if (int.TryParse(dt.Rows[0][0].ToString(), out count))
+                {
+                    sql = "";
+                    if (count > 0)
+                    {
+                        sql = @"update FilterReleaseInfo set FocusLevel='{0}', ActionDate='{1}' where uid ={2}";
+                        sql = string.Format(sql, focusLevel, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
+                    }
+                    else
+                    {
+                        sql = @"insert into FilterReleaseInfo(FocusLevel, uid, ActionDate) values({0}, {1}, '{2}')";
+                        sql = string.Format(sql, focusLevel, uid, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    }
+                    cmd.ExecuteNonQueryInt(sql);
+                }
+            }
+            return true;
         }
 
         private void lblSetTop_Click(object sender, EventArgs e)
@@ -1052,91 +1008,115 @@ where deleted=0";
             {
                 DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
                 string uid = dvs[0].Cells["uid"].Value.ToString();
-                string dataSource = dvs[0].Cells["dataSource"].Value.ToString();
-                if (dataSource == "1")
-                {
-                    //数据来源于筛选表
-                    string sql = @"update FilterReleaseInfo set FocusLevel='{0}', ActionDate='{1}' where uid ={2}";
-                    sql = string.Format(sql, "置顶", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData(); 
-                    FormateFoucsStatus();
 
-                }
-                else if (dataSource == "2")
+                int col = 0;// dataGridView1.CurrentCell.ColumnIndex;
+                int next = dataGridView1.Rows.GetNextRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+                string nextUid = "";
+                if (next > -1)
                 {
-                    //数据来源于抓取表
-                    string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
-                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                        where a.uid ={2}";
-                    sql = string.Format(sql, "置顶", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);                   
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
+                    nextUid = dataGridView1.Rows[next].Cells["uid"].Value.ToString();
                 }
-                
+
+                SetRecordFocusLevel(uid, 1);
+                //刷新数据
+                GetResultData();
+
+                if (next > -1 && !string.IsNullOrEmpty(nextUid))
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), nextUid) == 0)
+                        {
+                            dataGridView1.CurrentCell = row.Cells[col];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[col];
+                }
+
+                FormateFoucsStatus();
             }
         }
 
         private void lblFocus_Click(object sender, EventArgs e)
         {
+            //关注
             if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
             {
                 DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
                 string uid = dvs[0].Cells["uid"].Value.ToString();
-                string dataSource = dvs[0].Cells["dataSource"].Value.ToString();
-                if (dataSource == "1")
-                {
-                    //数据来源于筛选表
-                    string sql = @"update FilterReleaseInfo set FocusLevel='{0}', ActionDate='{1}' where uid ={2}";
-                    sql = string.Format(sql, "关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
 
-                }
-                else if (dataSource == "2")
+                int col = 0;// dataGridView1.CurrentCell.ColumnIndex;
+                int next = dataGridView1.Rows.GetNextRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+               string nextUid = "";
+                if (next > -1)
                 {
-                    //数据来源于抓取表
-                    string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
-                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                        where a.uid ={2}";
-                    sql = string.Format(sql, "关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
+                    nextUid = dataGridView1.Rows[next].Cells["uid"].Value.ToString();
                 }
+
+                SetRecordFocusLevel(uid, 3);
+                GetResultData();
+
+                if (next > -1 && !string.IsNullOrEmpty(nextUid))
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), nextUid) == 0)
+                        {
+                            dataGridView1.CurrentCell = row.Cells[col];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[col];
+                }
+
+                FormateFoucsStatus();
             }
 
         }
 
         private void lblMainFocus_Click(object sender, EventArgs e)
         {
+            //重点关注
             if (dataGridView1.Rows.Count > 0 && dataGridView1.SelectedRows != null)
             {
                 DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
                 string uid = dvs[0].Cells["uid"].Value.ToString();
-                string dataSource = dvs[0].Cells["dataSource"].Value.ToString();
-                if (dataSource == "1")
+
+                int col = 0;// dataGridView1.CurrentCell.ColumnIndex;
+                int next = dataGridView1.Rows.GetNextRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+                string nextUid = "";
+                if (next > -1)
                 {
-                    //数据来源于筛选表
-                    string sql = @"update FilterReleaseInfo set FocusLevel='{0}', ActionDate='{1}' where uid ={2}";
-                    sql = string.Format(sql, "重点关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
+                    nextUid = dataGridView1.Rows[next].Cells["uid"].Value.ToString();
                 }
-                else if (dataSource == "2")
+                
+                SetRecordFocusLevel(uid, 2);
+                GetResultData();
+
+                if (next > -1 && !string.IsNullOrEmpty(nextUid))
                 {
-                    //数据来源于抓取表
-                    string sql = @"insert into FilterReleaseInfo(FocusLevel, ActionDate, EventName, uid ,Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian)
-                                        select '{0}' as FocusLevl, '{1}', b.[Name] eventname, a.uid ,a.Title,a.Contexts,a.ReleaseDate,a.InfoSource,a.KeyWords,a.ReleaseName,a.CollectDate,a.Snapshot,a.webName,a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                        where a.uid ={2}";
-                    sql = string.Format(sql, "重点关注", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), nextUid) == 0)
+                        {
+                            dataGridView1.CurrentCell = row.Cells[col];
+                            break;
+                        }
+                    }
                 }
+                else
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[col];
+                }
+
+                FormateFoucsStatus();
             }
         }
 
@@ -1146,15 +1126,36 @@ where deleted=0";
             {
                 DataGridViewSelectedRowCollection dvs = dataGridView1.SelectedRows;
                 string uid = dvs[0].Cells["uid"].Value.ToString();
-                string dataSource = dvs[0].Cells["dataSource"].Value.ToString();
-                if (dataSource == "1")
+
+                int col = 0;// dataGridView1.CurrentCell.ColumnIndex;
+                int next = dataGridView1.Rows.GetNextRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+                string nextUid = "";
+                if (next > -1)
                 {
-                    //数据来源于筛选表
-                    string sql = @"update FilterReleaseInfo set FocusLevel='', ActionDate='{0}' where uid ={1}";
-                    sql = string.Format(sql, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), uid);
-                    cmd.ExecuteNonQueryInt(sql);
-                    GetResultData();
-                    FormateFoucsStatus();
+                    nextUid = dataGridView1.Rows[next].Cells["uid"].Value.ToString();
+                }
+
+                //数据来源于筛选表
+                string sql = @"delete from FilterReleaseInfo where uid={0}";
+                sql = string.Format(sql, uid);
+                cmd.ExecuteNonQueryInt(sql);
+                GetResultData();
+                FormateFoucsStatus();
+
+                if (next > -1 && !string.IsNullOrEmpty(nextUid))
+                {
+                    foreach (DataGridViewRow row in dataGridView1.Rows)
+                    {
+                        if (string.Compare(row.Cells["uid"].Value.ToString(), nextUid) == 0)
+                        {
+                            dataGridView1.CurrentCell = row.Cells[col];
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[dataGridView1.Rows.Count - 1].Cells[col];
                 }
             }
         }
@@ -1168,43 +1169,50 @@ where deleted=0";
                 {
                     switch (level)
                     {
-                        case "置顶":
-                            lblSetTop.Enabled = false;
-                            lblCancel.Enabled = true;
-                            lblFocus.Enabled = false;
-                            lblMainFocus.Enabled = false;
-                            lblDelete.Enabled = false;
+                        case "1": //置顶
+                            lblSetTop.Enabled = false;  //置顶
+                            lblMainFocus.Enabled = true; //重点关注
+                            lblFocus.Enabled = true; //关注
+                            lblCancel.Enabled = true; //取消
+                            lblDelete.Enabled = true; //删除
                             break;
-                        case "关注":
-                            lblSetTop.Enabled = false;
-                            lblCancel.Enabled = false;
-                            lblFocus.Enabled = false;
-                            lblMainFocus.Enabled = true;
-                            lblDelete.Enabled = true;
+                        case "2": //重点关注
+                            lblSetTop.Enabled = true; //置顶
+                            lblMainFocus.Enabled = false; //重点关注
+                            lblFocus.Enabled = true; //关注
+                            lblCancel.Enabled = true; //取消
+                            lblDelete.Enabled = true; //删除
                             break;
-                        case "重点关注":
-                            lblSetTop.Enabled = true;
-                            lblCancel.Enabled = false;
-                            lblFocus.Enabled = true;
-                            lblMainFocus.Enabled = false;
-                            lblDelete.Enabled = true;
+                        case "3": //关注
+                            lblSetTop.Enabled = true; //置顶
+                            lblMainFocus.Enabled = true; //重点关注
+                            lblFocus.Enabled = false; //关注
+                            lblCancel.Enabled = true; //取消
+                            lblDelete.Enabled = true; //删除
+                            break;
+                        case "99": //没有标志的记录
+                            lblSetTop.Enabled = true; //置顶
+                            lblMainFocus.Enabled = true; //重点关注
+                            lblFocus.Enabled = true; //关注
+                            lblCancel.Enabled = false; //取消
+                            lblDelete.Enabled = true; //删除
                             break;
                     }
                 }
                 else
                 {
-                    lblSetTop.Enabled = true;
-                    lblCancel.Enabled = false;
-                    lblFocus.Enabled = true;
-                    lblMainFocus.Enabled = true;
-                    lblDelete.Enabled = false;
+                    lblSetTop.Enabled = true; //置顶
+                    lblMainFocus.Enabled = true; //重点关注
+                    lblFocus.Enabled = true; //关注
+                    lblCancel.Enabled = false; //取消
+                    lblDelete.Enabled = true; //删除
                 }
             }
         }
 
         private void lblDelete_Click(object sender, EventArgs e)
         {
-
+            DeleteData();
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -1225,6 +1233,33 @@ where deleted=0";
 
             CommentView.Text = "";
 
+        }
+
+        private void lblPre_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentCell != null)
+            {
+                int col = dataGridView1.CurrentCell.ColumnIndex;
+                int pre = dataGridView1.Rows.GetPreviousRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+                if (pre > -1)
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[pre].Cells[col];
+                }
+            }
+
+        }
+
+        private void lblNext_Click(object sender, EventArgs e)
+        {
+            if (dataGridView1.CurrentCell != null)
+            {
+                int col =dataGridView1.CurrentCell.ColumnIndex;
+                int next = dataGridView1.Rows.GetNextRow(dataGridView1.CurrentCell.RowIndex, DataGridViewElementStates.None);
+                if (next > -1)
+                {
+                    dataGridView1.CurrentCell = dataGridView1.Rows[next].Cells[col];
+                }
+            }
         }
 
     }

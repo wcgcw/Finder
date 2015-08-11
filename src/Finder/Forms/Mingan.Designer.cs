@@ -46,7 +46,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.keylist = new System.Windows.Forms.ComboBox();
-            this.chkPrecise = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.cmsSearch.SuspendLayout();
             this.SuspendLayout();
@@ -241,23 +240,12 @@
             this.keylist.Tag = "9999";
             this.keylist.SelectedIndexChanged += new System.EventHandler(this.keylist_SelectedIndexChanged);
             // 
-            // chkPrecise
-            // 
-            this.chkPrecise.AutoSize = true;
-            this.chkPrecise.Location = new System.Drawing.Point(256, 17);
-            this.chkPrecise.Name = "chkPrecise";
-            this.chkPrecise.Size = new System.Drawing.Size(72, 16);
-            this.chkPrecise.TabIndex = 66;
-            this.chkPrecise.Text = "精确匹配";
-            this.chkPrecise.UseVisualStyleBackColor = true;
-            // 
             // Mingan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1001, 704);
-            this.Controls.Add(this.chkPrecise);
             this.Controls.Add(this.keylist);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.label6);
@@ -295,6 +283,5 @@
         private System.Windows.Forms.ComboBox keylist;
         private System.Windows.Forms.ContextMenuStrip cmsSearch;
         private System.Windows.Forms.ToolStripMenuItem cms;
-        private System.Windows.Forms.CheckBox chkPrecise;
     }
 }

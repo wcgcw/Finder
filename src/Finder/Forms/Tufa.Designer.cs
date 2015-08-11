@@ -44,7 +44,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
-            this.chkPrecise = new System.Windows.Forms.CheckBox();
             this.dataView = new System.Windows.Forms.RichTextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.cmsSearch.SuspendLayout();
@@ -162,16 +161,6 @@
             this.label2.TabIndex = 54;
             this.label2.Text = "选择突发舆情：";
             // 
-            // chkPrecise
-            // 
-            this.chkPrecise.AutoSize = true;
-            this.chkPrecise.Location = new System.Drawing.Point(256, 16);
-            this.chkPrecise.Name = "chkPrecise";
-            this.chkPrecise.Size = new System.Drawing.Size(72, 16);
-            this.chkPrecise.TabIndex = 77;
-            this.chkPrecise.Text = "精确匹配";
-            this.chkPrecise.UseVisualStyleBackColor = true;
-            // 
             // dataView
             // 
             this.dataView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
@@ -259,7 +248,6 @@
             this.ClientSize = new System.Drawing.Size(1001, 704);
             this.Controls.Add(this.dataView);
             this.Controls.Add(this.dataGridView1);
-            this.Controls.Add(this.chkPrecise);
             this.Controls.Add(this.keylist);
             this.Controls.Add(this.dateTimePicker2);
             this.Controls.Add(this.label6);
@@ -293,7 +281,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ContextMenuStrip cmsSearch;
         private System.Windows.Forms.ToolStripMenuItem cms;
-        private System.Windows.Forms.CheckBox chkPrecise;
         private System.Windows.Forms.RichTextBox dataView;
         private System.Windows.Forms.DataGridView dataGridView1;
     }

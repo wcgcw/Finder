@@ -28,7 +28,6 @@ namespace Finder.util
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.Message);
             }
         }

@@ -1481,7 +1481,7 @@ namespace Finder.Forms
 
                         Bitmap image = util.WebSnap.StartSnap(dvGridView.SelectedRows[0].Cells["infosource"].Value.ToString());
                         image.Save(temp);
-                        MessageBox.Show("证据图片生成成功！", "提示：", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("证据保存成功！", "提示");
                     }
                     catch (Exception ex)
                     {

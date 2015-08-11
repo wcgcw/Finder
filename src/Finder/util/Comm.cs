@@ -291,9 +291,12 @@ namespace Finder.util
             try
             {
                 //TODO:服务测试页面
-                string isServiced = HtmlUtil.getHtml("http://www.zhangyaojiang.com/yqserviced.html","UTF-8");
-                //string isServiced = HtmlUtil.getHtml("http://www.shangwukaocha.cn/", "UTF-8");
-                return isServiced.Equals("1") ? true : false;
+                //string isServiced = HtmlUtil.getHtml("http://www.zhangyaojiang.com/yqserviced.html","UTF-8");
+                //return isServiced.Equals("1") ? true : false;
+                string isServiced = HtmlUtil.getHtml("http://www.shangwukaocha.cn/", "UTF-8");
+                return isServiced.Contains("正义东方");
+                
+
             }
             catch (Exception e)
             {

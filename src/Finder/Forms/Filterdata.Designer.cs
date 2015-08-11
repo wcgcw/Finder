@@ -67,17 +67,17 @@
             this.txtTitle = new System.Windows.Forms.RichTextBox();
             this.lblDelete = new System.Windows.Forms.Label();
             this.lblCancel = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.lblNext = new System.Windows.Forms.Label();
             this.lblPre = new System.Windows.Forms.Label();
             this.lblSetTop = new System.Windows.Forms.Label();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.CommentView = new System.Windows.Forms.RichTextBox();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.txtComment = new System.Windows.Forms.RichTextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
-            this.CommentView = new System.Windows.Forms.RichTextBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel5 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.cmsSearch.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -489,7 +489,7 @@
             this.panel2.Controls.Add(this.txtTitle);
             this.panel2.Controls.Add(this.lblDelete);
             this.panel2.Controls.Add(this.lblCancel);
-            this.panel2.Controls.Add(this.label9);
+            this.panel2.Controls.Add(this.lblNext);
             this.panel2.Controls.Add(this.lblPre);
             this.panel2.Controls.Add(this.lblSetTop);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -563,18 +563,18 @@
             this.lblCancel.Text = "取消";
             this.lblCancel.Click += new System.EventHandler(this.lblCancel_Click);
             // 
-            // label9
+            // lblNext
             // 
-            this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label9.AutoSize = true;
-            this.label9.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.label9.ForeColor = System.Drawing.Color.Black;
-            this.label9.Location = new System.Drawing.Point(933, 12);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(53, 12);
-            this.label9.TabIndex = 0;
-            this.label9.Text = "下一条 >";
-            this.label9.Click += new System.EventHandler(this.lblSetTop_Click);
+            this.lblNext.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNext.AutoSize = true;
+            this.lblNext.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblNext.ForeColor = System.Drawing.Color.Black;
+            this.lblNext.Location = new System.Drawing.Point(933, 12);
+            this.lblNext.Name = "lblNext";
+            this.lblNext.Size = new System.Drawing.Size(53, 12);
+            this.lblNext.TabIndex = 0;
+            this.lblNext.Text = "下一条 >";
+            this.lblNext.Click += new System.EventHandler(this.lblNext_Click);
             // 
             // lblPre
             // 
@@ -587,7 +587,7 @@
             this.lblPre.Size = new System.Drawing.Size(53, 12);
             this.lblPre.TabIndex = 0;
             this.lblPre.Text = "< 上一条";
-            this.lblPre.Click += new System.EventHandler(this.lblSetTop_Click);
+            this.lblPre.Click += new System.EventHandler(this.lblPre_Click);
             // 
             // lblSetTop
             // 
@@ -635,6 +635,41 @@
             this.panel4.Size = new System.Drawing.Size(492, 208);
             this.panel4.TabIndex = 0;
             // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 1;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Controls.Add(this.CommentView, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.panel5, 0, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(492, 208);
+            this.tableLayoutPanel3.TabIndex = 2;
+            // 
+            // CommentView
+            // 
+            this.CommentView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.CommentView.Location = new System.Drawing.Point(3, 54);
+            this.CommentView.Name = "CommentView";
+            this.CommentView.ReadOnly = true;
+            this.CommentView.Size = new System.Drawing.Size(486, 151);
+            this.CommentView.TabIndex = 0;
+            this.CommentView.Text = "";
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.txtComment);
+            this.panel5.Controls.Add(this.btnSubmit);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(3, 3);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(486, 45);
+            this.panel5.TabIndex = 1;
+            // 
             // txtComment
             // 
             this.txtComment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -655,41 +690,6 @@
             this.btnSubmit.Text = "提交";
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
-            // 
-            // CommentView
-            // 
-            this.CommentView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.CommentView.Location = new System.Drawing.Point(3, 54);
-            this.CommentView.Name = "CommentView";
-            this.CommentView.ReadOnly = true;
-            this.CommentView.Size = new System.Drawing.Size(486, 151);
-            this.CommentView.TabIndex = 0;
-            this.CommentView.Text = "";
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 1;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Controls.Add(this.CommentView, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.panel5, 0, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 51F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(492, 208);
-            this.tableLayoutPanel3.TabIndex = 2;
-            // 
-            // panel5
-            // 
-            this.panel5.Controls.Add(this.txtComment);
-            this.panel5.Controls.Add(this.btnSubmit);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(3, 3);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(486, 45);
-            this.panel5.TabIndex = 1;
             // 
             // Filterdata
             // 
@@ -758,7 +758,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label lblNext;
         private System.Windows.Forms.Label lblPre;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.RichTextBox CommentView;
