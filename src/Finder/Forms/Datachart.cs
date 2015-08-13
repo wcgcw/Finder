@@ -60,7 +60,7 @@ namespace Finder.Forms
             keyword = chart10.Series["Series"].Points[htr.PointIndex].AxisLabel;
 
             //ChartDetailData cdd = new ChartDetailData(0, keyword, "全网", time, "U");
-            ChartDetailData cdd = new ChartDetailData(keyword, "全网", "U", DataSelected);
+            ChartDetailData cdd = new ChartDetailData(keyword, "全网", "K", DataSelected);
             cdd.ShowDialog();
         }
 
@@ -113,9 +113,12 @@ namespace Finder.Forms
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
         private void button1_Click(object sender, EventArgs e)
         {
-            string baseSql = @"select b.[Name] EventName, a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
-                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    where deleted=0 and a.uid > 0 ";
+            string baseSql = @"select ifnull(c.[FocusLevel],'99') FocusLevel, ifnull(c.[ActionDate], '') ActionDate, b.[Name] as EventName, 
+                                    a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
+                                    from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    inner join FilterReleaseInfo c on a.uid=c.uid
+                                    where a.deleted=0 and a.uid > 0 and b.[Name] is not null ";
 
             //事件类别
             if (kidlist.SelectedIndex != kidlist.Items.Count - 1)
@@ -144,6 +147,7 @@ namespace Finder.Forms
             }
 
             string sql = baseSql + " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
+            sql += " order by FocusLevel, ActionDate desc, a.collectdate desc";
 
             DataTable dt = cmd.GetTabel(sql);
 
@@ -442,6 +446,7 @@ namespace Finder.Forms
             {
                 int ptIdx = this.chart1.Series["Data"].Points.AddY(Convert.ToDouble(dr["columndata"].ToString()));
                 DataPoint pt = this.chart1.Series["Data"].Points[ptIdx];
+                pt.AxisLabel = dr["columnname"].ToString();
                 pt.LegendText = dr["columnname"].ToString() + " " + "#PERCENT{P2}" + " [ " + "#VAL{D} 条" + " ]";//右边标签列显示的文字
                 pt.Label = dr["columnname"].ToString() + " " + "#PERCENT{P2}" + " [ " + "#VAL{D} 条" + " ]"; //圆饼外显示的信息
 
@@ -474,6 +479,31 @@ namespace Finder.Forms
     #TOTAL      总数量
     #LEGENDTEXT      图例文本
                 */
+        }
+
+        private void chart1_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            HitTestResult htr = chart1.HitTest(e.X, e.Y);
+            //int time = 0;
+            if (htr.PointIndex < 0)
+            {
+                return;
+            }
+            string keyword = "";
+            keyword = chart1.Series["Data"].Points[htr.PointIndex].AxisLabel;
+            string KE = "E";
+            if (kidlist.SelectedIndex != kidlist.Items.Count - 1 && kwlist.SelectedIndex != kwlist.Items.Count - 1)
+            {
+                KE = "K";
+            }
+            else
+            {
+                KE = "E";
+            }
+
+            ChartDetailData cdd = new ChartDetailData(keyword, "全网", KE, DataSelected);
+            cdd.ShowDialog();
+
         }
 
     }

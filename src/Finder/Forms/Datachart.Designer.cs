@@ -321,6 +321,7 @@
             title4.Text = "总条数";
             this.chart1.Titles.Add(title3);
             this.chart1.Titles.Add(title4);
+            this.chart1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.chart1_MouseDoubleClick);
             // 
             // Datachart
             // 

@@ -13,29 +13,29 @@ namespace Finder.Forms
     public partial class ChartDetailData : Form
     {
         int kid;
-        string kwOrWebaddress;
+        string kwOrEventName;
         string webtype;
         int day;
-        string UD;
+        string KE;
         DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
-        public ChartDetailData(int kid_ , string kwOrWebaddress_ ,string webtype_ , int day_ , string ud_)
+        public ChartDetailData(int kid_ , string kwOrEvent_ ,string webtype_ , int day_ , string ke_)
         {
             InitializeComponent();
             kid = kid_;
-            kwOrWebaddress = kwOrWebaddress_;
+            kwOrEventName = kwOrEvent_;
             webtype = webtype_;
             day = day_;
-            UD = ud_;
+            KE = ke_;
         }
 
         private DataTable DataDetail = null;
-        public ChartDetailData(string kwOrWebaddress_, string webtype_, string ud_, DataTable dataDetail)
+        public ChartDetailData(string kwOrWebaddress_, string webtype_, string ke_, DataTable dataDetail)
         {
             InitializeComponent();
 
-            kwOrWebaddress = kwOrWebaddress_;
+            kwOrEventName = kwOrWebaddress_;
             webtype = webtype_;            
-            UD = ud_;
+            KE = ke_;
             DataDetail = dataDetail;
 
         }
@@ -44,48 +44,49 @@ namespace Finder.Forms
         {
             if (DataDetail != null)
             {
-                if (UD.Equals("U"))
+                if (KE.Equals("K"))
                 {
-                    label1.Text = "关键词为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
+                    label1.Text = "关键词为：“" + kwOrEventName + "”的" + webtype + "数据透视表如下：";
+                    DataDetail.DefaultView.RowFilter = string.Format("keywords='{0}'", kwOrEventName);
                 }
-                else if (UD.Equals("D"))
+                else if (KE.Equals("E"))
                 {
-                    label1.Text = "网站为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
+                    label1.Text = "事件为：“" + kwOrEventName + "”的" + webtype + "数据透视表如下：";
+                    DataDetail.DefaultView.RowFilter = string.Format("eventname='{0}'", kwOrEventName);
                 }
 
-                DataDetail.DefaultView.RowFilter = string.Format("keywords='{0}'", kwOrWebaddress);
                 dataGridView1.DataSource = DataDetail;
 
                 FormatDataView();
             }
-            else
-            {
-                string sql = "";
-                FormatDataView();
-                DataTable dt = new DataTable();
-                string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
-                if (UD.Equals("U"))
-                {
-                    label1.Text = "关键词为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
-                    label1.ForeColor = Color.IndianRed;
-                    sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webname,collectdate,part "
-                        + " from releaseinfo "
-                        + " where keywords like '%" + kwOrWebaddress + "%'"
-                        + " and collectdate > '" + time + "'";
-                }
-                if (UD.Equals("D"))
-                {
-                    label1.Text = "网站为：“" + kwOrWebaddress + "”的" + webtype + "数据透视表如下：";
-                    label1.ForeColor = Color.IndianRed;
-                    sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webname,collectdate,part "
-                        + " from releaseinfo "
-                        + " where webname = '" + kwOrWebaddress + "'"
-                        + " and kid = " + kid
-                        + " and collectdate > '" + time + "'";
-                }
-                dt = cmd.GetTabel(sql);
-                dataGridView1.DataSource = dt;
-            }
+            //else
+            //{
+            //    string sql = "";
+            //    FormatDataView();
+            //    DataTable dt = new DataTable();
+            //    string time = DateTime.Now.AddDays(0 - day).ToString("yyyy-MM-dd HH:mm:ss");
+            //    if (KE.Equals("U"))
+            //    {
+            //        label1.Text = "关键词为：“" + kwOrEventName + "”的" + webtype + "数据透视表如下：";
+            //        label1.ForeColor = Color.IndianRed;
+            //        sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webname,collectdate,part "
+            //            + " from releaseinfo "
+            //            + " where keywords like '%" + kwOrEventName + "%'"
+            //            + " and collectdate > '" + time + "'";
+            //    }
+            //    if (KE.Equals("D"))
+            //    {
+            //        label1.Text = "网站为：“" + kwOrEventName + "”的" + webtype + "数据透视表如下：";
+            //        label1.ForeColor = Color.IndianRed;
+            //        sql = "SELECT uid,keywords,title,infosource,contexts,releasename,reposts,comments,pid,webname,collectdate,part "
+            //            + " from releaseinfo "
+            //            + " where webname = '" + kwOrEventName + "'"
+            //            + " and kid = " + kid
+            //            + " and collectdate > '" + time + "'";
+            //    }
+            //    dt = cmd.GetTabel(sql);
+            //    dataGridView1.DataSource = dt;
+            //}
         }
 
         //表格初始化，设定各单元格显示，居中，宽度
@@ -93,124 +94,133 @@ namespace Finder.Forms
         {
             dataGridView1.Columns.Add(new DataGridViewImageColumn() { HeaderText = "正负预判", Name = "part_img", DisplayIndex = 19 });
             dataGridView1.Columns.Add(new DataGridViewLinkColumn() { HeaderText = "标题", Name = "title_link", DisplayIndex = 4, Width = 160 });
-            foreach (DataGridViewColumn col in dataGridView1.Columns)
+
+            // 设置可见列、隐藏列的显示顺序和显示样式
+            DataGridViewColumn[] array = new DataGridViewColumn[dataGridView1.Columns.Count];
+            dataGridView1.Columns.CopyTo(array, 0);
+            dataGridView1.Columns.Clear();
+
+            int order = 12;
+            foreach (DataGridViewColumn col in array)
             {
                 switch (col.Name.ToLower())
                 {
                     #region 调整列的隐藏与列序
-                    case "uid":
-                        col.DisplayIndex = 0;
-                        col.Visible = false;
-                        break;
                     case "focuslevel":
                         col.HeaderText = "关注度";
-                        col.DisplayIndex = 1;
+                        col.DisplayIndex = 0;
                         col.Width = 120;
                         break;
                     case "eventname":
                         col.HeaderText = "事件名称";
-                        col.DisplayIndex = 2;
+                        col.DisplayIndex = 1;
                         col.Width = 120;
                         break;
                     case "keywords":
                         col.HeaderText = "关键字";
-                        col.DisplayIndex = 3;
-                        col.Visible = false;
-                        break;
-                    case "title":
-                        col.HeaderText = "标题_txt";
-                        col.DisplayIndex = 4;
-                        col.Width = 260;
+                        col.DisplayIndex = 2;
                         col.Visible = false;
                         break;
                     case "title_link":
                         col.HeaderText = "标题";
-                        col.DisplayIndex = 5;
+                        col.DisplayIndex = 3;
                         col.Width = 260;
-                        break;
-                    case "infosource":
-                        col.HeaderText = "链接";
-                        col.DisplayIndex = 6;
-                        col.Visible = false;
                         break;
                     case "contexts":
                         col.HeaderText = "内容";
-                        col.DisplayIndex = 7;
+                        col.DisplayIndex = 4;
                         col.Width = 480;
                         break;
                     case "webname":
                         col.HeaderText = "来源";
-                        col.DisplayIndex = 8;
+                        col.DisplayIndex = 5;
                         col.Width = 120;
-                        break;
-                    case "sheng":
-                        col.HeaderText = "区域";
-                        col.DisplayIndex = 9;
-                        col.Width = 160;
-                        break;
-                    case "shi":
-                        col.HeaderText = "市";
-                        col.DisplayIndex = 10;
-                        col.Visible = false;
-                        break;
-                    case "xian":
-                        col.HeaderText = "县";
-                        col.DisplayIndex = 11;
-                        col.Visible = false;
                         break;
                     case "releasename":
                         col.HeaderText = "发布者";
-                        col.DisplayIndex = 12;
+                        col.DisplayIndex = 6;
                         col.Width = 160;
                         break;
                     case "releasedate":
                         col.HeaderText = "发布时间";
-                        col.DisplayIndex = 13;
+                        col.DisplayIndex = 7;
                         col.Width = 160;
-                        break;
-                    case "reposts":
-                        col.HeaderText = "转发量";
-                        col.DisplayIndex = 14;
-                        col.Visible = false;
-                        break;
-                    case "comments":
-                        col.HeaderText = "评论数";
-                        col.DisplayIndex = 15;
-                        col.Visible = false;
                         break;
                     case "pid":
                         col.HeaderText = "网站类别";
-                        col.DisplayIndex = 16;
+                        col.DisplayIndex = 8;
                         col.Width = 80;
                         break;
                     case "kid":
                         col.HeaderText = "事件类别";
-                        col.DisplayIndex = 17;
+                        col.DisplayIndex = 9;
                         col.Width = 80;
                         break;
                     case "collectdate":
                         col.HeaderText = "抓取时间";
-                        col.DisplayIndex = 18;
+                        col.DisplayIndex = 10;
                         col.Width = 160;
-                        break;
-                    case "part":
-                        col.HeaderText = "正负预判-txt";
-                        col.DisplayIndex = 19;
-                        col.Width = 80;
-                        col.Visible = false;
                         break;
                     case "part_img":
                         col.HeaderText = "正负预判";
-                        col.DisplayIndex = 20;
+                        col.DisplayIndex = 11;
                         col.Width = 80;
                         break;
+                    case "uid":
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "title":
+                        col.HeaderText = "标题_txt";
+                        col.DisplayIndex = order++;
+                        col.Width = 260;
+                        col.Visible = false;
+                        break;
+                    case "infosource":
+                        col.HeaderText = "链接";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "sheng":
+                        col.HeaderText = "区域";
+                        col.DisplayIndex = order++;
+                        col.Width = 160;
+                        col.Visible = false;
+                        break;
+                    case "shi":
+                        col.HeaderText = "市";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "xian":
+                        col.HeaderText = "县";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "reposts":
+                        col.HeaderText = "转发量";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "comments":
+                        col.HeaderText = "评论数";
+                        col.DisplayIndex = order++;
+                        col.Visible = false;
+                        break;
+                    case "part":
+                        col.HeaderText = "正负预判-txt";
+                        col.DisplayIndex = order++;
+                        col.Width = 80;
+                        col.Visible = false;
+                        break;
                     default:
+                        col.DisplayIndex = order++;
                         col.Visible = false;
                         break;
                     #endregion
                 }
             }
-
+            dataGridView1.Columns.AddRange(array);
         }
 
         //表格内容格式化，正负研判调用图片
@@ -224,14 +234,21 @@ namespace Finder.Forms
                         string txtFocus = dataGridView1.Rows[e.RowIndex].Cells["focuslevel"].Value.ToString();
                         switch (txtFocus)
                         {
-                            case "置顶":
+                            case "1":
+                                e.Value = "置顶";
                                 e.CellStyle.ForeColor = Color.Blue;
                                 break;
-                            case "关注":
+                            case "2":
+                                e.Value = "重点关注";
+                                e.CellStyle.ForeColor = Color.Red;
+                                break;
+                            case "3":
+                                e.Value = "关注";
                                 e.CellStyle.ForeColor = Color.Green;
                                 break;
-                            case "重点关注":
-                                e.CellStyle.ForeColor = Color.Red;
+                            case "99":
+                                e.Value = "";
+                                e.CellStyle.ForeColor = Color.Green;
                                 break;
                         }
                         e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
