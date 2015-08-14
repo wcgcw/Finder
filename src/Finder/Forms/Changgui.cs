@@ -645,5 +645,17 @@ namespace Finder.Forms
             //    chkPrecise.Visible = true;
             //}
         }
+
+        private void dataGridView1_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1 && dataGridView1.Columns[e.ColumnIndex].Name.ToLower() == "contexts")
+            {
+                string title = this.dataGridView1.Rows[e.RowIndex].Cells["title"].Value.ToString();
+                string link = this.dataGridView1.Rows[e.RowIndex].Cells["infosource"].Value.ToString();
+                WebBrowser browser = new WebBrowser(title, link);
+                browser.ShowDialog();
+
+            }
+        }
     }
 }

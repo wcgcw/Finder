@@ -214,27 +214,92 @@ namespace Finder.util
             return string.Format("{0},{1}", author, publishDate);
         }
 
-        enum WebSourceType
+        class seachRecord
         {
-            BaiduNews=1,
-            BingNews=2,
-            SogouNews=3,
-            ZhongsouNews=4,
-            HaosouNews=5,
-            BaiduWeb=6,
-            BingWeb=7,
-            SogouWeb=8,
-            ZhongsouWeb=9,
-            HaosouWeb=10,
-            SogouWeixin=11,
-            SogouBlog=12,
-            SogouBBS=13,
-            ZhongsouBBS=14,
-            BaiduTieba=15,
-            SinWeibo=16,
-            ZhongsouWeibo=17
+            public int _min;
+            public int _max;
+
+            public seachRecord(int min, int max)
+            {
+                this._min = min;
+                this._max = max;
+            }
+        }
+        public string GetContexts(string contexts, string keyword)
+        {
+            string retContexts = "";
+            List<seachRecord> seached = new List<seachRecord>();          
+
+            int preCount = 200, nextCount = 100;
+            string[] splitKw = keyword.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+            if (splitKw != null && splitKw.Count() > 0)
+            {
+                int start = 0;
+                foreach (string kw in splitKw)
+                {
+                    start = contexts.IndexOf(kw, start);  
+                    while (start >= 0)
+                    {                        
+                        int len = 0;
+                        if (start < preCount)
+                        {
+                            len = start + kw.Length + nextCount;
+                            start = 0;
+                        }
+                        else
+                        {
+                            len = preCount + kw.Length + nextCount;
+                            start = start - preCount;                            
+                        }
+
+                        bool has = false;
+                        foreach (var s in seached)
+                        {
+                            if (start > s._min && start + len < s._max)
+                            {
+                                has = true;
+                                break;
+                            }
+                        }
+
+                        if (!has)
+                        {
+                            if (!string.IsNullOrEmpty(retContexts))
+                            {
+                                retContexts += "  \r\n   ……   \r\n  ";
+                            }
+                            retContexts += contexts.Substring(start, len);
+                            seached.Add(new seachRecord(start, start + len));
+
+                            start = start + len;
+                            start = contexts.IndexOf(kw, start);  
+                        }
+                    }
+                }
+            }
+            return retContexts;
         }
 
+        enum WebSourceType
+        {
+            BaiduNews = 1,
+            BingNews = 2,
+            SogouNews = 3,
+            ZhongsouNews = 4,
+            HaosouNews = 5,
+            BaiduWeb = 6,
+            BingWeb = 7,
+            SogouWeb = 8,
+            ZhongsouWeb = 9,
+            HaosouWeb = 10,
+            SogouWeixin = 11,
+            SogouBlog = 12,
+            SogouBBS = 13,
+            ZhongsouBBS = 14,
+            BaiduTieba = 15,
+            SinWeibo = 16,
+            ZhongsouWeibo = 17
+        }
         public List<ModelReleaseInfo> ParseGeneralWeb(string html, string url, DataTable dtkey, string sheng, string shi, string xian, string webName, string webInfo, int pid)
         {
             //string strURLformat = "https?://.[^\"]+";
@@ -471,6 +536,19 @@ namespace Finder.util
                         mri.Comments = (int)WebSourceType.BaiduNews;
                         mri.Reposts = 0;
                         #endregion
+                        #region 2015.8.13 新增获取网址正文
+                        if (!string.IsNullOrEmpty(mri.InfoSource))
+                        {
+                            string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                            string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                            //分析关键字前100，后50个字符
+                            string formatContexts = GetContexts(noHtmlContexts, keyword);
+                            if (!string.IsNullOrEmpty(formatContexts))
+                            {
+                                mri.Contexts = formatContexts;
+                            }
+                        }
+                        #endregion
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
@@ -628,9 +706,25 @@ namespace Finder.util
                                     mri.Comments = (int)WebSourceType.BingNews;
                                     mri.Reposts = 0;
                                     #endregion
+
+                                    #region 2015.8.13 新增获取网址正文
+                                    if (!string.IsNullOrEmpty(mri.InfoSource))
+                                    {
+                                        string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                        string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                        //分析关键字前100，后50个字符
+                                        string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                        if (!string.IsNullOrEmpty(formatContexts))
+                                        {
+                                            mri.Contexts = formatContexts;
+                                        }
+                                    }
+                                    #endregion
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
                                     #endregion
+
+
                                     webDatas.Add(mri);
                                 }
                             }
@@ -780,9 +874,25 @@ namespace Finder.util
                                 mri.Comments = (int)WebSourceType.SogouNews;
                                 mri.Reposts = 0;
                                 #endregion
+
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
+
+
                                 webDatas.Add(mri);
                             }
                         }
@@ -949,9 +1059,25 @@ namespace Finder.util
                                     mri.Comments = (int)WebSourceType.ZhongsouNews;
                                     mri.Reposts = 0;
                                     #endregion
+
+                                    #region 2015.8.13 新增获取网址正文
+                                    if (!string.IsNullOrEmpty(mri.InfoSource))
+                                    {
+                                        string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                        string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                        //分析关键字前100，后50个字符
+                                        string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                        if (!string.IsNullOrEmpty(formatContexts))
+                                        {
+                                            mri.Contexts = formatContexts;
+                                        }
+                                    }
+                                    #endregion
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
                                     #endregion
+
+
                                     webDatas.Add(mri);
                                 }
                             }
@@ -993,105 +1119,121 @@ namespace Finder.util
                             //<div class="res-rich so-rich-news clearfix">
                             if ((result is MIL.Html.HtmlElement) && (result as MIL.Html.HtmlElement).Nodes != null)
                             {
-                                    ModelReleaseInfo mri = new ModelReleaseInfo();
-                                    #region 标题、超链
-                                    MIL.Html.HtmlNodeCollection titleNodes = (result as MIL.Html.HtmlElement).Nodes.FindByName("h3");
-                                    if (titleNodes != null && titleNodes.Count > 0)
+                                ModelReleaseInfo mri = new ModelReleaseInfo();
+                                #region 标题、超链
+                                MIL.Html.HtmlNodeCollection titleNodes = (result as MIL.Html.HtmlElement).Nodes.FindByName("h3");
+                                if (titleNodes != null && titleNodes.Count > 0)
+                                {
+                                    if (titleNodes[0].IsElement())
                                     {
-                                        if (titleNodes[0].IsElement())
+                                        MIL.Html.HtmlNodeCollection aNodes = (titleNodes[0] as MIL.Html.HtmlElement).Nodes.FindByName("a");
+                                        if (aNodes != null && aNodes.Count > 0 && aNodes[0].IsElement())
                                         {
-                                            MIL.Html.HtmlNodeCollection aNodes = (titleNodes[0] as MIL.Html.HtmlElement).Nodes.FindByName("a");
-                                            if (aNodes != null && aNodes.Count > 0 && aNodes[0].IsElement())
+                                            string title = "";
+                                            foreach (MIL.Html.HtmlNode t in (aNodes[0] as MIL.Html.HtmlElement).Nodes)
                                             {
-                                                string title = "";
-                                                foreach (MIL.Html.HtmlNode t in (aNodes[0] as MIL.Html.HtmlElement).Nodes)
+                                                if (t.IsText())
                                                 {
-                                                    if (t.IsText())
-                                                    {
-                                                        title += (t as MIL.Html.HtmlText).Text;
-                                                    }
-                                                    else if (t.IsElement() && (t as MIL.Html.HtmlElement).Name.ToLower() == "em")
-                                                    {
-                                                        title += (t as MIL.Html.HtmlElement).Text;
-                                                    }
+                                                    title += (t as MIL.Html.HtmlText).Text;
                                                 }
-                                                string href = (aNodes[0] as MIL.Html.HtmlElement).Attributes["href"].Value;
-
-                                                mri.Title = title;
-                                                mri.InfoSource = href;
-                                            }
-                                        }
-                                    }
-                                    #endregion
-                                    #region 内容简介
-                                    MIL.Html.HtmlNodeCollection contentNodes = (result as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "content", true); 
-                                    if (contentNodes != null && contentNodes.Count > 0)
-                                    {
-                                        string text = "";
-                                        foreach (MIL.Html.HtmlNode c in (contentNodes[0] as MIL.Html.HtmlElement).Nodes)
-                                        {
-                                            if (c.IsText())
-                                            {
-                                                text += (c as MIL.Html.HtmlText).Text;
-                                            }
-                                            else if (c.IsElement() && (c as MIL.Html.HtmlElement).Name.ToLower() == "em")
-                                            {
-                                                text += (c as MIL.Html.HtmlElement).Text;
-                                            }
-                                        }
-                                        mri.Contexts = text;
-                                    }
-                                    #endregion
-                                    #region 发布人，时间
-                                    MIL.Html.HtmlNodeCollection newsinfoNodes = (result as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "newsinfo");
-                                    if (newsinfoNodes != null && newsinfoNodes.Count > 0)
-                                    {
-                                        MIL.Html.HtmlNodeCollection sitenameNodes = (newsinfoNodes[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "sitename");
-                                        if (sitenameNodes != null && sitenameNodes.Count > 0)
-                                        {
-                                            if (sitenameNodes[0].IsElement())
-                                            {
-                                                mri.ReleaseName = (sitenameNodes[0] as MIL.Html.HtmlElement).Text;
-                                            }
-                                        }
-
-                                        MIL.Html.HtmlNodeCollection posttimeNodes = (newsinfoNodes[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "posttime");
-                                        if (posttimeNodes != null && posttimeNodes.Count > 0)
-                                        {
-                                            if (posttimeNodes[0].IsElement())
-                                            {
-                                                if ((posttimeNodes[0] as MIL.Html.HtmlElement).Attributes != null && (posttimeNodes[0] as MIL.Html.HtmlElement).Attributes["title"] != null)
+                                                else if (t.IsElement() && (t as MIL.Html.HtmlElement).Name.ToLower() == "em")
                                                 {
-                                                    mri.ReleaseDate = (posttimeNodes[0] as MIL.Html.HtmlElement).Attributes["title"].Value;
+                                                    title += (t as MIL.Html.HtmlElement).Text;
                                                 }
                                             }
-                                        }                                        
+                                            string href = (aNodes[0] as MIL.Html.HtmlElement).Attributes["href"].Value;
+
+                                            mri.Title = title;
+                                            mri.InfoSource = href;
+                                        }
                                     }
-                                    #endregion
-                                    #region 其他杂项
-                                    mri.KeyWords = keyword;
-                                    mri.CollectDate = string.Format(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                    mri.Kid = kid;
-                                    mri.Sheng = "";
-                                    mri.Shi = "";
-                                    mri.Xian = "";
-                                    if (!string.IsNullOrEmpty(mri.ReleaseName))
+                                }
+                                #endregion
+                                #region 内容简介
+                                MIL.Html.HtmlNodeCollection contentNodes = (result as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "content", true);
+                                if (contentNodes != null && contentNodes.Count > 0)
+                                {
+                                    string text = "";
+                                    foreach (MIL.Html.HtmlNode c in (contentNodes[0] as MIL.Html.HtmlElement).Nodes)
                                     {
-                                        mri.WebName = mri.ReleaseName;
+                                        if (c.IsText())
+                                        {
+                                            text += (c as MIL.Html.HtmlText).Text;
+                                        }
+                                        else if (c.IsElement() && (c as MIL.Html.HtmlElement).Name.ToLower() == "em")
+                                        {
+                                            text += (c as MIL.Html.HtmlElement).Text;
+                                        }
                                     }
-                                    else
+                                    mri.Contexts = text;
+                                }
+                                #endregion
+                                #region 发布人，时间
+                                MIL.Html.HtmlNodeCollection newsinfoNodes = (result as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "newsinfo");
+                                if (newsinfoNodes != null && newsinfoNodes.Count > 0)
+                                {
+                                    MIL.Html.HtmlNodeCollection sitenameNodes = (newsinfoNodes[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "sitename");
+                                    if (sitenameNodes != null && sitenameNodes.Count > 0)
                                     {
-                                        mri.WebName = "主流媒体";
+                                        if (sitenameNodes[0].IsElement())
+                                        {
+                                            mri.ReleaseName = (sitenameNodes[0] as MIL.Html.HtmlElement).Text;
+                                        }
                                     }
-                                    mri.Pid = 4;
-                                    //mri.Part = GetParts(mri.Contexts);
-                                    mri.Comments = (int)WebSourceType.HaosouNews;
-                                    mri.Reposts = 0;
-                                    #endregion
-                                    #region 报告进度
-                                    OnReportCactchProcess(mri);
-                                    #endregion
-                                    webDatas.Add(mri);
+
+                                    MIL.Html.HtmlNodeCollection posttimeNodes = (newsinfoNodes[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "posttime");
+                                    if (posttimeNodes != null && posttimeNodes.Count > 0)
+                                    {
+                                        if (posttimeNodes[0].IsElement())
+                                        {
+                                            if ((posttimeNodes[0] as MIL.Html.HtmlElement).Attributes != null && (posttimeNodes[0] as MIL.Html.HtmlElement).Attributes["title"] != null)
+                                            {
+                                                mri.ReleaseDate = (posttimeNodes[0] as MIL.Html.HtmlElement).Attributes["title"].Value;
+                                            }
+                                        }
+                                    }
+                                }
+                                #endregion
+                                #region 其他杂项
+                                mri.KeyWords = keyword;
+                                mri.CollectDate = string.Format(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                                mri.Kid = kid;
+                                mri.Sheng = "";
+                                mri.Shi = "";
+                                mri.Xian = "";
+                                if (!string.IsNullOrEmpty(mri.ReleaseName))
+                                {
+                                    mri.WebName = mri.ReleaseName;
+                                }
+                                else
+                                {
+                                    mri.WebName = "主流媒体";
+                                }
+                                mri.Pid = 4;
+                                //mri.Part = GetParts(mri.Contexts);
+                                mri.Comments = (int)WebSourceType.HaosouNews;
+                                mri.Reposts = 0;
+                                #endregion
+
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
+                                #region 报告进度
+                                OnReportCactchProcess(mri);
+                                #endregion
+
+
+                                webDatas.Add(mri);
                             }
                         }
                     }
@@ -1237,6 +1379,19 @@ namespace Finder.util
                                     //mri.Part = GetParts(mri.Contexts);
                                     mri.Comments = (int)WebSourceType.BingWeb;
                                     mri.Reposts = 0;
+                                    #endregion
+                                    #region 2015.8.13 新增获取网址正文
+                                    if (!string.IsNullOrEmpty(mri.InfoSource))
+                                    {
+                                        string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                        string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                        //分析关键字前100，后50个字符
+                                        string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                        if (!string.IsNullOrEmpty(formatContexts))
+                                        {
+                                            mri.Contexts = formatContexts;
+                                        }
+                                    }
                                     #endregion
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
@@ -1481,6 +1636,19 @@ namespace Finder.util
                         mri.Comments = (int)WebSourceType.BaiduWeb;
                         mri.Reposts = 0;
                         #endregion
+                        #region 2015.8.13 新增获取网址正文
+                        if (!string.IsNullOrEmpty(mri.InfoSource))
+                        {
+                            string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                            string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                            //分析关键字前100，后50个字符
+                            string formatContexts = GetContexts(noHtmlContexts, keyword);
+                            if (!string.IsNullOrEmpty(formatContexts))
+                            {
+                                mri.Contexts = formatContexts;
+                            }
+                        }
+                        #endregion
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
@@ -1723,7 +1891,6 @@ namespace Finder.util
                                         }
                                     }
                                     #endregion
-
                                 }
 
                                 #region 其他杂项
@@ -1744,6 +1911,19 @@ namespace Finder.util
                                 mri.Pid = 0;                                //mri.Part = GetParts(mri.Contexts);
                                 mri.Comments = (int)WebSourceType.SogouWeb;
                                 mri.Reposts = 0;
+                                #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
                                 #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
@@ -1873,6 +2053,19 @@ namespace Finder.util
                                 mri.Comments = (int)WebSourceType.ZhongsouWeb;
                                 mri.Reposts = 0;
                                 #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
@@ -1968,7 +2161,7 @@ namespace Finder.util
                                         {
                                             context = (contextNodes_Image[0] as MIL.Html.HtmlElement).Nodes.FindByName("p");
                                             link = (contextNodes_Image[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "res-linkinfo");
-                                        }                                        
+                                        }
                                     }
                                     if (contextNodes_Rich != null && contextNodes_Rich.Count > 0)
                                     {
@@ -1982,8 +2175,8 @@ namespace Finder.util
                                         else
                                         {
                                             context = (contextNodes_Image[0] as MIL.Html.HtmlElement).Nodes.FindByName("div");
-                                            if(context!=null && context.Count>0 && context[0].IsElement())
-                                            link = (context[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "res-linkinfo");
+                                            if (context != null && context.Count > 0 && context[0].IsElement())
+                                                link = (context[0] as MIL.Html.HtmlElement).Nodes.FindByAttributeNameValue("class", "res-linkinfo");
 
                                         }
                                     }
@@ -2235,6 +2428,19 @@ namespace Finder.util
                         mri.Comments = (int)WebSourceType.SogouWeixin;
                         mri.Reposts = 0;
                         #endregion
+                        #region 2015.8.13 新增获取网址正文
+                        if (!string.IsNullOrEmpty(mri.InfoSource))
+                        {
+                            string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                            string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                            //分析关键字前100，后50个字符
+                            string formatContexts = GetContexts(noHtmlContexts, keyword);
+                            if (!string.IsNullOrEmpty(formatContexts))
+                            {
+                                mri.Contexts = formatContexts;
+                            }
+                        }
+                        #endregion
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
@@ -2478,9 +2684,7 @@ namespace Finder.util
                                         }
                                     }
                                     #endregion
-
                                 }
-
                                 #region 其他杂项
                                 mri.KeyWords = keyword;
                                 mri.CollectDate = string.Format(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -2493,6 +2697,19 @@ namespace Finder.util
                                 //mri.Part = GetParts(mri.Contexts);
                                 mri.Comments = (int)WebSourceType.SogouBlog;
                                 mri.Reposts = 0;
+                                #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
                                 #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
@@ -2752,6 +2969,20 @@ namespace Finder.util
                                 mri.Comments = (int)WebSourceType.SogouBBS;
                                 mri.Reposts = 0;
                                 #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
+
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
@@ -2891,6 +3122,19 @@ namespace Finder.util
                                 mri.Comments = (int)WebSourceType.ZhongsouBBS;
                                 mri.Reposts = 0;
                                 #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
@@ -3016,6 +3260,19 @@ namespace Finder.util
                         //mri.Part = GetParts(mri.Contexts);
                         mri.Comments = (int)WebSourceType.BaiduTieba;
                         mri.Reposts = 0;
+                        #endregion
+                        #region 2015.8.13 新增获取网址正文
+                        if (!string.IsNullOrEmpty(mri.InfoSource))
+                        {
+                            string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                            string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                            //分析关键字前100，后50个字符
+                            string formatContexts = GetContexts(noHtmlContexts, keyword);
+                            if (!string.IsNullOrEmpty(formatContexts))
+                            {
+                                mri.Contexts = formatContexts;
+                            }
+                        }
                         #endregion
                         #region 报告进度
                         OnReportCactchProcess(mri);
@@ -3179,6 +3436,19 @@ namespace Finder.util
                                 mri.Comments = (int)WebSourceType.SinWeibo;
                                 mri.Reposts = 0;
                                 #endregion
+                                #region 2015.8.13 新增获取网址正文
+                                if (!string.IsNullOrEmpty(mri.InfoSource))
+                                {
+                                    string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                    string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                    //分析关键字前100，后50个字符
+                                    string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                    if (!string.IsNullOrEmpty(formatContexts))
+                                    {
+                                        mri.Contexts = formatContexts;
+                                    }
+                                }
+                                #endregion
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
@@ -3334,6 +3604,19 @@ namespace Finder.util
                                         mri.Comments = (int)WebSourceType.SinWeibo;
                                         mri.Reposts = 0;
                                         #endregion
+                                        #region 2015.8.13 新增获取网址正文
+                                        if (!string.IsNullOrEmpty(mri.InfoSource))
+                                        {
+                                            string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                            string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                            //分析关键字前100，后50个字符
+                                            string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                            if (!string.IsNullOrEmpty(formatContexts))
+                                            {
+                                                mri.Contexts = formatContexts;
+                                            }
+                                        }
+                                        #endregion
                                         #region 报告进度
                                         OnReportCactchProcess(mri);
                                         #endregion
@@ -3457,6 +3740,19 @@ namespace Finder.util
                                     //mri.Part = GetParts(mri.Contexts);
                                     mri.Comments = (int)WebSourceType.ZhongsouWeibo;
                                     mri.Reposts = 0;
+                                    #endregion
+                                    #region 2015.8.13 新增获取网址正文
+                                    if (!string.IsNullOrEmpty(mri.InfoSource))
+                                    {
+                                        string strContexts = HtmlUtil.getHtml(mri.InfoSource, "");
+                                        string noHtmlContexts = HtmlUtil.NoHTML(strContexts);
+                                        //分析关键字前100，后50个字符
+                                        string formatContexts = GetContexts(noHtmlContexts, keyword);
+                                        if (!string.IsNullOrEmpty(formatContexts))
+                                        {
+                                            mri.Contexts = formatContexts;
+                                        }
+                                    }
                                     #endregion
                                     #region 报告进度
                                     OnReportCactchProcess(mri);

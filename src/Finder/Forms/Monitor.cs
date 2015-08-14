@@ -30,6 +30,7 @@ namespace Finder.Forms
         private DataTable dtData;
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
         private string selectKwName;
+        private int selectKID;
 
         TbReleaseInfo tri;
         System.Threading.AutoResetEvent obj = new System.Threading.AutoResetEvent(false);
@@ -181,6 +182,7 @@ namespace Finder.Forms
             kwlist.SelectedIndex = 0;   //事件名称 (启动时隐藏)
             kwlist.Hide();  //事件名称
             label8.Hide();  //事件名称
+            selectKID = -1;
 
             #region 提取事件与关键字
             DataTable kwdtAll = cmd.GetTabel("select name, keyword from keywords");
@@ -767,7 +769,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -778,7 +788,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -913,8 +923,17 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             //DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            //dtkey = cmd.GetTabel("select * from Keywords");
             //dtParts = cmd.GetTabel("SELECT * FROM partword");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             #endregion
 
             HtmlParse parse = new HtmlParse();
@@ -924,7 +943,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -967,7 +986,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -978,7 +1005,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -1017,7 +1044,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -1028,7 +1063,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -1091,7 +1126,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -1102,7 +1145,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -1143,7 +1186,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -1154,7 +1205,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -1217,7 +1268,15 @@ namespace Finder.Forms
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
-            dtkey = cmd.GetTabel("select * from Keywords");
+            if (selectKID == -1)
+            {
+                //全部
+                dtkey = cmd.GetTabel("select * from Keywords");
+            }
+            else
+            {
+                dtkey = cmd.GetTabel("select * from Keywords where kid=" + selectKID);
+            }
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
@@ -1228,7 +1287,7 @@ namespace Finder.Forms
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
             {
                 //处理关键字
-                if (selectKwName != "全部")
+                if (selectKID != -1 && selectKwName != "全部")
                 {
                     if (dtkey.Rows[kw]["name"].ToString().Trim() != selectKwName) continue;
                 }
@@ -1675,7 +1734,7 @@ namespace Finder.Forms
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            DataTable dt = tri.GetLatestData();
+            DataTable dt = tri.GetLatestData(selectKID, selectKwName);
             e.Result = dt;
         }
 
@@ -1715,9 +1774,13 @@ namespace Finder.Forms
                 kwlist.Hide();
                 label8.Hide();
                 kwlist.SelectedIndex = kwlist.Items.Count - 1;
+
+                selectKID = -1;
             }
             else
             {
+                selectKID = int.Parse(kid);
+
                 string sql = "select uid , name from keywords where kid = '" + kid + "' group by name";
                 DataTable dt = cmd.GetTabel(sql);
 
@@ -1738,6 +1801,18 @@ namespace Finder.Forms
                 label8.Show();
             }
 
+        }
+
+        private void dvView_CellContentDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex != -1 && dvView.Columns[e.ColumnIndex].Name.ToLower() == "contexts")
+            {
+                string title = this.dvView.Rows[e.RowIndex].Cells["title"].Value.ToString();
+                string link = this.dvView.Rows[e.RowIndex].Cells["infosource"].Value.ToString();
+                WebBrowser browser = new WebBrowser(title, link);
+                browser.ShowDialog();
+
+            }
         }
 
     }

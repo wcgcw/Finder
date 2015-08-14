@@ -430,6 +430,7 @@
             this.dvView.TabIndex = 29;
             this.dvView.Tag = "9999";
             this.dvView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dvGridView_CellContentClick);
+            this.dvView.CellContentDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dvView_CellContentDoubleClick);
             this.dvView.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dvGridView_CellFormatting);
             // 
             // Monitor

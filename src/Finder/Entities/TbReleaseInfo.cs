@@ -47,7 +47,7 @@ namespace Finder
         public String GetInsString(ModelReleaseInfo obj)
         {
             StringBuilder insertSql = new StringBuilder();
-            string[] keywords = obj.KeyWords.Split(new string[] { "," },StringSplitOptions.RemoveEmptyEntries);
+            string[] keywords = obj.KeyWords.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string k in keywords)
             {
                 string sql = @"INSERT INTO ReleaseInfo([Title],[Contexts],[ReleaseDate],[InfoSource],[KeyWords],[ReleaseName],[CollectDate],[Snapshot],[webName],[pid],[part],[reposts],[comments],[kid],[sheng],[shi],[xian]) 
@@ -55,8 +55,8 @@ namespace Finder
 
                 obj.Title = filtRiskChar(obj.Title);
                 obj.Contexts = filtRiskChar(obj.Contexts);
-                insertSql.Append(string.Format(sql, obj.Title, obj.Contexts, obj.ReleaseDate, obj.InfoSource, k.Contains('-')?k.Split(new char[] { '-' })[0]:k,
-                    obj.ReleaseName, obj.CollectDate, obj.Snapshot, obj.WebName, obj.Pid, obj.Part, obj.Reposts, obj.Comments, k.Contains('-')?k.Split(new char[] { '-' })[1]:k, obj.Sheng, obj.Shi, obj.Xian));
+                insertSql.Append(string.Format(sql, obj.Title, obj.Contexts, obj.ReleaseDate, obj.InfoSource, k.Contains('-') ? k.Split(new char[] { '-' })[0] : k,
+                    obj.ReleaseName, obj.CollectDate, obj.Snapshot, obj.WebName, obj.Pid, obj.Part, obj.Reposts, obj.Comments, k.Contains('-') ? k.Split(new char[] { '-' })[1] : k, obj.Sheng, obj.Shi, obj.Xian));
             }
             return insertSql.ToString();
         }
@@ -242,8 +242,8 @@ namespace Finder
             try
             {
                 DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
-                object obj = dbobj.GetOne(sql); 
-                int val=0;
+                object obj = dbobj.GetOne(sql);
+                int val = 0;
                 int.TryParse(obj.ToString(), out val);
 
                 return val;
@@ -316,11 +316,20 @@ namespace Finder
             }
         }
 
-        public DataTable GetLatestData()
+        public DataTable GetLatestData(int kid, string eventName)
         {
             //string sql = "Select * From ReleaseInfo where pid={0} and deleted=0 order by collectdate desc limit 0,100";
             string sql = @"select b.[Name] eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    where b.[Name] is not null and  a.deleted=0 order by a.collectdate desc limit 0,50";
+                                    where b.[Name] is not null and  a.deleted=0";
+            if (kid != -1)
+            {
+                sql += "    and a.kid=" + kid;
+                if (!string.IsNullOrEmpty(eventName) && eventName != "全部")
+                {
+                    sql += " and  b.[Name]='" + eventName + "'";
+                }
+            }
+            sql += " order by a.collectdate desc limit 0,50";
             try
             {
                 DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
