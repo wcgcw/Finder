@@ -676,7 +676,14 @@ namespace Finder.Forms
         {
             if (e.RowIndex != -1 && dataGridView1.Columns[e.ColumnIndex].Name == "title_link")
             {
-                System.Diagnostics.Process.Start(this.dataGridView1.Rows[e.RowIndex].Cells["infosource"].Value.ToString());
+                try
+                {
+                    System.Diagnostics.Process.Start(this.dataGridView1.Rows[e.RowIndex].Cells["infosource"].Value.ToString());
+                }
+                catch(Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
 

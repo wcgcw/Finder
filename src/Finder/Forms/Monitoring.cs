@@ -18,6 +18,7 @@ using System.Web.UI;
 using Sodao.Snap;
 using System.Threading;
 using Finder.util;
+using HtmlParse;
 
 namespace Finder.Forms
 {

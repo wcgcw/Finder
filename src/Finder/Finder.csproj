@@ -59,6 +59,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>libs\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlParse">
+      <HintPath>libs\HtmlParse.dll</HintPath>
+    </Reference>
     <Reference Include="IrisSkin2">
       <HintPath>libs\IrisSkin2.dll</HintPath>
     </Reference>
@@ -279,7 +282,6 @@
     <Compile Include="util\DogVendorCode.cs" />
     <Compile Include="util\GetSnap.cs" />
     <Compile Include="util\GlobalPars.cs" />
-    <Compile Include="util\HtmlParse.cs" />
     <Compile Include="util\HtmlUtil.cs" />
     <Compile Include="util\QQWeibo.cs" />
     <Compile Include="util\SinaWeibo.cs" />

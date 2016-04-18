@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using DataBaseServer;
+using HtmlParse;
 
 namespace Finder.util
 {

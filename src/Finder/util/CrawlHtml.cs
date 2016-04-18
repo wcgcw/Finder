@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.Web;
+using HtmlParse;
 
 namespace Finder.util
 {

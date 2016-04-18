@@ -211,11 +211,11 @@ namespace Finder
             kz.Dock = DockStyle.Fill;
 
             panel_main.Controls.Add(home);
-            if (!Comm.IsServiced())
-            {
-                MessageBox.Show("软件出现未知错误，无法运行，请联系软件提供商。程序将退出！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                System.Environment.Exit(0);
-            }
+            //if (!Comm.IsServiced())
+            //{
+            //    MessageBox.Show("软件出现未知错误，无法运行，请联系软件提供商。程序将退出！", "警告", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    System.Environment.Exit(0);
+            //}
         }
         #endregion
 

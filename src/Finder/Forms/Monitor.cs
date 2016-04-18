@@ -20,6 +20,7 @@ using System.Threading;
 using Finder.util;
 using Finder.Entities;
 using Finder.UserControles;
+using HtmlParse;
 
 namespace Finder.Forms
 {
@@ -536,7 +537,7 @@ namespace Finder.Forms
             //相似表中的被抓取网址
             string webInfo = "";
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
 
             //读取相似表中要抓取的网址
             webInfo = HtmlUtil.getHtml(motherUrl, "");
@@ -781,7 +782,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(parse_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
@@ -936,8 +937,8 @@ namespace Finder.Forms
             }
             #endregion
 
-            HtmlParse parse = new HtmlParse();
-            parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Weixin_ReportCatchProcess);
+            HtmlParse.Parse parse = new HtmlParse.Parse();
+            //parse.ReportCatchProcess += new HtmlParse.Parse.ReportCatchProcessEventHandler(Weixin_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
             for (int kw = 0; kw < dtkey.Rows.Count; kw++)
@@ -956,9 +957,12 @@ namespace Finder.Forms
                 //组成查询字串                
                 string url = "http://weixin.sogou.com/weixin?type=2&query=" + keyword + "&ie=utf8";
 
-                string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+                //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+                CookieContainer cookies = new CookieContainer();
+                string strCookie = "";
+                string html = HtmlUtil.HttpGet(url, Encoding.UTF8, cookies, "weixin.sogou.com", ref strCookie); 
                 #endregion
-                List<ModelReleaseInfo> mris = parse.ParseSogouWeixin(html, keyword, kid);
+                List<ModelReleaseInfo> mris = parse.ParseSogouWeixin(html, keyword, kid, cookies, strCookie);
                 if (mris != null && mris.Count() > 0)
                 {
                     DataPersistenceControl.GetInstance().Add(mris);
@@ -998,7 +1002,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Blog_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
@@ -1056,7 +1060,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(BBS_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
@@ -1138,7 +1142,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Tieba_ReportCatchProcess);
 
             //按关键字循环
@@ -1198,7 +1202,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(Weibo_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环
@@ -1280,7 +1284,7 @@ namespace Finder.Forms
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             #endregion
 
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             //parse.ReportCatchProcess += new HtmlParse.ReportCatchProcessEventHandler(BaiduWeb_ReportCatchProcess);
             List<ModelReleaseInfo> webDatas = new List<ModelReleaseInfo>();
             //按关键字循环

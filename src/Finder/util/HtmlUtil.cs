@@ -756,6 +756,69 @@ namespace Finder
                 return "";
             }
         }
+
+        public static string HttpGet(string url, Encoding encode, CookieContainer cookies, string domain, ref string cookiesstr)
+        {
+            try
+            {
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+                req.Timeout = 1000 * 30; //30秒超时
+                req.MaximumAutomaticRedirections = 2000;
+                req.CookieContainer = new CookieContainer(); //暂存到新实例                
+                HttpWebResponse receiveStream = (HttpWebResponse)req.GetResponse();
+                cookies = req.CookieContainer; //保存cookies
+                cookiesstr = req.CookieContainer.GetCookieHeader(req.RequestUri); //把cookies转换成字符串
+                addCookieToContainer(cookiesstr, cookies, domain);
+                StreamReader reader = new StreamReader(receiveStream.GetResponseStream(), encode);
+                string content = reader.ReadToEnd();
+                return content;
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
+
+        public static CookieContainer addCookieToContainer(string cookie, CookieContainer cc, string domain)
+        {
+            string[] tempCookies = cookie.Split(';');
+            string tempCookie = null;
+            int Equallength = 0;//  =的位置 
+            string cookieKey = null;
+            string cookieValue = null;
+            //qg.gome.com.cn  cookie 
+            for (int i = 0; i < tempCookies.Length; i++)
+            {
+                if (!string.IsNullOrEmpty(tempCookies[i]))
+                {
+                    tempCookie = tempCookies[i];
+                    Equallength = tempCookie.IndexOf("=");
+
+                    if (Equallength != -1)       //有可能cookie 无=，就直接一个cookiename；比如:a=3;ck;abc=; 
+                    {
+                        cookieKey = tempCookie.Substring(0, Equallength).Trim();
+                        if (Equallength == tempCookie.Length - 1)    //这种是等号后面无值，如：abc=; 
+                        {
+                            cookieValue = "";
+                        }
+                        else
+                        {
+                            cookieValue = tempCookie.Substring(Equallength + 1, tempCookie.Length - Equallength - 1).Trim();
+                        }
+                    }
+                    else
+                    {
+                        cookieKey = tempCookie.Trim();
+                        cookieValue = "";
+                    }
+                    cc.Add(new Cookie(cookieKey, cookieValue, "", domain));
+                }
+
+            }
+
+            return cc;
+        }
+
         #endregion
     }
 }

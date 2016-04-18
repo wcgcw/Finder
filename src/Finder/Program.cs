@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Finder.util;
 using System.Text;
+using System.Net;
 
 namespace Finder
 {
@@ -16,7 +17,7 @@ namespace Finder
         static void Main()
         {
             #region 测试代码
-            HtmlParse parse = new HtmlParse();
+            HtmlParse.Parse parse = new HtmlParse.Parse();
             #region 百度新闻
             //string html = HtmlUtil.getHtml(@"http://news.baidu.com/ns?word=%CE%ED%F6%B2&tn=news&from=news&cl=2&rn=20&ct=1&oq=wumai&f=3&rsp=0", "");
             //parse.ParseBaiduNews(html, "");
@@ -46,7 +47,102 @@ namespace Finder
             //String encodeKey = CrawlHtml.UrlEncode("雾霾");
             //string Url = "http://s.weibo.com/weibo/" + encodeKey + "?topnav=1&wvr=6&b=1&page=1";
 
-            ////Url = "http://s.weibo.com/weibo/%25E9%259B%25BE%25E9%259C%25BE&Refer=STopic_box";
+            //string url = "http://weixin.sogou.com/weixin?type=2&query=日本地震&ie=utf8";
+
+            //string html = HtmlUtil.HttpGet(url, Encoding.UTF8);
+            //HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            //myHttpWebRequest.Timeout = 20 * 1000; //连接超时
+            //myHttpWebRequest.Accept = "*/*";
+            //myHttpWebRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0;)";
+            //myHttpWebRequest.CookieContainer = new CookieContainer(); //暂存到新实例
+            //myHttpWebRequest.GetResponse().Close();
+            //CookieContainer cookies = myHttpWebRequest.CookieContainer; //保存cookies
+            //string cookiesstr = myHttpWebRequest.CookieContainer.GetCookieHeader(myHttpWebRequest.RequestUri); //把cookies转换成字符串
+
+            //url = "http://www.google.com.hk/search?oe=utf8&ie=utf8&source=uds&hl=zh-CN&q=3g";
+            //myHttpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            //myHttpWebRequest.Timeout = 20 * 1000; //连接超时
+            //myHttpWebRequest.Accept = "*/*";
+            //myHttpWebRequest.UserAgent = "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident/4.0;)";
+            //myHttpWebRequest.CookieContainer = cookies; //使用已经保存的cookies 方法一
+            ////myHttpWebRequest.Headers.Add("Cookie", cookiesstr); //使用已经保存的cookies 方法二
+            //HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+            //Stream stream = myHttpWebResponse.GetResponseStream();
+            //stream.ReadTimeout = 15 * 1000; //读取超时
+            //StreamReader sr = new StreamReader(stream, Encoding.GetEncoding("utf-8"));
+            //string strWebData = sr.ReadToEnd();
+
+
+            //addCookieToContainer(
+
+            //string Url = "http://weixin.sogou.com/websearch/art.jsp?sg=xaXJ7lM8QYStF1kWP8Nhf27jjx9-k2V5Pxw2V1TnOVd5c3UQm_RtRRSpHy_Kv-vWcfbESUI3G2Pb-DQNpjh1C9crHcLpEBzF0I_n_tUUfmykMPyDsxj2kwPm7oaSSq-qWyqvhDizzyk.&url=p0OVDH8R4SHyUySb8E88hkJm8GF_McJfBfynRTbN8whUt5mIFg8z7f7OJoKS0COu7nKVURyrL7CSMXyLMuQ9cGQ3JxMQ3374HQ341djCfMVxr6fSRWMeKTzrjWK-vcFuMFpaWebFSBBYy-5x5In7jJFmExjqCxhpkyjFvwP6PuGcQ64lGQ2ZDMuqxplQrsbk";
+            //HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(Url);
+            ////req.Connection = "keep-alive";            
+            //req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            //req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36";
+            //req.Headers.Add("Accept-Encoding", "gzip, deflate, sdch");
+            //req.Headers.Add("Accept-Language", "zh-CN,zh;q=0.8");
+            //string domain = "weixin.sogou.com";
+            //CookieContainer myCookieContainer = new CookieContainer();
+            //Cookie ck = new Cookie("SMYUV", "1315876896029400", "/", domain);
+            //myCookieContainer.Add(ck);
+            //Cookie ck2 = new Cookie("SUV", "1315876896030236", "/", domain);
+            //myCookieContainer.Add(ck2);
+            //Cookie ck3 = new Cookie("ssuid", "8259370578", "/", domain);
+            //myCookieContainer.Add(ck3);
+            //Cookie ck4 = new Cookie("SUID", "B9AF8DDB7E23900A00000000558A6F47", "/", domain);
+            //myCookieContainer.Add(ck4);
+            //Cookie ck5 = new Cookie("pgv_pvi", "1353635840", "/", domain);
+            //myCookieContainer.Add(ck5);
+            //Cookie ck6 = new Cookie("usid", "7imwP0sX5gAk5mcI", "/", domain);
+            //myCookieContainer.Add(ck6);
+            //Cookie ck7 = new Cookie("_ga", "7imwP0sX5gAk5mcI", "/", domain);
+            //myCookieContainer.Add(ck7);
+            //Cookie ck8 = new Cookie("IPLOC", "CN1100", "/", domain);
+            //myCookieContainer.Add(ck8);
+            //Cookie ck9 = new Cookie("ABTEST", "0|1460883888|v1", "/", domain);
+            //myCookieContainer.Add(ck9);
+            //Cookie ck10 = new Cookie("weixinIndexVisited", "1", "/", domain);
+            //myCookieContainer.Add(ck10);
+            //Cookie ck11 = new Cookie("SNUID", "3375F7F18B8FBB200375FC0B8B212ABA", "/", domain);
+            //myCookieContainer.Add(ck11);
+            //Cookie ck12 = new Cookie("sct", "77", "/", domain);
+            //myCookieContainer.Add(ck12);
+            //req.CookieContainer = myCookieContainer;
+            //req.CookieContainer.SetCookies(req.RequestUri);
+
+            //CookieContainer myCookieContainer2 = new CookieContainer();
+            //string[] cookstr = cookieStr.Split(';');
+            //CookieCollection cookieCollection = new CookieCollection();
+
+            //foreach (string str in cookstr)
+            //{
+            //    string name = str.Substring(0, str.IndexOf("="));
+            //    string value = str.Substring(str.IndexOf("=") + 1);
+            //    Cookie ck = new Cookie(name, value);
+            //    cookieCollection.Add(ck);
+
+            //}
+            //myCookieContainer.Add(new Uri("www.58.com"), cookieCollection);
+            //myCookieContainer2.SetCookies(new Uri("www.58.com"), cookieStr);
+            //string content = string.Empty;
+            //HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(Url);
+            //request.Method = "GET";
+            //request.UserAgent = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1";
+            //request.KeepAlive = true;
+            //request.Accept = "*/*";
+            //request.Referer = "http://post.58.com/541/8/s5?pts=1403055598929";
+            //request.Headers.Add("Accept-Encoding", "gzip,deflate,sdch");
+            //request.Headers.Add("Accept-Language", "zh-CN,zh;q=0.8");
+            //request.Headers.Add("Accept-Charset", "GBK,utf-8;q=0.7,*;q=0.3");
+            //request.CookieContainer = myCookieContainer2;
+            //Stream Stream;
+            //Stream = request.GetRequestStream();
+            //Stream.Write(streamByImg, 0, streamByImg.Length);
+
+            //req.AllowAutoRedirect = false;
+            //HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+            //string loc = response.Headers["location"];
 
             //string html = HtmlUtil.HttpGet(Url, System.Text.Encoding.UTF8);
             //List<ModelReleaseInfo> mris = parse.ParseSinaWeibo(html, "");

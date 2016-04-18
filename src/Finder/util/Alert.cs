@@ -112,7 +112,7 @@ namespace Finder.util
                         if (dtsms != null && dtsms.Rows.Count > 0)
                         {
                             string lastTime = dtsms.Rows[0]["sendtime"].ToString();
-                            if (string.Compare(timeBefore, lastTime)<0)
+                            if (string.Compare(timeBefore, lastTime) < 0)
                             {
                                 timeBefore = lastTime;
                             }
@@ -142,21 +142,22 @@ namespace Finder.util
                             //    hashtableTime = (DateTime)ht[tmp_keyword];
                             //    if ((DateTime.Now - hashtableTime).TotalMinutes > double.Parse(tmp_IntervalHours) * 60)
                             //    {
-                                    sendText = StringReplace(tmp_sendContent, "[事件名称]", insertSign(tmp_keyword));
-                                    sendSMS(sendText, tmp_phoneNumber, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                    thisTimeCount++;
-                                    //aviCount--;
-                                    //ht.Remove(tmp_keyword);
-                                    //ht.Add(tmp_keyword, DateTime.Now);
-                                    sendText = "";
+                            sendText = StringReplace(tmp_sendContent, "[事件名称]", insertSign(tmp_keyword));
+                            //2016.4.17 去掉短信报警的功能
+                            sendSMS(sendText, tmp_phoneNumber, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                            thisTimeCount++;
+                            //aviCount--;
+                            //ht.Remove(tmp_keyword);
+                            //ht.Add(tmp_keyword, DateTime.Now);
+                            sendText = "";
 
-                                    //发完短信在数据库中插入刚才发的短信记录
-                                    sql = "insert into sms (content,sendtime,mobile,keyword) values ('"
-                                                + tmp_sendContent + "','"
-                                                + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','"
-                                                + tmp_phoneNumber + "','"
-                                                + tmp_keyword + "')";
-                                    cmd.ExecuteNonQueryInt(sql);
+                            //发完短信在数据库中插入刚才发的短信记录
+                            sql = "insert into sms (content,sendtime,mobile,keyword) values ('"
+                                        + tmp_sendContent + "','"
+                                        + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "','"
+                                        + tmp_phoneNumber + "','"
+                                        + tmp_keyword + "')";
+                            cmd.ExecuteNonQueryInt(sql);
                             //    }
                             //}
                             //else
@@ -177,9 +178,9 @@ namespace Finder.util
                             //    cmd.ExecuteNonQueryInt(sql);
                             //}
                         }
-                        else 
-                        { 
-                            tmp_hasSmsAlerted = "0"; 
+                        else
+                        {
+                            tmp_hasSmsAlerted = "0";
                         }
 
                         //if (aviCount <= 100 && sendAviCountSMS == 0)
@@ -191,7 +192,11 @@ namespace Finder.util
 
                         //"把本次使用量thisTimeCount,userID作为参数请求url"
                         string url = "http://www.shangwukaocha.cn/finder/users.php?userID=" + userID + "&m=usc&smscount=" + thisTimeCount.ToString();
-                        postSend(url, "");
+                        //2016.4.17 地址已经失效，去掉短信条数的登记服务
+                        //postSend(url, "");
+
+
+
                         //if (int.Parse(retVal[2].Equals("") ? "0" : retVal[2]) == 0 && aviCount <= 0)
                         //{
                         //    sendSMS("截止目前，您的舆情系统账户短信剩余量已为0，短信功能将停止，请尽快联系客服续费！",
@@ -292,7 +297,8 @@ namespace Finder.util
             string strPwd = "KGJTPSIK";                 //密码（由华兴软通提供）
             string strSourceAdd = "";                   //子通道号，可为空（预留参数）
             //string strPhone = "13391750223,18701657767";//手机号码，多个手机号用半角逗号分开，最多1000个
-            string strContent = HttpUtility.UrlEncode(content_ + "[" + sendTime_ + "]", myEncode);
+            //string strContent = HttpUtility.UrlEncode(content_ + "[" + sendTime_ + "]", myEncode);
+            string strContent = HttpUtility.UrlEncode(content_, myEncode);
             //短信内容
             string url = "http://www.stongnet.com/sdkhttp/sendsms.aspx";  //华兴软通发送短信地址
             //要发送的内容
