@@ -50,3 +50,13 @@ src/Finder/bin/*
 src/Finder/obj/*
 src/Update/obj/*
 src/Finder.suo
+src/Finder.suo
+*.suo
+src/HtmlParse/HtmlParse/obj/Debug/HtmlParse.csproj.FileListAbsolute.txt
+src/HtmlParse/HtmlParse/obj/Debug/HtmlParse.dll
+src/HtmlParse/HtmlParse/obj/Debug/HtmlParse.pdb
+src/HtmlParse/HtmlParse/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+src/HtmlParse/HtmlParse/bin/Debug/HtmlParse.dll
+src/HtmlParse/HtmlParse/bin/Debug/HtmlParse.pdb
+src/HtmlParse/HtmlParse/bin/Debug/log4net.dll
+src/HtmlParse/HtmlParse/bin/Debug/MILHTMLParser.dll
