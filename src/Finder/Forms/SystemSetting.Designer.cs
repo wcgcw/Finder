@@ -80,10 +80,9 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(16, 474);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(12, 379);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(294, 18);
+            this.label3.Size = new System.Drawing.Size(233, 14);
             this.label3.TabIndex = 20;
             this.label3.Tag = "9999";
             this.label3.Text = "微博授权(点击以下图片按钮授权)";
@@ -94,10 +93,9 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
-            this.label4.Location = new System.Drawing.Point(16, 769);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(12, 615);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(84, 18);
+            this.label4.Size = new System.Drawing.Size(67, 14);
             this.label4.TabIndex = 20;
             this.label4.Tag = "9999";
             this.label4.Text = "修改密码";
@@ -107,10 +105,9 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label5.Location = new System.Drawing.Point(43, 819);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label5.Location = new System.Drawing.Point(32, 655);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(98, 18);
+            this.label5.Size = new System.Drawing.Size(77, 14);
             this.label5.TabIndex = 20;
             this.label5.Tag = "9999";
             this.label5.Text = "当前密码：";
@@ -121,22 +118,19 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
-            this.groupBox1.Location = new System.Drawing.Point(-3, 794);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(-2, 635);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(1519, 2);
+            this.groupBox1.Size = new System.Drawing.Size(1139, 2);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Visible = false;
             // 
             // tb_oldpwd
             // 
-            this.tb_oldpwd.Location = new System.Drawing.Point(148, 815);
-            this.tb_oldpwd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_oldpwd.Location = new System.Drawing.Point(111, 652);
             this.tb_oldpwd.MaxLength = 20;
             this.tb_oldpwd.Name = "tb_oldpwd";
-            this.tb_oldpwd.Size = new System.Drawing.Size(173, 25);
+            this.tb_oldpwd.Size = new System.Drawing.Size(131, 21);
             this.tb_oldpwd.TabIndex = 11;
             this.tb_oldpwd.UseSystemPasswordChar = true;
             this.tb_oldpwd.Visible = false;
@@ -144,10 +138,9 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(359, 820);
-            this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label6.Location = new System.Drawing.Point(269, 656);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(67, 15);
+            this.label6.Size = new System.Drawing.Size(53, 12);
             this.label6.TabIndex = 20;
             this.label6.Tag = "9999";
             this.label6.Text = "新密码：";
@@ -155,11 +148,10 @@
             // 
             // tb_newpwd1
             // 
-            this.tb_newpwd1.Location = new System.Drawing.Point(432, 815);
-            this.tb_newpwd1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_newpwd1.Location = new System.Drawing.Point(324, 652);
             this.tb_newpwd1.MaxLength = 20;
             this.tb_newpwd1.Name = "tb_newpwd1";
-            this.tb_newpwd1.Size = new System.Drawing.Size(173, 25);
+            this.tb_newpwd1.Size = new System.Drawing.Size(131, 21);
             this.tb_newpwd1.TabIndex = 12;
             this.tb_newpwd1.UseSystemPasswordChar = true;
             this.tb_newpwd1.Visible = false;
@@ -167,10 +159,9 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(651, 819);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(488, 655);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(82, 15);
+            this.label7.Size = new System.Drawing.Size(65, 12);
             this.label7.TabIndex = 20;
             this.label7.Tag = "9999";
             this.label7.Text = "重复密码：";
@@ -178,21 +169,19 @@
             // 
             // tb_newpwd2
             // 
-            this.tb_newpwd2.Location = new System.Drawing.Point(741, 814);
-            this.tb_newpwd2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_newpwd2.Location = new System.Drawing.Point(556, 651);
             this.tb_newpwd2.MaxLength = 20;
             this.tb_newpwd2.Name = "tb_newpwd2";
-            this.tb_newpwd2.Size = new System.Drawing.Size(173, 25);
+            this.tb_newpwd2.Size = new System.Drawing.Size(131, 21);
             this.tb_newpwd2.TabIndex = 13;
             this.tb_newpwd2.UseSystemPasswordChar = true;
             this.tb_newpwd2.Visible = false;
             // 
             // btn_updatepwd
             // 
-            this.btn_updatepwd.Location = new System.Drawing.Point(941, 811);
-            this.btn_updatepwd.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_updatepwd.Location = new System.Drawing.Point(706, 649);
             this.btn_updatepwd.Name = "btn_updatepwd";
-            this.btn_updatepwd.Size = new System.Drawing.Size(128, 29);
+            this.btn_updatepwd.Size = new System.Drawing.Size(96, 23);
             this.btn_updatepwd.TabIndex = 14;
             this.btn_updatepwd.Text = "确认修改密码";
             this.btn_updatepwd.UseVisualStyleBackColor = true;
@@ -204,11 +193,9 @@
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
-            this.groupBox2.Location = new System.Drawing.Point(-3, 504);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox2.Location = new System.Drawing.Point(-2, 403);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox2.Size = new System.Drawing.Size(1519, 2);
+            this.groupBox2.Size = new System.Drawing.Size(1139, 2);
             this.groupBox2.TabIndex = 20;
             this.groupBox2.TabStop = false;
             this.groupBox2.Visible = false;
@@ -217,10 +204,9 @@
             // 
             this.btn_weibo_sina_auth.BackgroundImage = global::Finder.Properties.Resources.sinaweibo;
             this.btn_weibo_sina_auth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_weibo_sina_auth.Location = new System.Drawing.Point(380, 529);
-            this.btn_weibo_sina_auth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_weibo_sina_auth.Location = new System.Drawing.Point(285, 423);
             this.btn_weibo_sina_auth.Name = "btn_weibo_sina_auth";
-            this.btn_weibo_sina_auth.Size = new System.Drawing.Size(233, 62);
+            this.btn_weibo_sina_auth.Size = new System.Drawing.Size(175, 50);
             this.btn_weibo_sina_auth.TabIndex = 10;
             this.btn_weibo_sina_auth.Tag = "9999";
             this.toolTip1.SetToolTip(this.btn_weibo_sina_auth, "新浪微博授权");
@@ -232,10 +218,9 @@
             // 
             this.btn_weibo_qq_auth.BackgroundImage = global::Finder.Properties.Resources.qqweibo;
             this.btn_weibo_qq_auth.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.btn_weibo_qq_auth.Location = new System.Drawing.Point(19, 529);
-            this.btn_weibo_qq_auth.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_weibo_qq_auth.Location = new System.Drawing.Point(14, 423);
             this.btn_weibo_qq_auth.Name = "btn_weibo_qq_auth";
-            this.btn_weibo_qq_auth.Size = new System.Drawing.Size(233, 62);
+            this.btn_weibo_qq_auth.Size = new System.Drawing.Size(175, 50);
             this.btn_weibo_qq_auth.TabIndex = 9;
             this.btn_weibo_qq_auth.Tag = "9999";
             this.toolTip1.SetToolTip(this.btn_weibo_qq_auth, "腾讯微博授权");
@@ -248,10 +233,9 @@
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label15.ForeColor = System.Drawing.Color.Black;
-            this.label15.Location = new System.Drawing.Point(16, 630);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label15.Location = new System.Drawing.Point(12, 504);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(160, 18);
+            this.label15.Size = new System.Drawing.Size(127, 14);
             this.label15.TabIndex = 20;
             this.label15.Tag = "9999";
             this.label15.Text = "证据图片保存路径";
@@ -261,11 +245,9 @@
             this.groupBox5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
-            this.groupBox5.Location = new System.Drawing.Point(-3, 659);
-            this.groupBox5.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox5.Location = new System.Drawing.Point(-2, 527);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox5.Size = new System.Drawing.Size(1519, 2);
+            this.groupBox5.Size = new System.Drawing.Size(1139, 2);
             this.groupBox5.TabIndex = 20;
             this.groupBox5.TabStop = false;
             // 
@@ -273,10 +255,9 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.label16.Location = new System.Drawing.Point(15, 691);
-            this.label16.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label16.Location = new System.Drawing.Point(11, 553);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(224, 18);
+            this.label16.Size = new System.Drawing.Size(175, 14);
             this.label16.TabIndex = 20;
             this.label16.Tag = "9999";
             this.label16.Text = "请选择证据图片保存路径：";
@@ -284,18 +265,16 @@
             // tb_choosedimgpath
             // 
             this.tb_choosedimgpath.Enabled = false;
-            this.tb_choosedimgpath.Location = new System.Drawing.Point(252, 688);
-            this.tb_choosedimgpath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tb_choosedimgpath.Location = new System.Drawing.Point(189, 550);
             this.tb_choosedimgpath.Name = "tb_choosedimgpath";
-            this.tb_choosedimgpath.Size = new System.Drawing.Size(465, 25);
+            this.tb_choosedimgpath.Size = new System.Drawing.Size(350, 21);
             this.tb_choosedimgpath.TabIndex = 21;
             // 
             // btn_saveimgpath
             // 
-            this.btn_saveimgpath.Location = new System.Drawing.Point(771, 685);
-            this.btn_saveimgpath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_saveimgpath.Location = new System.Drawing.Point(578, 548);
             this.btn_saveimgpath.Name = "btn_saveimgpath";
-            this.btn_saveimgpath.Size = new System.Drawing.Size(100, 29);
+            this.btn_saveimgpath.Size = new System.Drawing.Size(75, 23);
             this.btn_saveimgpath.TabIndex = 22;
             this.btn_saveimgpath.Text = "保  存";
             this.btn_saveimgpath.UseVisualStyleBackColor = true;
@@ -312,10 +291,9 @@
             this.lbsmsCX.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lbsmsCX.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbsmsCX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
-            this.lbsmsCX.Location = new System.Drawing.Point(8, 11);
-            this.lbsmsCX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbsmsCX.Location = new System.Drawing.Point(6, 9);
             this.lbsmsCX.Name = "lbsmsCX";
-            this.lbsmsCX.Size = new System.Drawing.Size(103, 15);
+            this.lbsmsCX.Size = new System.Drawing.Size(83, 12);
             this.lbsmsCX.TabIndex = 24;
             this.lbsmsCX.Tag = "9999";
             this.lbsmsCX.Text = "报警历史查询";
@@ -327,10 +305,9 @@
             this.lbsoundCX.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lbsoundCX.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbsoundCX.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(102)))), ((int)(((byte)(0)))));
-            this.lbsoundCX.Location = new System.Drawing.Point(119, 8);
-            this.lbsoundCX.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lbsoundCX.Location = new System.Drawing.Point(89, 6);
             this.lbsoundCX.Name = "lbsoundCX";
-            this.lbsoundCX.Size = new System.Drawing.Size(103, 15);
+            this.lbsoundCX.Size = new System.Drawing.Size(83, 12);
             this.lbsoundCX.TabIndex = 25;
             this.lbsoundCX.Tag = "9999";
             this.lbsoundCX.Text = "报警历史查询";
@@ -339,13 +316,13 @@
             // btn_query_smscount
             // 
             this.btn_query_smscount.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btn_query_smscount.Location = new System.Drawing.Point(121, 4);
-            this.btn_query_smscount.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btn_query_smscount.Location = new System.Drawing.Point(91, 3);
             this.btn_query_smscount.Name = "btn_query_smscount";
-            this.btn_query_smscount.Size = new System.Drawing.Size(137, 29);
+            this.btn_query_smscount.Size = new System.Drawing.Size(103, 23);
             this.btn_query_smscount.TabIndex = 27;
             this.btn_query_smscount.Text = "查询剩余短信量";
             this.btn_query_smscount.UseVisualStyleBackColor = true;
+            this.btn_query_smscount.Visible = false;
             this.btn_query_smscount.Click += new System.EventHandler(this.btn_query_smscount_Click);
             // 
             // lb_show_shengyusmscount
@@ -354,10 +331,9 @@
             this.lb_show_shengyusmscount.AutoSize = true;
             this.lb_show_shengyusmscount.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lb_show_shengyusmscount.ForeColor = System.Drawing.Color.Blue;
-            this.lb_show_shengyusmscount.Location = new System.Drawing.Point(269, 9);
-            this.lb_show_shengyusmscount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lb_show_shengyusmscount.Location = new System.Drawing.Point(202, 7);
             this.lb_show_shengyusmscount.Name = "lb_show_shengyusmscount";
-            this.lb_show_shengyusmscount.Size = new System.Drawing.Size(0, 18);
+            this.lb_show_shengyusmscount.Size = new System.Drawing.Size(0, 14);
             this.lb_show_shengyusmscount.TabIndex = 28;
             // 
             // dgv1
@@ -365,11 +341,10 @@
             this.dgv1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.dgv1.BackgroundColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.dgv1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv1.Location = new System.Drawing.Point(8, 38);
-            this.dgv1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgv1.Location = new System.Drawing.Point(6, 30);
             this.dgv1.Name = "dgv1";
             this.dgv1.RowTemplate.Height = 23;
-            this.dgv1.Size = new System.Drawing.Size(1293, 298);
+            this.dgv1.Size = new System.Drawing.Size(970, 238);
             this.dgv1.TabIndex = 30;
             this.dgv1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv1_CellContentClick);
             // 
@@ -380,11 +355,10 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.ItemSize = new System.Drawing.Size(84, 25);
-            this.tabControl1.Location = new System.Drawing.Point(17, 70);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Location = new System.Drawing.Point(13, 56);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1320, 379);
+            this.tabControl1.Size = new System.Drawing.Size(990, 303);
             this.tabControl1.TabIndex = 31;
             // 
             // tabPage1
@@ -393,10 +367,9 @@
             this.tabPage1.Controls.Add(this.dgv1);
             this.tabPage1.Controls.Add(this.label18);
             this.tabPage1.Location = new System.Drawing.Point(4, 29);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabPage1.Size = new System.Drawing.Size(1312, 346);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage1.Size = new System.Drawing.Size(982, 270);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "短信报警设置";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -407,10 +380,10 @@
             this.panel1.Controls.Add(this.lbsmsCX);
             this.panel1.Controls.Add(this.lb_show_shengyusmscount);
             this.panel1.Controls.Add(this.btn_query_smscount);
-            this.panel1.Location = new System.Drawing.Point(835, -1);
+            this.panel1.Location = new System.Drawing.Point(626, -1);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(467, 35);
+            this.panel1.Size = new System.Drawing.Size(350, 28);
             this.panel1.TabIndex = 32;
             // 
             // label18
@@ -418,10 +391,9 @@
             this.label18.AutoSize = true;
             this.label18.Cursor = System.Windows.Forms.Cursors.Hand;
             this.label18.ForeColor = System.Drawing.Color.Red;
-            this.label18.Location = new System.Drawing.Point(8, 12);
-            this.label18.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label18.Location = new System.Drawing.Point(6, 10);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(67, 15);
+            this.label18.Size = new System.Drawing.Size(53, 12);
             this.label18.TabIndex = 29;
             this.label18.Text = "填写说明";
             this.label18.Click += new System.EventHandler(this.label18_Click);
@@ -431,10 +403,9 @@
             this.tabPage2.Controls.Add(this.panel2);
             this.tabPage2.Controls.Add(this.dgv2);
             this.tabPage2.Location = new System.Drawing.Point(4, 29);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tabPage2.Size = new System.Drawing.Size(1312, 346);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabPage2.Size = new System.Drawing.Size(982, 270);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "声音报警设置";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -443,10 +414,9 @@
             // 
             this.panel2.Anchor = System.Windows.Forms.AnchorStyles.Right;
             this.panel2.Controls.Add(this.lbsoundCX);
-            this.panel2.Location = new System.Drawing.Point(1035, 2);
-            this.panel2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panel2.Location = new System.Drawing.Point(776, 2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(267, 31);
+            this.panel2.Size = new System.Drawing.Size(200, 25);
             this.panel2.TabIndex = 27;
             // 
             // dgv2
@@ -454,11 +424,10 @@
             this.dgv2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.dgv2.BackgroundColor = System.Drawing.SystemColors.InactiveCaptionText;
             this.dgv2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv2.Location = new System.Drawing.Point(8, 39);
-            this.dgv2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgv2.Location = new System.Drawing.Point(6, 31);
             this.dgv2.Name = "dgv2";
             this.dgv2.RowTemplate.Height = 23;
-            this.dgv2.Size = new System.Drawing.Size(1293, 298);
+            this.dgv2.Size = new System.Drawing.Size(970, 238);
             this.dgv2.TabIndex = 26;
             this.dgv2.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv2_CellContentClick);
             // 
@@ -467,10 +436,9 @@
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("宋体", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.label1.ForeColor = System.Drawing.Color.Black;
-            this.label1.Location = new System.Drawing.Point(16, 28);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(12, 22);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 18);
+            this.label1.Size = new System.Drawing.Size(67, 14);
             this.label1.TabIndex = 20;
             this.label1.Tag = "9999";
             this.label1.Text = "报警设置";
@@ -480,21 +448,18 @@
             this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(238)))), ((int)(((byte)(238)))), ((int)(((byte)(238)))));
-            this.groupBox4.Location = new System.Drawing.Point(-3, 55);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox4.Location = new System.Drawing.Point(-2, 44);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox4.Size = new System.Drawing.Size(1520, 2);
+            this.groupBox4.Size = new System.Drawing.Size(1140, 2);
             this.groupBox4.TabIndex = 20;
             this.groupBox4.TabStop = false;
             // 
             // pb_choosepath
             // 
             this.pb_choosepath.Image = global::Finder.Properties.Resources.openfolder;
-            this.pb_choosepath.Location = new System.Drawing.Point(723, 689);
-            this.pb_choosepath.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pb_choosepath.Location = new System.Drawing.Point(542, 551);
             this.pb_choosepath.Name = "pb_choosepath";
-            this.pb_choosepath.Size = new System.Drawing.Size(25, 24);
+            this.pb_choosepath.Size = new System.Drawing.Size(19, 19);
             this.pb_choosepath.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb_choosepath.TabIndex = 23;
             this.pb_choosepath.TabStop = false;
@@ -506,20 +471,19 @@
             | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.ForeColor = System.Drawing.Color.Red;
-            this.label2.Location = new System.Drawing.Point(253, 78);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(190, 62);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(210, 15);
+            this.label2.Size = new System.Drawing.Size(167, 12);
             this.label2.TabIndex = 32;
             this.label2.Text = "注意:蓝色行为报警条件已设置";
             // 
             // SystemSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1365, 858);
+            this.ClientSize = new System.Drawing.Size(1024, 686);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.pb_choosepath);
@@ -544,7 +508,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "SystemSetting";
             this.Text = "SystemSetting";
             this.Load += new System.EventHandler(this.SystemSetting_Load);

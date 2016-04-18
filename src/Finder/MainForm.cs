@@ -115,18 +115,18 @@ namespace Finder
             //lb_username.Text = ui.UName;
 
             //读取超级狗里的数据文件，确定用户ID。
-            //dogId = Comm.GetDogFile(1);
-            //if (string.IsNullOrEmpty(dogId))
-            //{
-            //    if (MessageBox.Show("读取加密狗信息失败，请检查加密狗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.OK)
-            //    {
-            //        System.Environment.Exit(0);
-            //    }
-            //}
-            //else
-            //{
-            //    GlobalPars.GloPars.Add("userID", dogId);
-            //}
+            dogId = Comm.GetDogFile(1);
+            if (string.IsNullOrEmpty(dogId))
+            {
+                if (MessageBox.Show("读取加密狗信息失败，请检查加密狗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.OK)
+                {
+                    System.Environment.Exit(0);
+                }
+            }
+            else
+            {
+                GlobalPars.GloPars.Add("userID", dogId);
+            }
             //获取软件版本（1、基础版。2、高级版。3、专业版）
             string softVer = "3";
             if (string.IsNullOrWhiteSpace(softVer) || (!softVer.Equals("1")) && (!softVer.Equals("2")) && (!softVer.Equals("3")))

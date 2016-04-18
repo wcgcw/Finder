@@ -143,7 +143,6 @@ namespace Finder.util
                             //    if ((DateTime.Now - hashtableTime).TotalMinutes > double.Parse(tmp_IntervalHours) * 60)
                             //    {
                             sendText = StringReplace(tmp_sendContent, "[事件名称]", insertSign(tmp_keyword));
-                            //2016.4.17 去掉短信报警的功能
                             sendSMS(sendText, tmp_phoneNumber, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
                             thisTimeCount++;
                             //aviCount--;
