@@ -15,7 +15,7 @@ namespace Finder.Forms
     public partial class Zhongdian : Form
     {
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         //关键字列表
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
@@ -70,10 +70,10 @@ namespace Finder.Forms
 
         private void GetResultData()
         {
-            string sql = @"select ifnull(c.[FocusLevel],'99') FocusLevel, ifnull(c.[ActionDate], '') ActionDate, b.[Name] as EventName, 
+            string sql = @"select ifnull(c.FocusLevel,'99') FocusLevel, ifnull(c.ActionDate, '') ActionDate, b.Name as EventName, 
                                     a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
                                     a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
-                                    from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
                                     inner join FilterReleaseInfo c on a.uid=c.uid
                                     where a.deleted=0 and a.uid > 0 and a.kid={0} ";
             sql = string.Format(sql, kid);
@@ -103,7 +103,7 @@ namespace Finder.Forms
             {
                 sql += " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
             }
-            sql += " and b.[Name] is not null  order by FocusLevel, ActionDate desc, a.collectdate desc";
+            sql += " and b.Name is not null  order by FocusLevel, ActionDate desc, a.collectdate desc";
 
             DataTable dt = cmd.GetTabel(sql);
             #region 精确匹配

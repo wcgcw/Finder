@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using Finder.util;
 using System.Text;
 using System.Net;
+using System.IO;
 
 namespace Finder
 {
@@ -236,7 +237,17 @@ namespace Finder
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.DoEvents();
-            Application.Run(new MainForm());
+
+            try
+            {
+                Application.Run(new MainForm());
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message + "\r\n" + ex.StackTrace;
+                File.WriteAllText("err.txt", err, Encoding.Default);
+                MessageBox.Show("捕获到系统无法处理的异常，应用程序必须关闭。重新启动应用程序可能会解决此问题。", Application.ProductName, MessageBoxButtons.OK);
+            }
         }
 
         /// <summary>

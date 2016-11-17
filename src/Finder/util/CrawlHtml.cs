@@ -121,7 +121,7 @@ namespace Finder.util
         /// <returns></returns>
         public static int GetParts(string str1)
         {
-            DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
             DataTable dtParts;
             dtParts = cmd.GetTabel("SELECT * FROM partword");
             int z = 0;
@@ -152,7 +152,7 @@ namespace Finder.util
         public static bool UrlExist(string url)
         {
             bool result = false;
-            DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
             String sql = "select count(0) from urls where url='"+url+"'";
             int count = int.Parse(cmd.GetOne(sql).ToString());
             result = count > 0 ? true : false;

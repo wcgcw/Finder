@@ -12,7 +12,7 @@ namespace Finder.Forms
     public partial class AlertDetail : Form
     {
         string type;
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
         public AlertDetail(string type_)
         {
             InitializeComponent();

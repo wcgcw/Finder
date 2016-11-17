@@ -198,7 +198,7 @@ namespace Finder.Forms
             lbAll.Text = "";
             lbAll.Visible = true;
 
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             ;
             //得到关键字列表
             DataTable dtkey = new DataTable();
@@ -452,7 +452,7 @@ namespace Finder.Forms
             //相似链接
             string Similar = "";
 
-            DataBaseServer.SQLitecommand cmd = new SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new MySqlCmd();
 
             //得到相似表
             DataTable dtXs = new DataTable();
@@ -764,7 +764,7 @@ namespace Finder.Forms
             //相似链接
             string Similar = "";
 
-            DataBaseServer.SQLitecommand cmd = new SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new MySqlCmd();
 
             //得到相似表
             DataTable dtXs = new DataTable();
@@ -1065,7 +1065,7 @@ namespace Finder.Forms
             //相似链接
             string Similar = "";
 
-            DataBaseServer.SQLitecommand cmd = new SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new MySqlCmd();
 
             //得到相似表
             DataTable dtXs = new DataTable();
@@ -1624,7 +1624,7 @@ namespace Finder.Forms
                 lbweibo.Text = "正在搜索微博数据...";
                 lbweibo.ForeColor = Color.DarkBlue;
                 string wblog = "select uid,releasename AS title,contexts,releasedate,infosource,keywords,releasename,collectdate,snapshot,webname,pid,part,reposts,comments from ReleaseInfowb order by uid desc limit 0,300";
-                DataBaseServer.SQLitecommand cmd = new SQLitecommand();
+                DataBaseServer.MySqlCmd cmd = new MySqlCmd();
                 DataTable dtwBlog = new DataTable();
                 dtwBlog = cmd.GetTabel(wblog);
                 dvWBlog.DataSource = dtwBlog;
@@ -2293,7 +2293,7 @@ namespace Finder.Forms
             }
         }
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         public void RefreshChartData(object sender, EventArgs e)
         {

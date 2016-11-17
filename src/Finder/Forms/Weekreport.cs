@@ -18,7 +18,7 @@ namespace Finder.Forms
             InitializeComponent();
         }
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         private RegistryKey OpenRegistryPath(RegistryKey root, string s)
         {
@@ -95,28 +95,8 @@ namespace Finder.Forms
                 return;
             }
 
-            string sql = @"select b.[Name] eventname, a.keywords, a.title, a.infosource, a.kid, a.pid from releaseinfo  a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null  and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
-
-            //List<string> kid = new List<string>();
-            //if (checkBox0.Checked)
-            //{
-            //    kid.Add("0");
-            //}
-            //if (checkBox1.Checked)
-            //{
-            //    kid.Add("1");
-            //}
-            //if (checkBox2.Checked)
-            //{
-            //    kid.Add("2");
-            //}
-            //if (checkBox1.Checked)
-            //{
-            //    kid.Add("3");
-            //}
-            //sql += "and a.kid in (" + string.Join(",", kid) + ")";
-
+            string sql = @"select b.Name eventname, a.keywords, a.title, a.contexts, a.infosource, a.kid, a.pid from releaseinfo  a  left join keywords b on a.keywords=b.KeyWord
+                             inner join FilterReleaseInfo c on a.uid=c.uid where b.Name is not null  and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") + "'";
             List<string> pid = new List<string>();
             if (checkBox10.Checked)
             {
@@ -149,7 +129,7 @@ namespace Finder.Forms
             if (checkBox4.Checked)
             {
                 //定制
-                pid.Add("6");
+                pid.Add("7");
             }
             sql += " and a.pid in (" + string.Join(",", pid) + ")";
 
@@ -159,7 +139,7 @@ namespace Finder.Forms
                 eventCondition = "a.kid=" + (kidlist.SelectedItem as DataRowView)["kid"].ToString();
                 if (kwlist.Visible && kwlist.Text != "全部")
                 {
-                    eventCondition += " and b.[Name]='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
+                    eventCondition += " and b.Name='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
                     if (cmbKeyword.Visible && cmbKeyword.Text != "全部")
                     {
                         eventCondition += " and a.keywords='" + (cmbKeyword.SelectedItem as DataRowView)["keyword"].ToString() + "'";
@@ -173,6 +153,48 @@ namespace Finder.Forms
             sql +=" order by a.kid, a.pid, eventname";
 
             DataTable dt = cmd.GetTabel(sql);
+            #region 2016.4.28 修改成默认精确匹配
+            List<DataRow> remove = new List<DataRow>();
+            foreach (DataRow row in dt.Rows)
+            {
+                string keywords = row["keywords"].ToString();
+                string title = row["title"].ToString();
+                string context = row["contexts"].ToString();
+                if (!string.IsNullOrEmpty(keywords))
+                {
+                    bool isFundTitle = true;
+                    bool isFundContext = true;
+                    string[] keyw = keywords.Split(' ');
+                    if (keyw != null && keyw.Count() > 0)
+                    {
+                        foreach (string key in keyw)
+                        {
+                            if (title.IndexOf(key) < 0)
+                            {
+                                isFundTitle = false;
+                            }
+                            if (context.IndexOf(key) < 0)
+                            {
+                                isFundContext = false;
+                            }
+                        }
+                    }
+                    if (!isFundTitle && !isFundContext)
+                    {
+                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                        remove.Add(row);
+                    }
+                }
+            }
+            if (remove != null && remove.Count > 0)
+            {
+                foreach (DataRow row in remove)
+                {
+                    dt.Rows.Remove(row);
+                }
+            }
+            #endregion
+
             List<string> list = new List<string>();
             string kw = "";
             string k = "";
@@ -206,19 +228,66 @@ namespace Finder.Forms
                             break;
                     }
 
-                    string sql2 = @"SELECT count(1) kidcount from releaseinfo  a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null  and   a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss");
+                    string sql2 = @"SELECT a.keywords, a.title, a.contexts from releaseinfo  a  left join keywords b on a.keywords=b.KeyWord  inner join FilterReleaseInfo c on a.uid=c.uid
+                            where b.Name is not null  and   a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss");
                     sql2 += "' and a.kid=" + k;
                     if (kwlist.Visible && kwlist.Text != "全部")
                     {
-                        sql2 += " and b.[Name]='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
+                        sql2 += " and b.Name='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
                         if (cmbKeyword.Visible && cmbKeyword.Text != "全部")
                         {
                             sql2 += " and a.keywords='" + (cmbKeyword.SelectedItem as DataRowView)["keyword"].ToString() +"'";
                         }
                     }
+                    if (pid.Count > 0)
+                    {
+                        sql2 += " and a.pid in (" + string.Join(",", pid) + ")";
+                    }
+
                     DataTable dtCount = cmd.GetTabel(sql2);
-                    list.Add("检索到事件分类：" + kName + " 数据 " + dtCount.Rows[0]["kidcount"].ToString() + " 条");
+                    #region 2016.4.28 修改成默认精确匹配
+                    List<DataRow> remove2 = new List<DataRow>();
+                    foreach (DataRow row in dtCount.Rows)
+                    {
+                        string keywords = row["keywords"].ToString();
+                        string title = row["title"].ToString();
+                        string context = row["contexts"].ToString();
+                        if (!string.IsNullOrEmpty(keywords))
+                        {
+                            bool isFundTitle = true;
+                            bool isFundContext = true;
+                            string[] keyw = keywords.Split(' ');
+                            if (keyw != null && keyw.Count() > 0)
+                            {
+                                foreach (string key in keyw)
+                                {
+                                    if (title.IndexOf(key) < 0)
+                                    {
+                                        isFundTitle = false;
+                                    }
+                                    if (context.IndexOf(key) < 0)
+                                    {
+                                        isFundContext = false;
+                                    }
+                                }
+                            }
+                            if (!isFundTitle && !isFundContext)
+                            {
+                                //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                                remove2.Add(row);
+                            }
+                        }
+                    }
+                    if (remove2 != null && remove2.Count > 0)
+                    {
+                        foreach (DataRow row in remove2)
+                        {
+                            dtCount.Rows.Remove(row);
+                        }
+                    }
+                    #endregion
+
+                    list.Add("检索到事件分类：" + kName + " 数据 " + dtCount.Rows.Count.ToString() + " 条");
                 }
                 if (p != dt.Rows[i]["pid"].ToString())
                 {
@@ -254,33 +323,117 @@ namespace Finder.Forms
                             break;
                     }
 
-                    string sql3 = @"SELECT count(1) pidcount from releaseinfo   a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null  and  a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") +
+                    string sql3 = @"SELECT a.keywords, a.title, a.contexts from releaseinfo   a  left join keywords b on a.keywords=b.KeyWord  inner join FilterReleaseInfo c on a.uid=c.uid
+                            where b.Name is not null  and  a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss") +
                             "' and a.kid=" + k + " and a.pid=" + p;
                     if (kwlist.Visible && kwlist.Text != "全部")
                     {
-                        sql3 += " and b.[Name]='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
+                        sql3 += " and b.Name='" + (kwlist.SelectedItem as DataRowView)["name"].ToString() + "'";
                         if (cmbKeyword.Visible && cmbKeyword.Text != "全部")
                         {
                             sql3 += " and a.keywords='" + (cmbKeyword.SelectedItem as DataRowView)["keyword"].ToString() + "'";
                         }
                     }
                     DataTable dtCount = cmd.GetTabel(sql3);
-                    list.Add("  检索到网站分类：" + pName + " 数据 " + dtCount.Rows[0]["pidcount"].ToString() + " 条");
+                    #region 2016.4.28 修改成默认精确匹配
+                    List<DataRow> remove2 = new List<DataRow>();
+                    foreach (DataRow row in dtCount.Rows)
+                    {
+                        string keywords = row["keywords"].ToString();
+                        string title = row["title"].ToString();
+                        string context = row["contexts"].ToString();
+                        if (!string.IsNullOrEmpty(keywords))
+                        {
+                            bool isFundTitle = true;
+                            bool isFundContext = true;
+                            string[] keyw = keywords.Split(' ');
+                            if (keyw != null && keyw.Count() > 0)
+                            {
+                                foreach (string key in keyw)
+                                {
+                                    if (title.IndexOf(key) < 0)
+                                    {
+                                        isFundTitle = false;
+                                    }
+                                    if (context.IndexOf(key) < 0)
+                                    {
+                                        isFundContext = false;
+                                    }
+                                }
+                            }
+                            if (!isFundTitle && !isFundContext)
+                            {
+                                //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                                remove2.Add(row);
+                            }
+                        }
+                    }
+                    if (remove2 != null && remove2.Count > 0)
+                    {
+                        foreach (DataRow row in remove2)
+                        {
+                            dtCount.Rows.Remove(row);
+                        }
+                    }
+                    #endregion
+
+                    list.Add("  检索到网站分类：" + pName + " 数据 " + dtCount.Rows.Count.ToString() + " 条");
                 }
                 if (kw != dt.Rows[i]["eventname"].ToString())
                 {
                     kw = dt.Rows[i]["eventname"].ToString();
-                    string sql4 = @"SELECT count(1) kwcount from releaseinfo    a  left join keywords b on a.keywords=b.[KeyWord]
-                            where b.[Name] is not null  and a. collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                            + "' and a.kid=" + k + " and a.pid=" + p + " and b.[Name]='" + kw + "'";
+                    string sql4 = @"SELECT a.keywords, a.title, a.contexts from releaseinfo    a  left join keywords b on a.keywords=b.KeyWord  inner join FilterReleaseInfo c on a.uid=c.uid
+                            where b.Name is not null  and a. collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd HH:mm:ss") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                            + "' and a.kid=" + k + " and a.pid=" + p + " and b.Name='" + kw + "'";
 
                     if (cmbKeyword.Visible && cmbKeyword.Text != "全部")
                     {
                         sql4 += " and a.keywords='" + (cmbKeyword.SelectedItem as DataRowView)["keyword"].ToString() + "'";
                     }
                     DataTable dtCount = cmd.GetTabel(sql4);
-                    list.Add("    检索到事件：" + kw + " 数据 " + dtCount.Rows[0]["kwcount"].ToString() + " 条");
+                    #region 2016.4.28 修改成默认精确匹配
+                    List<DataRow> remove2 = new List<DataRow>();
+                    foreach (DataRow row in dtCount.Rows)
+                    {
+                        string keywords = row["keywords"].ToString();
+                        string title = row["title"].ToString();
+                        string context = row["contexts"].ToString();
+                        if (!string.IsNullOrEmpty(keywords))
+                        {
+                            bool isFundTitle = true;
+                            bool isFundContext = true;
+                            string[] keyw = keywords.Split(' ');
+                            if (keyw != null && keyw.Count() > 0)
+                            {
+                                foreach (string key in keyw)
+                                {
+                                    if (title.IndexOf(key) < 0)
+                                    {
+                                        isFundTitle = false;
+                                    }
+                                    if (context.IndexOf(key) < 0)
+                                    {
+                                        isFundContext = false;
+                                    }
+                                }
+                            }
+                            if (!isFundTitle && !isFundContext)
+                            {
+                                //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                                remove2.Add(row);
+                            }
+                        }
+                    }
+                    if (remove2 != null && remove2.Count > 0)
+                    {
+                        foreach (DataRow row in remove2)
+                        {
+                            dtCount.Rows.Remove(row);
+                        }
+                    }
+                    #endregion
+
+                    list.Add("    检索到事件：" + kw + " 数据 " + dtCount.Rows.Count.ToString() + " 条");
                 }
                 list.Add("    标题：" + dt.Rows[i]["title"].ToString() + "<?p>链接：" + dt.Rows[i]["infosource"].ToString());
             }

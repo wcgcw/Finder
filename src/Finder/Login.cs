@@ -43,7 +43,7 @@ namespace Finder
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 DataTable one = dbobj.GetTabel(sql);
                 if (one.Rows.Count <= 0)
                 {

@@ -183,6 +183,7 @@ namespace HtmlParse
 
     public class Parse
     {
+        private static readonly object lockObj = new object();
         #region 查询进度报告
         public delegate void ReportCatchProcessEventHandler(ModelReleaseInfo mri);
         public event ReportCatchProcessEventHandler ReportCatchProcess;
@@ -313,7 +314,6 @@ namespace HtmlParse
             //<cite id="cacheresult_info_7">豆瓣 - www.douban.com - 2015-3-10</cite>
 
             //时间假定有 x天前，x小时前，x分前，xxxx年xx月xx日，xxxx-xx-xx
-
             byte[] space = new byte[] { 0xc2, 0xa0 };
             string UTFSpace = Encoding.GetEncoding("UTF-8").GetString(space);
             string txt = text.Replace(UTFSpace, " ").Trim();
@@ -398,57 +398,70 @@ namespace HtmlParse
         }
         public string GetContexts(string contexts, string keyword)
         {
-            string retContexts = "";
-            List<seachRecord> seached = new List<seachRecord>();          
-
-            int preCount = 200, nextCount = 100;
-            string[] splitKw = keyword.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-            if (splitKw != null && splitKw.Count() > 0)
+            lock (lockObj)
             {
-                int start = 0;
-                foreach (string kw in splitKw)
+                string retContexts = "";
+                try
                 {
-                    start = contexts.IndexOf(kw, start);  
-                    while (start >= 0)
-                    {                        
-                        int len = 0;
-                        if (start < preCount)
+                    List<seachRecord> seached = new List<seachRecord>();
+                    int preCount = 200, nextCount = 100;
+                    string[] splitKw = keyword.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                    if (splitKw != null && splitKw.Count() > 0)
+                    {
+                        foreach (string kw in splitKw)
                         {
-                            len = start + kw.Length + nextCount;
-                            start = 0;
-                        }
-                        else
-                        {
-                            len = preCount + kw.Length + nextCount;
-                            start = start - preCount;                            
-                        }
-
-                        bool has = false;
-                        foreach (var s in seached)
-                        {
-                            if (start > s._min && start + len < s._max)
+                            int start = 0;
+                            start = contexts.IndexOf(kw, start);
+                            while (start >= 0)
                             {
-                                has = true;
-                                break;
-                            }
-                        }
+                                int len = 0;
+                                if (start < preCount)
+                                {
+                                    len = start + kw.Length + nextCount;
+                                    start = 0;
+                                }
+                                else
+                                {
+                                    len = preCount + kw.Length + nextCount;
+                                    start = start - preCount;
+                                }
 
-                        if (!has)
-                        {
-                            if (!string.IsNullOrEmpty(retContexts))
-                            {
-                                retContexts += "  \r\n   ……   \r\n  ";
-                            }
-                            retContexts += contexts.Substring(start, len);
-                            seached.Add(new seachRecord(start, start + len));
+                                bool has = false;
+                                foreach (var s in seached)
+                                {
+                                    if (start > s._min && start + len < s._max)
+                                    {
+                                        has = true;
+                                        break;
+                                    }
+                                }
 
-                            start = start + len;
-                            start = contexts.IndexOf(kw, start);  
+                                if (!has)
+                                {
+                                    if (!string.IsNullOrEmpty(retContexts))
+                                    {
+                                        retContexts += "  \r\n   ……   \r\n  ";
+                                    }
+                                    if (start + len > contexts.Length)
+                                    {
+                                        len = contexts.Length - start;
+                                    }
+                                    retContexts += contexts.Substring(start, len);
+                                    seached.Add(new seachRecord(start, start + len));
+
+                                    start = start + len;
+                                    start = contexts.IndexOf(kw, start);
+                                }
+                            }
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Comm.WriteErrorLog(ex.Message);
+                }
+                return retContexts;
             }
-            return retContexts;
         }
 
         enum WebSourceType
@@ -539,7 +552,10 @@ namespace HtmlParse
                         OnReportCactchProcess(mri);
                         #endregion
 
-                        mris.Add(mri);
+                        if (!string.IsNullOrEmpty(mri.Title))
+                        {
+                            mris.Add(mri);
+                        }
                     }
                 }
             }
@@ -723,7 +739,11 @@ namespace HtmlParse
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
-                        webDatas.Add(mri);
+
+                        if (!string.IsNullOrEmpty(mri.Title))
+                        {
+                            webDatas.Add(mri);
+                        }
                     }
                 }
                 #endregion
@@ -895,8 +915,10 @@ namespace HtmlParse
                                     OnReportCactchProcess(mri);
                                     #endregion
 
-
-                                    webDatas.Add(mri);
+                                    if (!string.IsNullOrEmpty(mri.Title))
+                                    {
+                                        webDatas.Add(mri);
+                                    }
                                 }
                             }
                         }
@@ -1063,8 +1085,10 @@ namespace HtmlParse
                                 OnReportCactchProcess(mri);
                                 #endregion
 
-
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -1248,8 +1272,10 @@ namespace HtmlParse
                                     OnReportCactchProcess(mri);
                                     #endregion
 
-
-                                    webDatas.Add(mri);
+                                    if (!string.IsNullOrEmpty(mri.Title))
+                                    {
+                                        webDatas.Add(mri);
+                                    }
                                 }
                             }
                         }
@@ -1403,8 +1429,10 @@ namespace HtmlParse
                                 OnReportCactchProcess(mri);
                                 #endregion
 
-
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -1567,7 +1595,10 @@ namespace HtmlParse
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
                                     #endregion
-                                    webDatas.Add(mri);
+                                    if (!string.IsNullOrEmpty(mri.Title))
+                                    {
+                                        webDatas.Add(mri);
+                                    }
                                 }
                             }
                         }
@@ -1823,7 +1854,10 @@ namespace HtmlParse
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
-                        webDatas.Add(mri);
+                        if (!string.IsNullOrEmpty(mri.Title))
+                        {
+                            webDatas.Add(mri);
+                        }
                     }
                 }
                 #endregion
@@ -2099,7 +2133,10 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -2240,7 +2277,11 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -2441,7 +2482,11 @@ namespace HtmlParse
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
                                     #endregion
-                                    webDatas.Add(mri);
+
+                                    if (!string.IsNullOrEmpty(mri.Title))
+                                    {
+                                        webDatas.Add(mri);
+                                    }
                                 }
                             }
                         }
@@ -2535,52 +2580,27 @@ namespace HtmlParse
                                 mri.Title = title;
                                 //mri.InfoSource = href;
                                 //2016.4.17 微信的地址需要添加前缀  http://weixin.sogou.com
-                                mri.InfoSource = string.Format("{0}{1}", "http://weixin.sogou.com", href);                                
-                                HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(mri.InfoSource);
-                                req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-                                req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36";
-                                req.Headers.Add("Accept-Encoding", "gzip, deflate, sdch");
-                                req.Headers.Add("Accept-Language", "zh-CN,zh;q=0.8");
-                                //string domain = "weixin.sogou.com";
-                                //CookieContainer myCookieContainer = new CookieContainer();
-                                //Cookie ck = new Cookie("SMYUV", "1315876896029400", "/", domain);
-                                //myCookieContainer.Add(ck);
-                                //Cookie ck2 = new Cookie("SUV", "1315876896030236", "/", domain);
-                                //myCookieContainer.Add(ck2);
-                                //Cookie ck3 = new Cookie("ssuid", "8259370578", "/", domain);
-                                //myCookieContainer.Add(ck3);
-                                //Cookie ck4 = new Cookie("SUID", "B9AF8DDB7E23900A00000000558A6F47", "/", domain);
-                                //myCookieContainer.Add(ck4);
-                                //Cookie ck5 = new Cookie("pgv_pvi", "1353635840", "/", domain);
-                                //myCookieContainer.Add(ck5);
-                                //Cookie ck6 = new Cookie("usid", "7imwP0sX5gAk5mcI", "/", domain);
-                                //myCookieContainer.Add(ck6);
-                                //Cookie ck7 = new Cookie("_ga", "7imwP0sX5gAk5mcI", "/", domain);
-                                //myCookieContainer.Add(ck7);
-                                //Cookie ck8 = new Cookie("IPLOC", "CN1100", "/", domain);
-                                //myCookieContainer.Add(ck8);
-                                //Cookie ck9 = new Cookie("ABTEST", "0|1460883888|v1", "/", domain);
-                                //myCookieContainer.Add(ck9);
-                                //Cookie ck10 = new Cookie("weixinIndexVisited", "1", "/", domain);
-                                //myCookieContainer.Add(ck10);
-                                //Cookie ck11 = new Cookie("SNUID", "3375F7F18B8FBB200375FC0B8B212ABA", "/", domain);
-                                //myCookieContainer.Add(ck11);
-                                //Cookie ck12 = new Cookie("sct", "77", "/", domain);
-                                //myCookieContainer.Add(ck12);
-                                //req.CookieContainer = myCookieContainer;
-                                //req.CookieContainer = cookies; //使用已经保存的cookies 方法一
-                                req.Headers.Add("Cookie", strCookies); //使用已经保存的cookies 方法二
-
-                                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-                                if (response.ResponseUri!=null)
+                                if (href.StartsWith("http://mp.weixin.qq.com", StringComparison.OrdinalIgnoreCase))
                                 {
-                                    mri.InfoSource = response.ResponseUri.AbsoluteUri;
+                                    mri.InfoSource = href;
                                 }
-                                //string loc = response.Headers["location"];
-                                //if (!string.IsNullOrEmpty(loc))
-                                //{
-                                //    mri.InfoSource = loc;                                    
-                                //}
+                                else
+                                {
+                                    mri.InfoSource = string.Format("{0}{1}", "http://weixin.sogou.com", href);
+                                    HttpWebRequest req = (HttpWebRequest)HttpWebRequest.Create(mri.InfoSource);
+                                    req.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                                    req.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36";
+                                    req.Headers.Add("Accept-Encoding", "gzip, deflate, sdch");
+                                    req.Headers.Add("Accept-Language", "zh-CN,zh;q=0.8");
+                                    //req.CookieContainer = cookies; //使用已经保存的cookies 方法一
+                                    req.Headers.Add("Cookie", strCookies); //使用已经保存的cookies 方法二
+
+                                    HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                                    if (response.ResponseUri != null)
+                                    {
+                                        mri.InfoSource = response.ResponseUri.AbsoluteUri;
+                                    }
+                                }
                             }
                         }
 
@@ -2662,7 +2682,10 @@ namespace HtmlParse
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
-                        webDatas.Add(mri);
+                        if (!string.IsNullOrEmpty(mri.Title))
+                        {
+                            webDatas.Add(mri);
+                        }
                     }
                 }
                 #endregion
@@ -2932,7 +2955,10 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -3204,7 +3230,10 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -3356,7 +3385,10 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                         }
                     }
@@ -3495,7 +3527,10 @@ namespace HtmlParse
                         #region 报告进度
                         OnReportCactchProcess(mri);
                         #endregion
-                        webDatas.Add(mri);
+                        if (!string.IsNullOrEmpty(mri.Title))
+                        {
+                            webDatas.Add(mri);
+                        }
                     }
                 }
                 #endregion
@@ -3670,7 +3705,10 @@ namespace HtmlParse
                                 #region 报告进度
                                 OnReportCactchProcess(mri);
                                 #endregion
-                                webDatas.Add(mri);
+                                if (!string.IsNullOrEmpty(mri.Title))
+                                {
+                                    webDatas.Add(mri);
+                                }
                             }
                             catch (Exception ex1)
                             {
@@ -3838,7 +3876,11 @@ namespace HtmlParse
                                         #region 报告进度
                                         OnReportCactchProcess(mri);
                                         #endregion
-                                        webDatas.Add(mri);
+
+                                        if (!string.IsNullOrEmpty(mri.Title))
+                                        {
+                                            webDatas.Add(mri);
+                                        }
                                     }
                                     catch (Exception ex2)
                                     {
@@ -3975,7 +4017,10 @@ namespace HtmlParse
                                     #region 报告进度
                                     OnReportCactchProcess(mri);
                                     #endregion
-                                    webDatas.Add(mri);
+                                    if (!string.IsNullOrEmpty(mri.Title))
+                                    {
+                                        webDatas.Add(mri);
+                                    }
                                 }
                             }
                         }

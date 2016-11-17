@@ -14,6 +14,55 @@ using System.Reflection;
 
 namespace Finder.util
 {
+    public class DataPage
+    {
+        public bool isInited = false;
+        public int pageIdx;
+        public int pageSize;
+        public long pageCount;
+        public long maxUid;
+        public long minUid;
+
+        public long CurrenPageStartUid
+        {
+            get
+            {
+                long startId = maxUid - pageSize * pageIdx;
+                if (startId <= minUid) startId = minUid;
+                return startId;
+
+            }
+        }
+
+        public long CurrenPageEndUid
+        {
+            get
+            {
+                long endId = CurrenPageStartUid + pageSize;
+                return endId;
+            }
+        }
+
+
+        public bool HasNextPage
+        {
+            get
+            {
+                //下一页数据，是指是否还有比当前uid更小的数据
+                return isInited && CurrenPageStartUid > minUid;
+            }
+        }
+
+        public bool HasPrePage
+        {
+            get
+            {
+                //下一页数据，是指是否还有比当前uid更小的数据
+                return isInited && CurrenPageEndUid < maxUid;
+            }
+        }
+    }
+
     public class Comm
     {
         public static bool isChangedEvents = false;
@@ -315,5 +364,54 @@ namespace Finder.util
 
             log.Error(msg);
         }
+
+        public static DataPage GetPageInfo()
+        {
+            DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
+
+            #region 获取查询开始uid
+            int pageSize = 500;
+            string maxuidsql = "select max(uid) from releaseinfo";
+            object oc = cmd.GetOne(maxuidsql);            
+            long maxId = 0;
+            if (!(oc is System.DBNull))
+            { 
+                if (oc is long)
+                {
+                    maxId = (long)oc;
+                }
+                else
+                {
+                    maxId = (int)oc;
+                }
+            }
+
+            string minuidsql = "select min(uid) from releaseinfo";
+            oc = cmd.GetOne(minuidsql);
+            long minId = 0;
+            if (!(oc is System.DBNull))
+            {
+                if (oc is long)
+                {
+                    minId = (long)oc;
+                }
+                else
+                {
+                    minId = (int)oc;
+                }
+            }
+
+            #endregion
+            DataPage dp = new DataPage();
+            dp.maxUid = maxId;
+            dp.minUid = minId;
+            dp.pageSize = pageSize;
+            dp.pageIdx = 1;
+            dp.pageCount = (maxId - minId) / pageSize;
+            dp.isInited = true;
+
+            return dp;
+        }
+
     }
 }

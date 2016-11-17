@@ -14,7 +14,7 @@ namespace Finder.Forms
 {
     public partial class Kongzhi : Form
     {
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         public Kongzhi()
         {

@@ -9,17 +9,17 @@ using System.Windows.Forms;
 using System.Media;
 using Finder.util;
 using DataBaseServer;
-using System.Data.SQLite;
 using Finder.Entites;
 using Finder.Entities;
 using System.Collections;
 using System.IO;
+using MySql.Data.MySqlClient;
 
 namespace Finder.Forms
 {
     public partial class SystemSetting : Form
     {
-        SQLitecommand cmd = new SQLitecommand();
+        MySqlCmd cmd = new MySqlCmd();
         private SoundPlayer sPlayer = new SoundPlayer();
 
         public SystemSetting()
@@ -69,12 +69,12 @@ namespace Finder.Forms
                 return;
             }
             string sql = "UPDATE LoginUser SET PWord=@PWord WHERE uid=@Uid";
-            List<SQLiteParameter> pars = new List<SQLiteParameter>();
-            pars.Add(new SQLiteParameter("@PWord", newpwd1));
-            pars.Add(new SQLiteParameter("@Uid", ui.Uid));
+            List<MySqlParameter> pars = new List<MySqlParameter>();
+            pars.Add(new MySqlParameter("@PWord", newpwd1));
+            pars.Add(new MySqlParameter("@Uid", ui.Uid));
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 if (dbobj.ExecuteNonQueryInt(sql, pars) > 0)
                 {
                     MessageBox.Show("修改成功！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -121,11 +121,11 @@ namespace Finder.Forms
                 return;
             }
             string sql = "UPDATE systemset SET EvidenceImgSavePath=@EvidenceImgSavePath WHERE id=1";
-            List<SQLiteParameter> pars = new List<SQLiteParameter>();
-            pars.Add(new SQLiteParameter("@EvidenceImgSavePath", tb_choosedimgpath.Text));
+            List<MySqlParameter> pars = new List<MySqlParameter>();
+            pars.Add(new MySqlParameter("@EvidenceImgSavePath", tb_choosedimgpath.Text));
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 if (dbobj.ExecuteNonQueryInt(sql, pars) > 0)
                 {
                     SystemSet ss = (SystemSet)GlobalPars.GloPars["systemset"];
@@ -174,8 +174,8 @@ namespace Finder.Forms
 
         private void label18_Click(object sender, EventArgs e)
         {
-            string msg = "1.短信内容需小于70个字。\r\n"
-                       + "2.短信内容的输入模板为：系统已经发现________________舆情信息，请您及时关注！【正义东方】\r\n"
+            string msg = "1.短信内容需小于70个字。必须以【正义东方】结尾！\r\n"
+                       + "2.短信内容的输入模板为：系统已经发现[事件名称]舆情信息，请您及时关注！【正义东方】\r\n"
                        + "3.因电信运营商原因，用户手机实际收到的短信，事件名称可能会出现：[事*件*1],[事-件-1]等形式。\r\n"
                        + "4.选中单元格进行数据编辑。";
             MessageBox.Show(msg, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -558,13 +558,13 @@ namespace Finder.Forms
                     sql = "UPDATE Warn SET IntervalHours=@IntervalHours,IntervalHoursTotalInfo=@IntervalHoursTotalInfo,"
                         + "keyword=@keyword,WarnWay=@WarnWay,WarnContent=@WarnContent,Mobile=@Mobile WHERE ID=" + id;
 
-                    List<SQLiteParameter> pars = new List<SQLiteParameter>();
-                    pars.Add(new SQLiteParameter("@IntervalHours", hours));
-                    pars.Add(new SQLiteParameter("@IntervalHoursTotalInfo", hours_info));
-                    pars.Add(new SQLiteParameter("@keyword", kw));
-                    pars.Add(new SQLiteParameter("@WarnWay", 1));
-                    pars.Add(new SQLiteParameter("@WarnContent", content));
-                    pars.Add(new SQLiteParameter("@Mobile", mobile));
+                    List<MySqlParameter> pars = new List<MySqlParameter>();
+                    pars.Add(new MySqlParameter("@IntervalHours", hours));
+                    pars.Add(new MySqlParameter("@IntervalHoursTotalInfo", hours_info));
+                    pars.Add(new MySqlParameter("@keyword", kw));
+                    pars.Add(new MySqlParameter("@WarnWay", 1));
+                    pars.Add(new MySqlParameter("@WarnContent", content));
+                    pars.Add(new MySqlParameter("@Mobile", mobile));
 
                     try
                     {
@@ -693,13 +693,13 @@ namespace Finder.Forms
                     sql = "UPDATE Warn SET IntervalHours=@IntervalHours,IntervalHoursTotalInfo=@IntervalHoursTotalInfo,"
                         + "keyword=@keyword,WarnWay=@WarnWay,WarnContent=@WarnContent,Mobile=@Mobile WHERE ID=" + id;
 
-                    List<SQLiteParameter> pars = new List<SQLiteParameter>();
-                    pars.Add(new SQLiteParameter("@IntervalHours", hours));
-                    pars.Add(new SQLiteParameter("@IntervalHoursTotalInfo", hours_info));
-                    pars.Add(new SQLiteParameter("@keyword", kw));
-                    pars.Add(new SQLiteParameter("@WarnWay", 2));
-                    pars.Add(new SQLiteParameter("@WarnContent", content));
-                    pars.Add(new SQLiteParameter("@Mobile", ""));
+                    List<MySqlParameter> pars = new List<MySqlParameter>();
+                    pars.Add(new MySqlParameter("@IntervalHours", hours));
+                    pars.Add(new MySqlParameter("@IntervalHoursTotalInfo", hours_info));
+                    pars.Add(new MySqlParameter("@keyword", kw));
+                    pars.Add(new MySqlParameter("@WarnWay", 2));
+                    pars.Add(new MySqlParameter("@WarnContent", content));
+                    pars.Add(new MySqlParameter("@Mobile", ""));
 
                     try
                     {

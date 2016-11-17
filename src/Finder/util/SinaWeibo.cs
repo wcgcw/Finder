@@ -19,7 +19,7 @@ namespace Finder.util
 
         System.Timers.Timer t = null;
         Client sina = null;
-        SQLitecommand cmd = null;
+        MySqlCmd cmd = null;
         DataTable dt_kw = null;  //关键字表
         DataTable dt_partWord = null;  //正负词表
         DataTable dt_event = null;   //事件列表
@@ -68,7 +68,7 @@ namespace Finder.util
             if (!Program.ProClose)
             {
                 getSinaClientAuto();
-                cmd = new SQLitecommand();
+                cmd = new MySqlCmd();
                 dt_kw = cmd.GetTabel("select KeyWord from KeyWords group by KeyWord");
                 dt_event = cmd.GetTabel("select name,keyword,kid from KeyWords group by name,keyword,kid");
                 dt_partWord = cmd.GetTabel("select word,part from partword");

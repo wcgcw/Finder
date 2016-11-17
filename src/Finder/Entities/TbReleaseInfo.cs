@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.SQLite;
 using System.Data;
 using DataBaseServer;
 using HtmlParse;
+using MySql.Data.MySqlClient;
+using Finder.util;
 
 namespace Finder
 {
@@ -19,23 +20,23 @@ namespace Finder
         /// <returns></returns>
         public int InsReleaseInfo(ModelReleaseInfo obj)
         {
-            string sql = @"INSERT INTO ReleaseInfo([Title],[Contexts],[ReleaseDate],[InfoSource],[KeyWords],[ReleaseName],[CollectDate],[Snapshot]) 
+            string sql = @"INSERT INTO ReleaseInfo(Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot) 
                             VALUES(@Title,@Contexts,@RleaseDate,@InfoSource,@KeyWords,@ReleaseName,@CollectDate,@Snapshot) ";
 
-            List<SQLiteParameter> par = new List<SQLiteParameter>();
-            par.Add(new SQLiteParameter("@Title", obj.Title));
-            par.Add(new SQLiteParameter("@Contexts", obj.Contexts));
-            par.Add(new SQLiteParameter("@RleaseDate", obj.ReleaseDate));
-            par.Add(new SQLiteParameter("@InfoSource", obj.InfoSource));
-            par.Add(new SQLiteParameter("@KeyWords", obj.KeyWords));
-            par.Add(new SQLiteParameter("@ReleaseName", obj.ReleaseName));
-            par.Add(new SQLiteParameter("@CollectDate", obj.CollectDate));
-            par.Add(new SQLiteParameter("@Snapshot", obj.Snapshot));
+            List<MySqlParameter> par = new List<MySqlParameter>();
+            par.Add(new MySqlParameter("@Title", obj.Title));
+            par.Add(new MySqlParameter("@Contexts", obj.Contexts));
+            par.Add(new MySqlParameter("@RleaseDate", obj.ReleaseDate));
+            par.Add(new MySqlParameter("@InfoSource", obj.InfoSource));
+            par.Add(new MySqlParameter("@KeyWords", obj.KeyWords));
+            par.Add(new MySqlParameter("@ReleaseName", obj.ReleaseName));
+            par.Add(new MySqlParameter("@CollectDate", obj.CollectDate));
+            par.Add(new MySqlParameter("@Snapshot", obj.Snapshot));
 
 
             try
             {
-                SQLitecommand dbobj = new SQLitecommand();
+                MySqlCmd dbobj = new MySqlCmd();
                 return dbobj.ExecuteNonQueryInt(sql, par);
 
             }
@@ -51,7 +52,7 @@ namespace Finder
             string[] keywords = obj.KeyWords.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string k in keywords)
             {
-                string sql = @"INSERT INTO ReleaseInfo([Title],[Contexts],[ReleaseDate],[InfoSource],[KeyWords],[ReleaseName],[CollectDate],[Snapshot],[webName],[pid],[part],[reposts],[comments],[kid],[sheng],[shi],[xian]) 
+                string sql = @"INSERT INTO ReleaseInfo(Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian) 
                             VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}'); ";
 
                 obj.Title = filtRiskChar(obj.Title);
@@ -64,7 +65,7 @@ namespace Finder
 
         public String GetInsertStr(ModelReleaseInfo mri)
         {
-            string sql = @"INSERT INTO ReleaseInfo([Title],[Contexts],[ReleaseDate],[InfoSource],[KeyWords],[ReleaseName],[CollectDate],[Snapshot],[webName],[pid],[part],[reposts],[comments],[kid],[sheng],[shi],[xian]) 
+            string sql = @"INSERT INTO ReleaseInfo(Title,Contexts,ReleaseDate,InfoSource,KeyWords,ReleaseName,CollectDate,Snapshot,webName,pid,part,reposts,comments,kid,sheng,shi,xian) 
                             VALUES('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}','{11}','{12}','{13}','{14}','{15}','{16}'); ";
 
             mri.Title = filtRiskChar(mri.Title);
@@ -124,25 +125,25 @@ namespace Finder
         /// <returns></returns>
         public int FixReleaseInfo(ModelReleaseInfo obj)
         {
-            string sql = @"UPDATE SET ReleaseInfo [Title]=@Title,[Contexts]=@Contexts,[ReleaseDate]=@ReleaseDate,
-                                [InfoSource]=@InfoSource,[KeyWords]=@KeyWords,[ReleaseName]=@ReleaseName,
-                                [CollectDate]=@CollectDate,[Snapshot]=@Snapshot  
-                        WHERE [uid]=@uid";
+            string sql = @"UPDATE SET ReleaseInfo Title=@Title,Contexts=@Contexts,ReleaseDate=@ReleaseDate,
+                                InfoSource=@InfoSource,KeyWords=@KeyWords,ReleaseName=@ReleaseName,
+                                CollectDate=@CollectDate,Snapshot=@Snapshot  
+                        WHERE uid=@uid";
 
-            List<SQLiteParameter> par = new List<SQLiteParameter>();
-            par.Add(new SQLiteParameter("@uid", obj.Uid));
-            par.Add(new SQLiteParameter("@Title", obj.Title));
-            par.Add(new SQLiteParameter("@Contexts", obj.Contexts));
-            par.Add(new SQLiteParameter("@RleaseDate", obj.ReleaseDate));
-            par.Add(new SQLiteParameter("@InfoSource", obj.InfoSource));
-            par.Add(new SQLiteParameter("@KeyWords", obj.KeyWords));
-            par.Add(new SQLiteParameter("@ReleaseName", obj.ReleaseName));
-            par.Add(new SQLiteParameter("@CollectDate", obj.CollectDate));
-            par.Add(new SQLiteParameter("@Snapshot", obj.Snapshot));
+            List<MySqlParameter> par = new List<MySqlParameter>();
+            par.Add(new MySqlParameter("@uid", obj.Uid));
+            par.Add(new MySqlParameter("@Title", obj.Title));
+            par.Add(new MySqlParameter("@Contexts", obj.Contexts));
+            par.Add(new MySqlParameter("@RleaseDate", obj.ReleaseDate));
+            par.Add(new MySqlParameter("@InfoSource", obj.InfoSource));
+            par.Add(new MySqlParameter("@KeyWords", obj.KeyWords));
+            par.Add(new MySqlParameter("@ReleaseName", obj.ReleaseName));
+            par.Add(new MySqlParameter("@CollectDate", obj.CollectDate));
+            par.Add(new MySqlParameter("@Snapshot", obj.Snapshot));
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 return dbobj.ExecuteNonQueryInt(sql, par);
             }
             catch (Exception ex)
@@ -159,11 +160,11 @@ namespace Finder
         public int DelReleaseInfo(int uid)
         {
             string sql = @"DELETE FROM ReleaseInfo WHERE uid=@uid";
-            List<SQLiteParameter> par = new List<SQLiteParameter>();
-            par.Add(new SQLiteParameter("@uid", uid));
+            List<MySqlParameter> par = new List<MySqlParameter>();
+            par.Add(new MySqlParameter("@uid", uid));
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 return dbobj.ExecuteNonQueryInt(sql, par);
             }
             catch (Exception ex)
@@ -179,10 +180,11 @@ namespace Finder
         /// <returns></returns>
         public DataTable SelReleaseInfo()
         {
-            string sql = "SELECT * FROM ReleaseInfo";
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+            string sql = "SELECT * FROM ReleaseInfo where uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid;
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 return dbobj.GetTabel(sql);
             }
             catch (Exception ex)
@@ -202,7 +204,7 @@ namespace Finder
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 return dbobj.GetTabel(sql);
             }
             catch (Exception ex)
@@ -217,12 +219,13 @@ namespace Finder
         /// <returns></returns>
         public DataTable SelReleaseInfo(string sUrl)
         {
-            string sql = "SELECT * FROM ReleaseInfo WHERE InfoSource ='{0}'";
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+            string sql = "SELECT * FROM ReleaseInfo WHERE InfoSource ='{0}' and uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid;
             sql = string.Format(sql, sUrl);
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 return dbobj.GetTabel(sql);
             }
             catch (Exception ex)
@@ -237,12 +240,13 @@ namespace Finder
         /// <returns></returns>
         public int GetReleaseInfoCount(string sUrl, string keyword)
         {
-            string sql = "SELECT count(*) FROM ReleaseInfo WHERE InfoSource ='{0}' and keywords='{1}'";
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+            string sql = "SELECT count(*) FROM ReleaseInfo WHERE InfoSource ='{0}' and keywords='{1}'  and uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid ;
             sql = string.Format(sql, sUrl, keyword);
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 object obj = dbobj.GetOne(sql);
                 int val = 0;
                 int.TryParse(obj.ToString(), out val);
@@ -266,7 +270,7 @@ namespace Finder
 
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
 
                 return dbobj.GetTabel(sql);
             }
@@ -285,11 +289,12 @@ namespace Finder
         /// <returns></returns>
         public DataTable SelReleaseInfo(string t1, string t2, string pid)
         {
-            string sql = "SELECT * FROM ReleaseInfo WHERE CollectDate BETWEEN '{1}' AND '{0}' AND pid={2} ORDER BY CollectDate";
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+            string sql = "SELECT * FROM ReleaseInfo WHERE CollectDate BETWEEN '{1}' AND '{0}' AND pid={2}  and uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid  + " ORDER BY CollectDate";
             sql = string.Format(sql, t1, t2, pid);
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
 
                 return dbobj.GetTabel(sql);
             }
@@ -301,13 +306,16 @@ namespace Finder
 
         public DataTable GetLatestData(int pid)
         {
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+
             //string sql = "Select * From ReleaseInfo where pid={0} and deleted=0 order by collectdate desc limit 0,100";
-            string sql = @"select b.[Name] eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    where b.[Name] is not null and  a.pid={0} and a.deleted=0 order by a.collectdate desc limit 0,50";
+            string sql = @"select b.Name eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
+                                    where b.Name is not null and  a.pid={0} and a.deleted=0 and a.uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid 
+                                    + " order by a.collectdate desc limit 0,50";
             sql = string.Format(sql, pid);
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
 
                 return dbobj.GetTabel(sql);
             }
@@ -319,21 +327,23 @@ namespace Finder
 
         public DataTable GetLatestData(int kid, string eventName)
         {
+            DataPage firstPage = Finder.util.Comm.GetPageInfo();
+
             //string sql = "Select * From ReleaseInfo where pid={0} and deleted=0 order by collectdate desc limit 0,100";
-            string sql = @"select b.[Name] eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    where b.[Name] is not null and  a.deleted=0";
+            string sql = @"select b.Name eventname, a.* from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
+                                    where b.Name is not null and  a.deleted=0 and a.uid between " + firstPage.CurrenPageStartUid + " and " + firstPage.CurrenPageEndUid;
             if (kid != -1)
             {
                 sql += "    and a.kid=" + kid;
                 if (!string.IsNullOrEmpty(eventName) && eventName != "全部")
                 {
-                    sql += " and  b.[Name]='" + eventName + "'";
+                    sql += " and  b.Name='" + eventName + "'";
                 }
             }
             sql += " order by a.collectdate desc limit 0,50";
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
 
                 return dbobj.GetTabel(sql);
             }
@@ -348,7 +358,7 @@ namespace Finder
             string sql = "SELECT max(uid) FROM ReleaseInfo";
             try
             {
-                DataBaseServer.SQLitecommand dbobj = new SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new MySqlCmd();
                 DataTable dt = new DataTable();
                 dt = dbobj.GetTabel(sql);
                 try

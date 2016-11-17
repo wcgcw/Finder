@@ -61,6 +61,8 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblCount = new System.Windows.Forms.Label();
+            this.lblNexPage = new System.Windows.Forms.Label();
+            this.lblPrePage = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblMainFocus = new System.Windows.Forms.Label();
             this.lblFocus = new System.Windows.Forms.Label();
@@ -78,6 +80,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.txtComment = new System.Windows.Forms.RichTextBox();
             this.btnSubmit = new System.Windows.Forms.Button();
+            this.lblCurrentPage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.cmsSearch.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -445,12 +448,15 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.lblCurrentPage);
             this.panel1.Controls.Add(this.lblCount);
             this.panel1.Controls.Add(this.kwlist);
             this.panel1.Controls.Add(this.dateTimePicker1);
             this.panel1.Controls.Add(this.searchTxt);
             this.panel1.Controls.Add(this.pidlist);
+            this.panel1.Controls.Add(this.lblNexPage);
             this.panel1.Controls.Add(this.shenglist);
+            this.panel1.Controls.Add(this.lblPrePage);
             this.panel1.Controls.Add(this.weblist);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label1);
@@ -477,11 +483,37 @@
             // 
             this.lblCount.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCount.AutoSize = true;
-            this.lblCount.Location = new System.Drawing.Point(861, 72);
+            this.lblCount.Location = new System.Drawing.Point(873, 69);
             this.lblCount.Name = "lblCount";
-            this.lblCount.Size = new System.Drawing.Size(131, 12);
+            this.lblCount.Size = new System.Drawing.Size(113, 12);
             this.lblCount.TabIndex = 38;
-            this.lblCount.Text = "共计检索到XXXXX条结果";
+            this.lblCount.Text = "本页检索到[{0}] 条";
+            // 
+            // lblNexPage
+            // 
+            this.lblNexPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNexPage.AutoSize = true;
+            this.lblNexPage.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblNexPage.ForeColor = System.Drawing.Color.Black;
+            this.lblNexPage.Location = new System.Drawing.Point(933, 93);
+            this.lblNexPage.Name = "lblNexPage";
+            this.lblNexPage.Size = new System.Drawing.Size(53, 12);
+            this.lblNexPage.TabIndex = 0;
+            this.lblNexPage.Text = "下一页 >";
+            this.lblNexPage.Click += new System.EventHandler(this.lblNexPage_Click);
+            // 
+            // lblPrePage
+            // 
+            this.lblPrePage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblPrePage.AutoSize = true;
+            this.lblPrePage.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblPrePage.ForeColor = System.Drawing.Color.Black;
+            this.lblPrePage.Location = new System.Drawing.Point(874, 93);
+            this.lblPrePage.Name = "lblPrePage";
+            this.lblPrePage.Size = new System.Drawing.Size(53, 12);
+            this.lblPrePage.TabIndex = 0;
+            this.lblPrePage.Text = "< 上一页";
+            this.lblPrePage.Click += new System.EventHandler(this.lblPrePage_Click);
             // 
             // panel2
             // 
@@ -692,6 +724,16 @@
             this.btnSubmit.UseVisualStyleBackColor = true;
             this.btnSubmit.Click += new System.EventHandler(this.btnSubmit_Click);
             // 
+            // lblCurrentPage
+            // 
+            this.lblCurrentPage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblCurrentPage.AutoSize = true;
+            this.lblCurrentPage.Location = new System.Drawing.Point(777, 45);
+            this.lblCurrentPage.Name = "lblCurrentPage";
+            this.lblCurrentPage.Size = new System.Drawing.Size(215, 12);
+            this.lblCurrentPage.TabIndex = 38;
+            this.lblCurrentPage.Text = "未处理的数据有[{0}]页 - 当前页[{1}]";
+            // 
             // Filterdata
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -766,5 +808,8 @@
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.RichTextBox txtComment;
         private System.Windows.Forms.Button btnSubmit;
+        private System.Windows.Forms.Label lblNexPage;
+        private System.Windows.Forms.Label lblPrePage;
+        private System.Windows.Forms.Label lblCurrentPage;
     }
 }

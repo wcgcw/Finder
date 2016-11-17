@@ -16,7 +16,7 @@ namespace Finder.Forms
             InitializeComponent();
         }
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
         private void linkLableClick(object sender, LinkLabelLinkClickedEventArgs args)
         {
             if (sender is LinkLabel)

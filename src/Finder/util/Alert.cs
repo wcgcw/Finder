@@ -14,7 +14,7 @@ namespace Finder.util
 {
     class Alert
     {
-        SQLitecommand cmd = new SQLitecommand();
+        MySqlCmd cmd = new MySqlCmd();
         System.Timers.Timer t = null;
         private SoundPlayer sPlayer = new SoundPlayer();
         private DateTime soundPlayTime;
@@ -126,10 +126,10 @@ namespace Finder.util
                         //select count(*) cs, b.name from releaseinfo a
                         //left join keywords b on a.keywords=b.[KeyWord]
                         //where b.[Name]='自然灾害'
-                        sql = @"select count(1) cs,b.[Name] keywords from releaseinfo a
-                                left join keywords b on a.keywords=b.[KeyWord]
+                        sql = @"select count(1) cs,b.Name keywords from releaseinfo a
+                                left join keywords b on a.keywords=b.KeyWord
                                 where a.collectdate between '{0}' and '{1}'
-                                and  b.[Name]='{2}'";
+                                and  b.Name='{2}'";
                         sql = string.Format(sql, timeBefore, timeNow, tmp_keyword);
                         DataTable dt_SMS = cmd.GetTabel(sql);
 
@@ -245,10 +245,10 @@ namespace Finder.util
                         //select count(*) cs, b.name from releaseinfo a
                         //left join keywords b on a.keywords=b.[KeyWord]
                         //where b.[Name]='自然灾害'
-                        sql = @"select count(1) cs,b.[Name] keywords from releaseinfo a
-                                left join keywords b on a.keywords=b.[KeyWord]
+                        sql = @"select count(1) cs,b.Name keywords from releaseinfo a
+                                left join keywords b on a.keywords=b.KeyWord
                                 where a.collectdate between '{0}' and '{1}'
-                                and  b.[Name]='{2}'";
+                                and  b.Name='{2}'";
                         sql = string.Format(sql, timeBefore, timeNow, tmp_keyword);
 
                         DataTable dt_SND = cmd.GetTabel(sql);

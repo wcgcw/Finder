@@ -15,7 +15,7 @@ namespace Finder.Forms
 {
     public partial class Filterdata : Form
     {
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
 
@@ -114,33 +114,31 @@ namespace Finder.Forms
 
             txtTitle.Text = "";
             lblCount.Text = "";
+            lblCurrentPage.Text = "";
             txtTitle.BorderStyle = BorderStyle.None;
 
+            lblPrePage.Visible = false;
+            lblNexPage.Visible = false;
         }
 
-        private void GetResultData()
+        //上一次查询数据使用的条件 
+        private void GetResultData(DataPage dp)
         {
-            string sql = @"select ifnull(c.[FocusLevel],'99') FocusLevel, ifnull(c.[ActionDate], '') ActionDate, b.[Name] as EventName, 
-                                    a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
-                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
-                                    from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
-                                    left join FilterReleaseInfo c on a.uid=c.uid
-                                    where a.deleted=0 and a.uid > 0";
-
-            #region 拼接sql的条件
+            #region 拼接查询的条件
+            string condition = "";
             if (searchTxt.Text.ToString().Length > 0)
             {
-                sql += " and a.contexts like '%" + searchTxt.Text.ToString() + "%'";
+                condition += " and a.contexts like '%" + searchTxt.Text.ToString() + "%'";
             }
             //事件类别
             if (pidlist.SelectedIndex != pidlist.Items.Count - 1)
             {
-                sql += " and a.pid = " + ((DataRowView)pidlist.SelectedItem)["pid"].ToString();
+                condition += " and a.pid = " + ((DataRowView)pidlist.SelectedItem)["pid"].ToString();
             }
 
             if (kidlist.SelectedIndex != kidlist.Items.Count - 1)
             {
-                sql += " and a.kid = " + kidlist.SelectedIndex.ToString();
+                condition += " and a.kid = " + kidlist.SelectedIndex.ToString();
                 if (kwlist.SelectedIndex != kwlist.Items.Count - 1)
                 {
                     string eventName = ((DataRowView)kwlist.SelectedItem)["name"].ToString();
@@ -150,13 +148,13 @@ namespace Finder.Forms
                         {
                             if (dicKeywords[eventName] != null)
                             {
-                                sql += " and a.keywords in(";
+                                condition += " and a.keywords in(";
                                 foreach (var keyword in dicKeywords[eventName])
                                 {
-                                    sql += "'" + keyword + "',";
+                                    condition += "'" + keyword + "',";
                                 }
-                                sql = sql.Substring(0, sql.Length - 1);
-                                sql += ")";
+                                condition = condition.Substring(0, condition.Length - 1);
+                                condition += ")";
                             }
                         }
                     }
@@ -165,25 +163,106 @@ namespace Finder.Forms
 
             if (((DataRowView)shenglist.SelectedItem)["id"].ToString() != "0")
             {
-                sql += " and a.sheng = '" + ((DataRowView)shenglist.SelectedItem)["name"].ToString() + "'";
+                condition += " and a.sheng = '" + ((DataRowView)shenglist.SelectedItem)["name"].ToString() + "'";
 
                 if (((DataRowView)shilist.SelectedItem)["id"].ToString() != "0")
                 {
-                    sql += " and a.shi = '" + ((DataRowView)shilist.SelectedItem)["name"].ToString() + "'";
+                    condition += " and a.shi = '" + ((DataRowView)shilist.SelectedItem)["name"].ToString() + "'";
 
                     if (((DataRowView)xianlist.SelectedItem)["id"].ToString() != "0")
                     {
-                        sql += " and a.xian = '" + ((DataRowView)xianlist.SelectedItem)["name"].ToString() + "'";
+                        condition += " and a.xian = '" + ((DataRowView)xianlist.SelectedItem)["name"].ToString() + "'";
                     }
                 }
             }
 
-            sql += " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
-            sql += " and b.[Name] is not null  order by FocusLevel, ActionDate desc, a.collectdate desc";
+            condition += " and a.collectdate  BETWEEN '" + dateTimePicker1.Value.ToString("yyyy-MM-dd 00:00:00") + "' and '" + dateTimePicker2.Value.ToString("yyyy-MM-dd 23:59:59") + "'";
+            condition += " and b.Name is not null";
+            #endregion
+            string orderby = "  order by FocusLevel, ActionDate desc, a.collectdate desc";
+
+            #region 查询处理过的数据
+            string sqlFilter = @"select ifnull(c.FocusLevel,'99') FocusLevel, ifnull(c.ActionDate, '') ActionDate, b.Name as EventName, 
+                                    a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
+                                    from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
+                                    inner join FilterReleaseInfo c on a.uid=c.uid
+                                    where a.deleted=0";
+            sqlFilter += condition + orderby;
+            DataTable dtFilter = cmd.GetTabel(sqlFilter);
+            #region 精确匹配
+            List<DataRow> removeFilter = new List<DataRow>();
+            foreach (DataRow row in dtFilter.Rows)
+            {
+                string keywords = row["keywords"].ToString();
+                string title = row["title"].ToString();
+                string context = row["contexts"].ToString();
+                if (!string.IsNullOrEmpty(keywords))
+                {
+                    bool isFundTitle = true;
+                    bool isFundContext = true;
+                    string[] keyw = keywords.Split(' ');
+                    if (keyw != null && keyw.Count() > 0)
+                    {
+                        foreach (string key in keyw)
+                        {
+                            if (title.IndexOf(key) < 0)
+                            {
+                                isFundTitle = false;
+                            }
+                            if (context.IndexOf(key) < 0)
+                            {
+                                isFundContext = false;
+                            }
+                        }
+                    }
+                    if (!isFundTitle && !isFundContext)
+                    {
+                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                        removeFilter.Add(row);
+                    }
+                }
+            }
+            if (removeFilter != null && removeFilter.Count > 0)
+            {
+                foreach (DataRow row in removeFilter)
+                {
+                    dtFilter.Rows.Remove(row);
+                }
+            }
+            #endregion
             #endregion
 
-            DataTable dt = cmd.GetTabel(sql);
+            #region 查询未处理过的数据
+            //#region 获取查询开始uid
+            //int pageCount = 200;
+            //string maxuidsql = "select max(uid) from releaseinfo";
+            //object oc = cmd.GetOne(maxuidsql);
+            //long maxId;
+            //if (oc is long)
+            //{
+            //    maxId = (long)oc;
+            //}
+            //else
+            //{
+            //    maxId = (int)oc;
+            //}
+            //long startId = 0;
+            //long endId = 0;
+            //startId = maxId - pageCount * pageIdx;
+            //endId = startId + pageCount;
+            //if (startId <= 0) startId = 0;
+            //#endregion
 
+            string sql = @"select ifnull(c.FocusLevel,'99') FocusLevel, ifnull(c.ActionDate, '') ActionDate, b.Name as EventName, 
+                                    a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
+                                    a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
+                                    from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
+                                    left join FilterReleaseInfo c on a.uid=c.uid
+                                    where a.deleted=0 and c.FocusLevel is null";
+            sql += " and a.uid between " + dp.CurrenPageStartUid + " and " + dp.CurrenPageEndUid;
+            sql += condition + orderby;
+            DataTable dt = cmd.GetTabel(sql);
             #region 2015.7.14 修改成默认精确匹配
             List<DataRow> remove = new List<DataRow>();
             foreach (DataRow row in dt.Rows)
@@ -225,16 +304,21 @@ namespace Finder.Forms
                 }
             }
             #endregion
+            #endregion
 
+            #region 合并数据
+            dtFilter.Merge(dt);
+            #endregion
             dataGridView1.DataSource = null;
             dataGridView1.Columns.Clear();
-            dataGridView1.DataSource = dt;
+            dataGridView1.DataSource = dtFilter;
 
             this.dataGridView1.SelectionChanged -= new System.EventHandler(this.dataGridView1_SelectionChanged);
             FormatDataView();
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
 
-            lblCount.Text = string.Format("共计检索到 {0} 条结果", dt.Rows.Count);
+            lblCount.Text = string.Format("本页检索到[{0}] 条", dt.Rows.Count);
+            lblCurrentPage.Text = string.Format("未处理的数据有[{0}]页 - 当前页[{1}]", dp.pageCount, dp.pageIdx);
         }
 
         private DataTable MergeTable(DataTable dt1, DataTable dt2)
@@ -694,10 +778,14 @@ namespace Finder.Forms
             dataView.Clear();
         }
 
+        DataPage CurrentDataPageInfo = new DataPage();
         private void button1_Click(object sender, EventArgs e)
         {
+            //获取数据的分页信息
+            CurrentDataPageInfo = Comm.GetPageInfo();
+
             dataGridView1.DataSource = null;
-            GetResultData();
+            GetResultData(CurrentDataPageInfo);
 
             lblSetTop.Visible = true;
             lblCancel.Visible = true;
@@ -707,6 +795,11 @@ namespace Finder.Forms
             lblPre.Visible = true;
             lblNext.Visible = true;
             panel4.Visible = true;
+
+            lblNexPage.Visible = true;
+            lblPrePage.Visible = true;
+            lblNexPage.Enabled = CurrentDataPageInfo.HasNextPage;
+            lblPrePage.Enabled = CurrentDataPageInfo.HasPrePage;
 
             FormateFoucsStatus();
         }
@@ -949,7 +1042,25 @@ namespace Finder.Forms
                 {
                     cmd.ExecuteNonQueryInt(sb.ToString());
                 }
-                GetResultData();
+                //GetResultData();
+                DataTable dt = (dataGridView1.DataSource as DataTable);
+                foreach (string r in removes)
+                {
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            if (row["uid"].ToString() == r)
+                            {
+                                dt.Rows.Remove(row);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                dt.DefaultView.Sort = "FocusLevel, ActionDate desc, collectdate desc";
+
 
                 if (!string.IsNullOrEmpty(nextUid))
                 {
@@ -1025,8 +1136,22 @@ namespace Finder.Forms
                 }
 
                 SetRecordFocusLevel(uid, 1);
+
+                DataTable dt = (dataGridView1.DataSource as DataTable);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["uid"].ToString() == uid)
+                        {
+                            row["FocusLevel"] = 1;
+                        }
+                    }
+                }
+                dt.DefaultView.Sort = "FocusLevel, ActionDate desc, collectdate desc";
+
                 //刷新数据
-                GetResultData();
+                //GetResultData();
 
                 if (next > -1 && !string.IsNullOrEmpty(nextUid))
                 {
@@ -1065,7 +1190,19 @@ namespace Finder.Forms
                 }
 
                 SetRecordFocusLevel(uid, 3);
-                GetResultData();
+                //GetResultData();
+                DataTable dt = (dataGridView1.DataSource as DataTable);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["uid"].ToString() == uid)
+                        {
+                            row["FocusLevel"] = 3;
+                        }
+                    }
+                }
+                dt.DefaultView.Sort = "FocusLevel, ActionDate desc, collectdate desc";
 
                 if (next > -1 && !string.IsNullOrEmpty(nextUid))
                 {
@@ -1105,7 +1242,19 @@ namespace Finder.Forms
                 }
                 
                 SetRecordFocusLevel(uid, 2);
-                GetResultData();
+                //GetResultData();
+                DataTable dt = (dataGridView1.DataSource as DataTable);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["uid"].ToString() == uid)
+                        {
+                            row["FocusLevel"] = 2;
+                        }
+                    }
+                }
+                dt.DefaultView.Sort = "FocusLevel, ActionDate desc, collectdate desc";
 
                 if (next > -1 && !string.IsNullOrEmpty(nextUid))
                 {
@@ -1146,7 +1295,20 @@ namespace Finder.Forms
                 string sql = @"delete from FilterReleaseInfo where uid={0}";
                 sql = string.Format(sql, uid);
                 cmd.ExecuteNonQueryInt(sql);
-                GetResultData();
+                //GetResultData();
+                DataTable dt = (dataGridView1.DataSource as DataTable);
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        if (row["uid"].ToString() == uid)
+                        {
+                            row["FocusLevel"] = 99;
+                        }
+                    }
+                }
+                dt.DefaultView.Sort = "FocusLevel, ActionDate desc, collectdate desc";
+
                 FormateFoucsStatus();
 
                 if (next > -1 && !string.IsNullOrEmpty(nextUid))
@@ -1280,6 +1442,72 @@ namespace Finder.Forms
                 
             }
 
+        }
+
+        private void lblNexPage_Click(object sender, EventArgs e)
+        {
+            //下一页
+            if (CurrentDataPageInfo.HasNextPage)
+            {
+                dataGridView1.DataSource = null;
+                CurrentDataPageInfo.pageIdx++;
+                GetResultData(CurrentDataPageInfo);
+
+                lblSetTop.Visible = true;
+                lblCancel.Visible = true;
+                lblFocus.Visible = true;
+                lblMainFocus.Visible = true;
+                lblDelete.Visible = true;
+                lblPre.Visible = true;
+                lblNext.Visible = true;
+                panel4.Visible = true;
+
+                lblNexPage.Visible = true;
+                lblPrePage.Visible = true;
+
+                FormateFoucsStatus();
+            }
+            else
+            {
+                MessageBox.Show("没有更多的数据了！");
+                this.Enabled = false;
+            }
+            
+            lblNexPage.Enabled = CurrentDataPageInfo.HasNextPage;
+            lblPrePage.Enabled = CurrentDataPageInfo.HasPrePage;
+        }
+
+        private void lblPrePage_Click(object sender, EventArgs e)
+        {
+            //下一页
+            if (CurrentDataPageInfo.HasPrePage)
+            {
+                dataGridView1.DataSource = null;
+                CurrentDataPageInfo.pageIdx--;
+                GetResultData(CurrentDataPageInfo);
+
+                lblSetTop.Visible = true;
+                lblCancel.Visible = true;
+                lblFocus.Visible = true;
+                lblMainFocus.Visible = true;
+                lblDelete.Visible = true;
+                lblPre.Visible = true;
+                lblNext.Visible = true;
+                panel4.Visible = true;
+
+                lblNexPage.Visible = true;
+                lblPrePage.Visible = true;
+
+                FormateFoucsStatus();
+            }
+            else
+            {
+                MessageBox.Show("没有更多的数据了！");
+                this.Enabled = false;
+            }
+            
+            lblNexPage.Enabled = CurrentDataPageInfo.HasNextPage;
+            lblPrePage.Enabled = CurrentDataPageInfo.HasPrePage;
         }
 
     }

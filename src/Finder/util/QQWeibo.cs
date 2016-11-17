@@ -31,7 +31,7 @@ namespace Finder.util
 
         //关键词
         string[] keywords = null;
-        SQLitecommand cmd = new SQLitecommand();
+        MySqlCmd cmd = new MySqlCmd();
         DataTable dt_kw = null;  //关键字表
         DataTable dt_partWord = null;  //正负词表
         DataTable dt_event = null;   //事件列表

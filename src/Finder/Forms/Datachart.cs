@@ -19,7 +19,7 @@ namespace Finder.Forms
             InitializeComponent();
         }
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         private void Datachart_Load(object sender, EventArgs e)
         {
@@ -113,12 +113,12 @@ namespace Finder.Forms
         Dictionary<string, List<string>> dicKeywords = new Dictionary<string, List<string>>();
         private void button1_Click(object sender, EventArgs e)
         {
-            string baseSql = @"select ifnull(c.[FocusLevel],'99') FocusLevel, ifnull(c.[ActionDate], '') ActionDate, b.[Name] as EventName, 
+            string baseSql = @"select ifnull(c.FocusLevel,'99') FocusLevel, ifnull(c.ActionDate, '') ActionDate, b.Name as EventName, 
                                     a.uid,a.title,a.contexts,a.releasedate,a.infosource,a.keywords,a.releasename,a.collectdate,a.snapshot,a.webname,
                                     a.pid,a.part,a.reposts,a.comments,a.kid,a.sheng,a.shi,a.xian,a.deleted
-                                    from releaseinfo a  left join keywords b on a.keywords=b.[KeyWord] 
+                                    from releaseinfo a  left join keywords b on a.keywords=b.KeyWord 
                                     inner join FilterReleaseInfo c on a.uid=c.uid
-                                    where a.deleted=0 and a.uid > 0 and b.[Name] is not null ";
+                                    where a.deleted=0 and a.uid > 0 and b.Name is not null ";
 
             //事件类别
             if (kidlist.SelectedIndex != kidlist.Items.Count - 1)

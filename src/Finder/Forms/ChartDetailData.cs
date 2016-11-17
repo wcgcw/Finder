@@ -17,7 +17,6 @@ namespace Finder.Forms
         string webtype;
         int day;
         string KE;
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
         public ChartDetailData(int kid_ , string kwOrEvent_ ,string webtype_ , int day_ , string ke_)
         {
             InitializeComponent();

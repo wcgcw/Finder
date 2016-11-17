@@ -23,7 +23,7 @@ namespace Finder.util
         {
             Queue = new ConcurrentQueue<List<ModelReleaseInfo>>();
         }
-        
+
         public static DataPersistenceControl GetInstance()
         {
             return instance;
@@ -59,12 +59,46 @@ namespace Finder.util
                             StringBuilder sb = new StringBuilder();
                             sb.Append("");
                             TbReleaseInfo tri = new TbReleaseInfo();
-                            SQLitecommand cmd = new SQLitecommand();
+                            MySqlCmd cmd = new MySqlCmd();
                             foreach (var mri in data)
                             {
+                                #region 2016.11.16 加入精确匹配的判断
+                                string keywords = mri.KeyWords;
+                                string title = mri.Title;
+                                string context = mri.Contexts;
+                                if (!string.IsNullOrEmpty(keywords))
+                                {
+                                    bool isFundTitle = true;
+                                    bool isFundContext = true;
+                                    string[] keyw = keywords.Split(' ');
+                                    if (keyw != null && keyw.Count() > 0)
+                                    {
+                                        foreach (string key in keyw)
+                                        {
+                                            if (title.IndexOf(key) < 0)
+                                            {
+                                                isFundTitle = false;
+                                            }
+                                            if (context.IndexOf(key) < 0)
+                                            {
+                                                isFundContext = false;
+                                            }
+                                        }
+                                    }
+                                    if (!isFundTitle && !isFundContext)
+                                    {
+                                        //如果标题或者内容没有匹配全部关键字则去掉该条数据
+                                        continue;
+                                    }
+                                }
+                                #endregion
                                 if (tri.GetReleaseInfoCount(mri.InfoSource, mri.KeyWords) > 0) continue;
-
-                                sb.Append(tri.GetInsertStr(mri) + ";");
+                                string sql = tri.GetInsertStr(mri);
+                                if (!sql.Trim().EndsWith(";"))
+                                {
+                                    sql += sql + ";";
+                                }
+                                sb.Append(sql);
                             }
 
                             if (sb.ToString().Length > 0)

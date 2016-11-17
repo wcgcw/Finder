@@ -36,7 +36,7 @@ namespace Finder.Forms
         TbReleaseInfo tri;
         System.Threading.AutoResetEvent obj = new System.Threading.AutoResetEvent(false);
 
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
         private DataView dv;
 
         string SoftVer;
@@ -98,6 +98,12 @@ namespace Finder.Forms
         //全网抓取定时器
         System.Timers.Timer RefreshWebSpiderTimer = new System.Timers.Timer(1000 * 5);
 
+        //防止拉黑时间策略
+        private int Interval2m=1000;//1000 * 60 * 2;
+        private int Interval50s=1000;//1000 * 50;
+        private int Interval30s = 1000;//1000 * 30;
+        private int Interval10s = 1000;//1000 * 10;
+        private int Interval5s = 1000;//1000 * 5;
         #endregion
 
         #region 初始化
@@ -504,7 +510,7 @@ namespace Finder.Forms
         /// </summary>
         private void GeneralWebSpider()
         {
-            DataBaseServer.SQLitecommand cmd = new SQLitecommand();
+            DataBaseServer.MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey = cmd.GetTabel("select * from Keywords");
             //得到抓取网站的地址
@@ -533,7 +539,6 @@ namespace Finder.Forms
 
         private void BasicWebSpider(string motherUrl, string similar, DataTable keys, string sheng, string shi, string xian, string name, bool catchSub)
         {
-            DataBaseServer.SQLitecommand cmd = new SQLitecommand();
             //相似表中的被抓取网址
             string webInfo = "";
 
@@ -766,7 +771,7 @@ namespace Finder.Forms
         private void MediaWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -808,8 +813,6 @@ namespace Finder.Forms
                     //写入数据库
                     DataPersistenceControl.GetInstance().Add(mris);
                 }
-                //防止拉黑
-                Thread.Sleep(1000 * 38);
                 #endregion
 
                 #region bing检索
@@ -832,7 +835,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 50);
+                    Thread.Sleep(Interval50s);
                 }
                 #endregion
 
@@ -856,7 +859,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑（2分钟）
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
 
@@ -880,7 +883,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑（2分钟）
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
 
@@ -904,7 +907,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 50);
+                    Thread.Sleep(Interval50s);
                 }
                 #endregion
             }
@@ -920,7 +923,7 @@ namespace Finder.Forms
         private void WeixinWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             //DataTable dtParts;
@@ -971,7 +974,7 @@ namespace Finder.Forms
                     //RefreshDataGridView(6);
                 }
                 //防止拉黑（2分钟）
-                Thread.Sleep(1000 * 60 * 2);
+                Thread.Sleep(Interval2m);
             }
         }
 
@@ -986,7 +989,7 @@ namespace Finder.Forms
         private void BlogWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -1030,7 +1033,7 @@ namespace Finder.Forms
                     DataPersistenceControl.GetInstance().Add(mris);
                 }
                 //防止拉黑
-                Thread.Sleep(1000 * 60 * 2);
+                Thread.Sleep(Interval2m);
             }
         }
 
@@ -1044,7 +1047,7 @@ namespace Finder.Forms
         private void BBSWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -1087,7 +1090,7 @@ namespace Finder.Forms
                     DataPersistenceControl.GetInstance().Add(mris);
                 }
                 //防止拉黑（2分钟）
-                Thread.Sleep(1000 * 60 * 2);
+                Thread.Sleep(Interval2m);
                 #endregion
 
                 #region 中搜新闻
@@ -1110,7 +1113,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
             }
@@ -1126,7 +1129,7 @@ namespace Finder.Forms
         private void TiebaWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -1172,7 +1175,7 @@ namespace Finder.Forms
                     DataPersistenceControl.GetInstance().Add(mris);
                 }
                 //防止拉黑
-                Thread.Sleep(1000 * 50);
+                Thread.Sleep(Interval50s);
             }
         }
 
@@ -1186,7 +1189,7 @@ namespace Finder.Forms
         private void WeiboWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -1229,7 +1232,7 @@ namespace Finder.Forms
                     DataPersistenceControl.GetInstance().Add(mris);
                 }
                 //防止微博拉黑
-                Thread.Sleep(1000 * 40);
+                Thread.Sleep(Interval30s);
                 #endregion
 
                 #region 中搜检索
@@ -1252,7 +1255,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
             }
@@ -1268,7 +1271,7 @@ namespace Finder.Forms
         private void BaiduWebWebSpider()
         {
             #region 处理关键字
-            SQLitecommand cmd = new SQLitecommand();
+            MySqlCmd cmd = new MySqlCmd();
             //得到关键字列表
             DataTable dtkey;
             DataTable dtParts;
@@ -1317,7 +1320,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 50);
+                    Thread.Sleep(Interval50s);
                 }
                 #endregion
 
@@ -1338,7 +1341,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 45);
+                    Thread.Sleep(Interval30s);
                 }
                 #endregion
 
@@ -1359,7 +1362,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
 
@@ -1380,7 +1383,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 60 * 2);
+                    Thread.Sleep(Interval2m);
                 }
                 #endregion
 
@@ -1401,7 +1404,7 @@ namespace Finder.Forms
                         break;
                     }
                     //防止拉黑
-                    Thread.Sleep(1000 * 60);
+                    Thread.Sleep(Interval50s);
                 }
                 #endregion
 

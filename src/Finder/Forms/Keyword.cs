@@ -12,7 +12,7 @@ namespace Finder.Forms
 {
     public partial class Keyword : Form
     {
-        DataBaseServer.SQLitecommand cmd = new DataBaseServer.SQLitecommand();
+        DataBaseServer.MySqlCmd cmd = new DataBaseServer.MySqlCmd();
 
         public Keyword()
         {

@@ -77,7 +77,7 @@ namespace Finder
         private void GenCacheData()
         {
             //以下缓存报警信息
-            DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+            DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
             string sql = "select Id,EvidenceImgSavePath from systemset";
             DataTable dt = dbobj.GetTabel(sql);
             SystemSet ss = new SystemSet();
@@ -115,18 +115,18 @@ namespace Finder
             //lb_username.Text = ui.UName;
 
             //读取超级狗里的数据文件，确定用户ID。
-            dogId = Comm.GetDogFile(1);
-            if (string.IsNullOrEmpty(dogId))
-            {
-                if (MessageBox.Show("读取加密狗信息失败，请检查加密狗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.OK)
-                {
-                    System.Environment.Exit(0);
-                }
-            }
-            else
-            {
-                GlobalPars.GloPars.Add("userID", dogId);
-            }
+            //dogId = Comm.GetDogFile(1);
+            //if (string.IsNullOrEmpty(dogId))
+            //{
+            //    if (MessageBox.Show("读取加密狗信息失败，请检查加密狗！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error) == System.Windows.Forms.DialogResult.OK)
+            //    {
+            //        System.Environment.Exit(0);
+            //    }
+            //}
+            //else
+            //{
+            //    GlobalPars.GloPars.Add("userID", dogId);
+            //}
             //获取软件版本（1、基础版。2、高级版。3、专业版）
             string softVer = "3";
             if (string.IsNullOrWhiteSpace(softVer) || (!softVer.Equals("1")) && (!softVer.Equals("2")) && (!softVer.Equals("3")))
@@ -155,10 +155,11 @@ namespace Finder
             delExpiredDbData.Elapsed +=new System.Timers.ElapsedEventHandler(delExpiredDbData_Elapsed);
             delExpiredDbData.Enabled = true;
 
+            //2016.4.19 服务网站已经不可用了，暂停检查
             //检测试用，且第一次打开程序，要向服务端提交客户端在线数
-            Thread trailT = new Thread(new ThreadStart(CheckTrail));
-            trailT.IsBackground = true;
-            trailT.Start();
+            //Thread trailT = new Thread(new ThreadStart(CheckTrail));
+            //trailT.IsBackground = true;
+            //trailT.Start();
 
             //报警
             Alert alert = new Alert(1000 * 60);
@@ -245,7 +246,8 @@ namespace Finder
         #region 统计客户端和检查试用期
         private void tongjiT_Elapsed(object sender, EventArgs e)
         {
-            CheckTrail();
+            //2016.4.19 服务网站已经不能用了，暂停检查
+            //CheckTrail();
         }
         /// <summary>
         /// 检测试用是否到期
@@ -293,19 +295,19 @@ namespace Finder
             if (SoftVer.Equals("3"))
             {
                 string sql = "delete from ReleaseInfo where datetime(CollectDate) < datetime('now','-60 day');";
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 dbobj.ExecuteNonQuery(sql);
             }
             else if (SoftVer.Equals("2"))
             {
                 string sql = "delete from ReleaseInfo where datetime(CollectDate) < datetime('now','-45 day');";
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 dbobj.ExecuteNonQuery(sql);
             }
             else
             {
                 string sql = "delete from ReleaseInfo where datetime(CollectDate) < datetime('now','-30 day');";
-                DataBaseServer.SQLitecommand dbobj = new DataBaseServer.SQLitecommand();
+                DataBaseServer.MySqlCmd dbobj = new DataBaseServer.MySqlCmd();
                 dbobj.ExecuteNonQuery(sql);
             }
 
